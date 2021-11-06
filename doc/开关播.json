@@ -1,0 +1,13 @@
+{
+    "cmd": "LIVE",
+    "live_key": "180397328040093225",
+    "voice_background": "",
+    "sub_session_key": "180397328040093225sub_time:1636189064",
+    "live_platform": "pc",
+    "live_model": 0,
+    "roomid": 4351529
+}
+{
+    "cmd": "PREPARING",
+    "roomid": "4351529"
+}

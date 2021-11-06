@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+    shark7:
+        build: ./
+        container_name: shark7
+        # restart: unless-stopped

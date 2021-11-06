@@ -1,0 +1,836 @@
+{
+    "code": 0,
+    "message": "0",
+    "ttl": 1,
+    "data": {
+        "info": {
+            "num": 11,
+            "page": 1,
+            "now": 1,
+            "achievement_level": 1,
+            "anchor_guard_achieve_level": 0
+        },
+        "list": [
+            {
+                "uid": 1655635,
+                "ruid": 480675481,
+                "rank": 4,
+                "username": "巨大巨大灰",
+                "face": "http://i1.hdslb.com/bfs/face/3b0465d19180bae84fbacd8cb6482c311f3d277f.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 1955652,
+                "ruid": 480675481,
+                "rank": 5,
+                "username": "梦榴莲_金牌推销商",
+                "face": "http://i0.hdslb.com/bfs/face/1ad8eca5e26906b6dd83c491eb841e3261b19958.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 73743391,
+                "ruid": 480675481,
+                "rank": 6,
+                "username": "BlacatYao",
+                "face": "http://i1.hdslb.com/bfs/face/4d3ee6f7394dee3164e501614871b1676cf6ce73.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 22949985,
+                "ruid": 480675481,
+                "rank": 7,
+                "username": "良心奸商",
+                "face": "http://i2.hdslb.com/bfs/face/9faa881c1b2da5438e2e94d4f41b3a171e29325c.jpg",
+                "is_alive": 1,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 25,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 11971265,
+                "ruid": 480675481,
+                "rank": 8,
+                "username": "东木郅",
+                "face": "http://i2.hdslb.com/bfs/face/bc9a30fce58953905933760206f4c31595c6d569.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 24,
+                    "medal_color_start": 1725515,
+                    "medal_color_end": 5414290,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 4499951,
+                "ruid": 480675481,
+                "rank": 9,
+                "username": "C公司",
+                "face": "http://i2.hdslb.com/bfs/face/e077e741aafc4c231a96fea293cade65de0bf1c1.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 24,
+                    "medal_color_start": 1725515,
+                    "medal_color_end": 5414290,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 4427383,
+                "ruid": 480675481,
+                "rank": 10,
+                "username": "满酱满酱小满酱",
+                "face": "http://i0.hdslb.com/bfs/face/94c86b7d512a5db4d53c2a4c14da26f0a3e68471.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 22,
+                    "medal_color_start": 1725515,
+                    "medal_color_end": 5414290,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 399481,
+                "ruid": 480675481,
+                "rank": 11,
+                "username": "散步人明天kun",
+                "face": "http://i1.hdslb.com/bfs/face/e404364f119aa0a8a2997fdbcb637c0b1c4c92c9.jpg",
+                "is_alive": 1,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 21,
+                    "medal_color_start": 1725515,
+                    "medal_color_end": 5414290,
+                    "medal_color_border": 6809855
+                }
+            }
+        ],
+        "top3": [
+            {
+                "uid": 2687357,
+                "ruid": 480675481,
+                "rank": 1,
+                "username": "_二七七_",
+                "face": "http://i2.hdslb.com/bfs/face/3792d58b238c9c26e313c6ebf274f74023976403.jpg",
+                "is_alive": 1,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 2835299,
+                "ruid": 480675481,
+                "rank": 2,
+                "username": "-ェ-",
+                "face": "http://i2.hdslb.com/bfs/face/084414f01813d0e09ca084a887aad6b7e5bccbab.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            },
+            {
+                "uid": 34357159,
+                "ruid": 480675481,
+                "rank": 3,
+                "username": "亦太233",
+                "face": "http://i2.hdslb.com/bfs/face/5114b7237e3a10e457918d1f6d7b28a03f4927b2.jpg",
+                "is_alive": 0,
+                "guard_level": 3,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "迪D",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 6809855
+                }
+            }
+        ],
+        "my_follow_info": {
+            "guard_level": 0,
+            "accompany_days": 0,
+            "expired_time": "",
+            "auto_renew": 0,
+            "renew_remind": {
+                "content": "",
+                "type": 0,
+                "hint": ""
+            },
+            "medal_info": {
+                "medal_name": "",
+                "medal_level": 0,
+                "medal_color_start": 0,
+                "medal_color_end": 0,
+                "medal_color_border": 0
+            },
+            "rank": 0,
+            "ruid": 0,
+            "face": ""
+        },
+        "guard_warn": {
+            "is_warn": 0,
+            "warn": "",
+            "expired": 0,
+            "will_expired": 0,
+            "address": ""
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+    "code": 0,
+    "message": "0",
+    "ttl": 1,
+    "data": {
+        "info": {
+            "num": 1914,
+            "page": 66,
+            "now": 1,
+            "achievement_level": 3,
+            "anchor_guard_achieve_level": 1000
+        },
+        "list": [
+            {
+                "uid": 279698,
+                "ruid": 434334701,
+                "rank": 4,
+                "username": "30块SC",
+                "face": "http://i2.hdslb.com/bfs/face/6db8cec5807c536de5213e3a64e20aaaf683f169.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 467934,
+                "ruid": 434334701,
+                "rank": 5,
+                "username": "4utomata",
+                "face": "http://i0.hdslb.com/bfs/face/861b5643d31152eb571bfe47639ee12cc11144fd.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 35405323,
+                "ruid": 434334701,
+                "rank": 6,
+                "username": "大耳朵菜子",
+                "face": "http://i1.hdslb.com/bfs/face/9d3be1aeee55e8f41ad3b1cfa51dacbff83dcfa3.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 1277843,
+                "ruid": 434334701,
+                "rank": 7,
+                "username": "仙丹会断肠",
+                "face": "http://i2.hdslb.com/bfs/face/37849aaedc420543eeb7d9c09eb8e49a07acd180.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 2,
+                "ruid": 434334701,
+                "rank": 8,
+                "username": "碧诗",
+                "face": "http://i2.hdslb.com/bfs/face/ef0457addb24141e15dfac6fbf45293ccf1e32ab.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 29,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 1153207253,
+                "ruid": 434334701,
+                "rank": 9,
+                "username": "脆脆鲨站起来了",
+                "face": "http://i2.hdslb.com/bfs/face/fe7faae0e89ce8a0770069a535af8de3351f7350.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 29,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 36403376,
+                "ruid": 434334701,
+                "rank": 10,
+                "username": "网瘾少女飞天猪",
+                "face": "http://i2.hdslb.com/bfs/face/a0d77b5b8d8e0403b6ac40b37df86b58e5965a86.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 29,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 90870089,
+                "ruid": 434334701,
+                "rank": 11,
+                "username": "本-帅",
+                "face": "http://i2.hdslb.com/bfs/face/1c4ad089c7ee47e90ab7a20b66cfe8034623426d.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 28,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 23743636,
+                "ruid": 434334701,
+                "rank": 12,
+                "username": "鳥居清满",
+                "face": "http://i1.hdslb.com/bfs/face/517d51b712a3a729c93717a6afaea00114ae3e7e.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 28,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 2723373,
+                "ruid": 434334701,
+                "rank": 13,
+                "username": "HtSmith陳",
+                "face": "http://i0.hdslb.com/bfs/face/83a21e743052f911a4bcd12896c6f9500c56c240.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 28,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 413701378,
+                "ruid": 434334701,
+                "rank": 14,
+                "username": "左小丘先生",
+                "face": "http://i1.hdslb.com/bfs/face/58484c5cdaf81f51d4ba65ab1768022c19cb8bc1.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 28,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 4770697,
+                "ruid": 434334701,
+                "rank": 15,
+                "username": "拉玛库斯布莱希特",
+                "face": "http://i1.hdslb.com/bfs/face/f42fbec4774d3163418d7fcababcd67ef25596f1.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 28,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 48592,
+                "ruid": 434334701,
+                "rank": 16,
+                "username": "JackLee1009",
+                "face": "http://i1.hdslb.com/bfs/face/826650c1d94fc1e67e871e57f0d215a85bf0c5f4.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 7230115,
+                "ruid": 434334701,
+                "rank": 17,
+                "username": "能冲锋的白球",
+                "face": "http://i1.hdslb.com/bfs/face/be0f46ba6635c29669764c44f4ec249409862498.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 331961,
+                "ruid": 434334701,
+                "rank": 18,
+                "username": "吴涯不是大笨蛋",
+                "face": "http://i2.hdslb.com/bfs/face/32d353fdff3fa1135385eb446d164f62930ca14f.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 5529416,
+                "ruid": 434334701,
+                "rank": 19,
+                "username": "快乐女孩hate妳",
+                "face": "http://i2.hdslb.com/bfs/face/e4b4a0f9c06bb3a967089ad2c8be97ed2e9a96f1.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 5768986,
+                "ruid": 434334701,
+                "rank": 20,
+                "username": "DateOfAnonymous",
+                "face": "http://i1.hdslb.com/bfs/face/17a85f9408bbdc418ae5b97b238a155193fa4216.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 12253206,
+                "ruid": 434334701,
+                "rank": 21,
+                "username": "王老吉吨吨吨",
+                "face": "http://i0.hdslb.com/bfs/face/7382699c3ec84ca767e84a2c69b1bb94f87791aa.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 71402848,
+                "ruid": 434334701,
+                "rank": 22,
+                "username": "药尘的骨灵冷火",
+                "face": "http://i1.hdslb.com/bfs/face/f56a1cf54e526860f24fdd23378abcacb69c6c4a.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 913690,
+                "ruid": 434334701,
+                "rank": 23,
+                "username": "一人为城希克斯",
+                "face": "http://i1.hdslb.com/bfs/face/fb978750be6ee4d2780b8339ffac25132b7ec167.jpg",
+                "is_alive": 1,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 896830,
+                "ruid": 434334701,
+                "rank": 24,
+                "username": "七海Nana7mi单推人",
+                "face": "http://i1.hdslb.com/bfs/face/d63d9e2565b3e5b01d68a0aec1e34c09ca5793e1.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 1954971,
+                "ruid": 434334701,
+                "rank": 25,
+                "username": "SeanProductions",
+                "face": "http://i0.hdslb.com/bfs/face/edba1c1440f549b5ed5d681eb865f5896ae8afbf.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 5590646,
+                "ruid": 434334701,
+                "rank": 26,
+                "username": "Ryllis1",
+                "face": "http://i2.hdslb.com/bfs/face/1bf9173cc203b0994ab664c8d040648fb227c033.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 27,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 28571351,
+                "ruid": 434334701,
+                "rank": 27,
+                "username": "wawxc",
+                "face": "http://i2.hdslb.com/bfs/face/d417d9a7f9e87623300b598260703d31420b3bc8.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 194523,
+                "ruid": 434334701,
+                "rank": 28,
+                "username": "屎炸",
+                "face": "http://i0.hdslb.com/bfs/face/bba54b7f6c73bd9c9b3a30ccdd56a205d14951d2.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 164820919,
+                "ruid": 434334701,
+                "rank": 29,
+                "username": "左搂右抱亚丝娜",
+                "face": "http://i1.hdslb.com/bfs/face/4cd7cf8ed5fc7a274f0e8dca19e24615f85b0f0e.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 3572246,
+                "ruid": 434334701,
+                "rank": 30,
+                "username": "阿肾阿肾",
+                "face": "http://i2.hdslb.com/bfs/face/bc97292f6700fd1ea14f1c3ef74a16ef9e3c3cef.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 809925,
+                "ruid": 434334701,
+                "rank": 31,
+                "username": "old2son",
+                "face": "http://i0.hdslb.com/bfs/face/dae729f79b7db31ce50dc45452a0088e8ef84efa.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 60151,
+                "ruid": 434334701,
+                "rank": 32,
+                "username": "原神义务推广员",
+                "face": "http://i1.hdslb.com/bfs/face/5d2c92beb774a4bb30762538bb102d23670ae9c0.gif",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 26,
+                    "medal_color_start": 398668,
+                    "medal_color_end": 6850801,
+                    "medal_color_border": 16771156
+                }
+            }
+        ],
+        "top3": [
+            {
+                "uid": 350973938,
+                "ruid": 434334701,
+                "rank": 1,
+                "username": "美少女球球子",
+                "face": "http://i2.hdslb.com/bfs/face/3610caed996c4b173331750c25b8e7b9cb64b405.jpg",
+                "is_alive": 0,
+                "guard_level": 1,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 611821,
+                "ruid": 434334701,
+                "rank": 2,
+                "username": "リセマラ",
+                "face": "http://i1.hdslb.com/bfs/face/1052100cc72196c0cb2c75e9396e91e9b79a011d.jpg",
+                "is_alive": 1,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 31,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            },
+            {
+                "uid": 369331,
+                "ruid": 434334701,
+                "rank": 3,
+                "username": "真基の佬绅士",
+                "face": "http://i1.hdslb.com/bfs/face/2b0666975e90e802d235f124ce69c390186a8a7e.jpg",
+                "is_alive": 0,
+                "guard_level": 2,
+                "guard_sub_level": 0,
+                "medal_info": {
+                    "medal_name": "脆鲨",
+                    "medal_level": 30,
+                    "medal_color_start": 2951253,
+                    "medal_color_end": 10329087,
+                    "medal_color_border": 16771156
+                }
+            }
+        ],
+        "my_follow_info": {
+            "guard_level": 3,
+            "accompany_days": 60,
+            "expired_time": "2021-12-07",
+            "auto_renew": 0,
+            "renew_remind": {
+                "content": "",
+                "type": 0,
+                "hint": ""
+            },
+            "medal_info": {
+                "medal_name": "脆鲨",
+                "medal_level": 23,
+                "medal_color_start": 1725515,
+                "medal_color_end": 5414290,
+                "medal_color_border": 6809855
+            },
+            "rank": 425,
+            "ruid": 434334701,
+            "face": "http://i2.hdslb.com/bfs/face/e2533e608d067acc457c7376df238c13bc5cd067.jpg"
+        },
+        "guard_warn": {
+            "is_warn": 0,
+            "warn": "",
+            "expired": 0,
+            "will_expired": 0,
+            "address": ""
+        }
+    }
+}

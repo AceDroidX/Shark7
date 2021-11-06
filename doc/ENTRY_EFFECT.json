@@ -1,0 +1,56 @@
+{
+    "cmd": "ENTRY_EFFECT",
+    "data": {
+        "id": 4,
+        "uid": 39373763,
+        "target_id": 434334701,
+        "mock_effect": 0,
+        "face": "https://i2.hdslb.com/bfs/face/e2533e608d067acc457c7376df238c13bc5cd067.jpg",
+        "privilege_type": 3,
+        "copy_writing": "欢迎舰长 <%AceDroi...%> 进入直 播间",
+        "copy_color": "#ffffff",
+        "highlight_color": "#E6FF00",
+        "priority": 1,
+        "basemap_url": "https://i0.hdslb.com/bfs/live/mlive/f34c7441cdbad86f76edebf74e60b59d2958f6ad.png",
+        "show_avatar": 1,
+        "effective_time": 2,
+        "web_basemap_url": "",
+        "web_effective_time": 0,
+        "web_effect_close": 0,
+        "web_close_time": 0,
+        "business": 1,
+        "copy_writing_v2": "欢迎舰长 <%AceDro…%> 进入直播间",
+        "icon_list": [],
+        "max_delay_time": 7,
+        "trigger_time": 1636025445457963000,
+        "identities": 6
+    }
+}
+{
+    "cmd": "ENTRY_EFFECT",
+    "data": {
+        "id": 4,
+        "uid": 39621921,
+        "target_id": 434334701,
+        "mock_effect": 0,
+        "face": "https://i0.hdslb.com/bfs/face/dab66d71d692af9f3b5722c44efa1c36091d8699.jpg",
+        "privilege_type": 3,
+        "copy_writing": "欢迎舰长 <%桜のナイト%> 进入直 播间",
+        "copy_color": "#ffffff",
+        "highlight_color": "#E6FF00",
+        "priority": 1,
+        "basemap_url": "https://i0.hdslb.com/bfs/live/mlive/f34c7441cdbad86f76edebf74e60b59d2958f6ad.png",
+        "show_avatar": 1,
+        "effective_time": 2,
+        "web_basemap_url": "",
+        "web_effective_time": 0,
+        "web_effect_close": 0,
+        "web_close_time": 0,
+        "business": 1,
+        "copy_writing_v2": "欢迎舰长 <%桜のナイト%> 进入直播间",
+        "icon_list": [],
+        "max_delay_time": 7,
+        "trigger_time": 1636025312770833400,
+        "identities": 6
+    }
+}

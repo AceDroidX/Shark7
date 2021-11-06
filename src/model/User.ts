@@ -1,0 +1,38 @@
+import axios from "axios";
+const UID_info_prefix = 'https://api.bilibili.com/x/space/acc/info?mid='
+const ROOMID_info_prefix = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="
+
+export class User {
+    uid: number;
+    name: string;
+    roomid: number;
+
+    constructor() {
+        this.uid = 0;
+        this.name = '未知用户';
+        this.roomid = 0;
+    }
+
+    async initByUID(uid: number) {
+        this.uid = uid;
+        axios.get(UID_info_prefix + uid).then(res => {
+            this.name = res.data['data']['name']
+            this.roomid = res.data['data']['live_room']['roomid']
+        })
+        return this
+    }
+    async initByRoomid(roomid: number) {
+        this.roomid = roomid;
+        await axios.get(ROOMID_info_prefix + roomid).then(res => {
+            this.uid = res.data['data']['room_info']['uid']
+            this.name = res.data['data']['anchor_info']['base_info']['uname']
+        })
+        return this
+    }
+    init(uid: number, name: string, roomid: number): User {
+        this.uid = uid;
+        this.name = name;
+        this.roomid = roomid;
+        return this
+    }
+}
