@@ -16,7 +16,7 @@ var marked_Users: Users
 if (require.main === module) {
     main()
 }
-function main() {
+async function main() {
     const marked_uid_str = config.get('marked_uid')
     if (typeof marked_uid_str != "string") {
         console.error('请设置marked_uid')
@@ -26,9 +26,10 @@ function main() {
     console.debug(marked_uid)
 
     marked_Users = new Users()
-    marked_uid.forEach(uid => {
-        marked_Users.addByUID(uid)
-    })
+    for (const uid of marked_uid) {
+        await marked_Users.addByUID(uid);
+    }
+    console.info(timePrefix() + `已设置${marked_Users.users.length}个用户:\n${marked_Users.toString()}`)
 
     const roomid_str = config.get('room_id')
     if (typeof roomid_str != "string") {
@@ -43,27 +44,24 @@ function main() {
     });
 }
 
-export function getAllMsg(id: number) {
-    const live = new KeepLiveTCP(id)
-    live.on('open', () => console.log(timePrefix() + `<${id}>WebSocket连接上了`))
-    live.on('live', () => console.log(timePrefix() + `<${id}>成功登入房间`))
-    live.on('heartbeat', (online) => console.log(timePrefix() + `<${id}>当前人气值${online}`))
-    live.on('msg', (data) => console.log(timePrefix() + `<${id}>收到消息\n${JSON.stringify(data)}`))
-    live.on('close', () => console.log(timePrefix() + `<${id}>连接关闭`))
-    live.on('error', (e) => console.log(timePrefix() + `<${id}>连接错误`))
-}
-
 function getFiltedMsg(id: any) {
     const live = new KeepLiveTCP(id)
     live.on('open', () => console.info(timePrefix() + `<${id}>WebSocket连接上了`))
     live.on('live', () => console.info(timePrefix() + `<${id}>成功登入房间`))
     // live.on('heartbeat', (online) => console.log(timePrefix() + `<${id}>当前人气值${online}`))
     live.on('msg', async (data) => {
-        const filter = await msgFilter(data)
-        if (filter.code == 0) {
-            console.info(timePrefix() + `<${id}>${filter.msg}`)
-            sendMsgToKHL(timePrefix() + `<${id}>${filter.msg}`)
+        try {
+            const filter = await msgFilter(data)
+            if (filter.code == 0) {
+                const targetuser = await new User().initByRoomid(id)
+                console.info(timePrefix() + `<${targetuser.name}/${id}>${filter.msg}`)
+                sendMsgToKHL(timePrefix() + `<${targetuser.name}/${id}>${filter.msg}`)
+            }
+        } catch (error) {
+            console.info(timePrefix() + `<${id}>遇到错误，请检查日志；\n${error}`)
+            sendMsgToKHL(timePrefix() + `<${id}>遇到错误，请检查日志；\n${error}`)
         }
+
     })
     live.on('close', () => console.info(timePrefix() + `<${id}>连接关闭`))
     live.on('error', (e) => console.info(timePrefix() + `<${id}>连接错误：${e}`))
@@ -76,27 +74,30 @@ async function msgFilter(data: any) {
     if (data['cmd'] == 'DANMU_MSG') {
         const uid = data['info'][2][0]
         if (marked_uid.includes(uid)) {
-            return new FiltedMsg(0, `${uid}发送弹幕：${data['info'][1]}`, data)
+            const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}发送弹幕：${data['info'][1]}`, data)
         }
     } else if (data['cmd'] == 'ENTRY_EFFECT') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
-            return new FiltedMsg(0, `${uid}进入直播间：${data['data']['target_id']}`, data)
+            const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}进入直播间`, data)
         }
     } else if (data['cmd'] == 'SEND_GIFT') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
-            return new FiltedMsg(0, `${uid}送出礼物：${data['data']['giftName']}x${data['data']['num']}`, data)
+            const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}送出礼物：${data['data']['giftName']}x${data['data']['num']}`, data)
         }
     } else if (data['cmd'] == 'LIVE') {
         const user = await new User().initByRoomid(data['roomid'])
         if (marked_uid.includes(user.uid)) {
-            return new FiltedMsg(0, `${user.uid}开始直播：\n${BILILIVEPREFIX}/${user.roomid}`, data)
+            return new FiltedMsg(0, `${user.name}开始直播：\n${BILILIVEPREFIX}/${user.roomid}`, data)
         }
     } else if (data['cmd'] == 'PREPARING') {
         const user = await new User().initByRoomid(parseInt(data['roomid']))
         if (marked_uid.includes(user.uid)) {
-            return new FiltedMsg(0, `${user.uid}停止直播：\n${BILILIVEPREFIX}/${user.roomid}`, data)
+            return new FiltedMsg(0, `${user.name}停止直播：\n${BILILIVEPREFIX}/${user.roomid}`, data)
         }
     } else {
         // if(JSON.stringify(data).includes(`uid:${marked_uid}`)){
@@ -106,6 +107,15 @@ async function msgFilter(data: any) {
     return new FiltedMsg(1, '', data)
 }
 
+export function getAllMsg(id: number) {
+    const live = new KeepLiveTCP(id)
+    live.on('open', () => console.log(timePrefix() + `<${id}>WebSocket连接上了`))
+    live.on('live', () => console.log(timePrefix() + `<${id}>成功登入房间`))
+    live.on('heartbeat', (online) => console.log(timePrefix() + `<${id}>当前人气值${online}`))
+    live.on('msg', (data) => console.log(timePrefix() + `<${id}>收到消息\n${JSON.stringify(data)}`))
+    live.on('close', () => console.log(timePrefix() + `<${id}>连接关闭`))
+    live.on('error', (e) => console.log(timePrefix() + `<${id}>连接错误`))
+}
 
 function openOneRoom(id: number) {
     const live = new KeepLiveTCP(id)

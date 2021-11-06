@@ -15,8 +15,16 @@
   "author": "AceDroidX",
   "license": "ISC",
   "dependencies": {
-    "bilibili-live-ws": "latest",
     "axios": "latest",
+    "bilibili-live-ws": "latest",
     "typescript": "latest"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

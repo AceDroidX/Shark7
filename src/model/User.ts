@@ -15,7 +15,7 @@ export class User {
 
     async initByUID(uid: number) {
         this.uid = uid;
-        axios.get(UID_info_prefix + uid).then(res => {
+        await axios.get(UID_info_prefix + uid).then(res => {
             this.name = res.data['data']['name']
             this.roomid = res.data['data']['live_room']['roomid']
         })
@@ -34,5 +34,8 @@ export class User {
         this.name = name;
         this.roomid = roomid;
         return this
+    }
+    toString(): string {
+        return `${this.name}:${this.uid}/${this.roomid}`
     }
 }

@@ -1,5 +1,5 @@
-config.json
-*.js
+config/config.json
+src/**/*.js
 
 # Logs
 logs

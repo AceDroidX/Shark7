@@ -7,5 +7,6 @@ import { User } from "./model/User";
 test()
 
 async function test() {
-    console.log(await new User().initByRoomid(21452505));
+    console.log((await new User().initByUID(39373763)).toString());
+    console.log((await new User().initByRoomid(21452505)).toString());
 }
