@@ -1,5 +1,6 @@
-import { isGuardOnline, makeURL } from "./guard";
+import { guardMain, isGuardOnline, makeURL } from "./guard";
 import { GuardList } from "./model/GuardList";
+import { Users } from "./model/Users";
 
 var j = [
     {
@@ -58,7 +59,12 @@ var j = [
 // console.log(gl.pageFilter(j))
 // console.log(gl.competed())
 // console.log(makeURL(21452505, 434334701, 1))
-main()
-async function main() {
+main2()
+async function main1() {
     console.log(await isGuardOnline(21696950, 480680646, [39373763, 434334701]));   
+}
+async function main2() {
+    const user=new Users()
+    await user.addByUID(39373763)
+    guardMain(user,new Users())
 }

@@ -8,9 +8,11 @@ import { BILILIVEPREFIX } from './constants';
 import { sendMsgToKHL, timePrefix } from './utils'
 import { Users } from './model/Users';
 import { User } from './model/User';
+import { guardMain } from './guard';
 
 var marked_uid: number[]
 var marked_Users: Users
+var roomid_Users: Users
 
 // init
 if (require.main === module) {
@@ -25,11 +27,13 @@ async function main() {
     marked_uid = marked_uid_str.split(',').map(x => parseInt(x))
     console.debug(marked_uid)
 
+    console.info(timePrefix() + `设置${marked_uid.length}个用户:`)
     marked_Users = new Users()
     for (const uid of marked_uid) {
-        await marked_Users.addByUID(uid);
+        const user = await marked_Users.addByUID(uid);
+        console.info(user.toString())
+        await new Promise(resolve => setTimeout(resolve, 200));
     }
-    console.info(timePrefix() + `已设置${marked_Users.users.length}个用户:\n${marked_Users.toString()}`)
 
     const roomid_str = config.get('room_id')
     if (typeof roomid_str != "string") {
@@ -37,23 +41,32 @@ async function main() {
         process.exit(1)
     }
     const roomid = roomid_str.split(',').map(x => parseInt(x))
+    console.info(timePrefix() + `设置${roomid.length}个房间:`)
+    roomid_Users = new Users()
+    for (const id of roomid) {
+        const user = await roomid_Users.addByRoomid(id);
+        console.info(user.toString())
+        await new Promise(resolve => setTimeout(resolve, 200));
+    }
     roomid.forEach((value: number, index: number) => {
         // openOneRoom(parseInt(element))
         // getAllMsg(parseInt(element)) 
         setTimeout(() => getFiltedMsg(value), 500 * index)
     });
+
+    guardMain(roomid_Users, marked_Users)
 }
 
 function getFiltedMsg(id: any) {
     const live = new KeepLiveTCP(id)
-    live.on('open', () => console.info(timePrefix() + `<${id}>WebSocket连接上了`))
+    // live.on('open', () => console.info(timePrefix() + `<${id}>WebSocket连接上了`))
     live.on('live', () => console.info(timePrefix() + `<${id}>成功登入房间`))
     // live.on('heartbeat', (online) => console.log(timePrefix() + `<${id}>当前人气值${online}`))
     live.on('msg', async (data) => {
         try {
             const filter = await msgFilter(data)
             if (filter.code == 0) {
-                const targetuser = await new User().initByRoomid(id)
+                const targetuser = roomid_Users.getUserByRoomid(id)
                 console.info(timePrefix() + `<${targetuser.name}/${id}>${filter.msg}`)
                 sendMsgToKHL(timePrefix() + `<${targetuser.name}/${id}>${filter.msg}`)
             }
