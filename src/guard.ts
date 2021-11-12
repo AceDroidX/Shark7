@@ -23,15 +23,13 @@ async function guardMain(roomid_Users: Users, marked_Users: Users) {
     var GuardStates: any = []
     while (true) {
         for (const roomid_user of roomid_Users.users) {
+            if(marked_Users.users.length == 1 && marked_Users.users[0].uid == roomid_user.uid) {
+                console.info(timePrefix() + `跳过搜索${roomid_user.name}/${roomid_user.roomid}的舰队列表`)
+                continue    
+            }
             console.info(timePrefix() + `开始搜索${roomid_user.name}/${roomid_user.roomid}的舰队列表`)
             const result = await isGuardOnline(roomid_user.roomid, roomid_user.uid, marked_Users.uidlist())
-            // console.log('a')
-            // console.log(GuardStates[roomid_user.roomid.toString()])
-            // console.log('b')
-            // console.log(result.list)
             const changedGuardStates = compareList(GuardStates[roomid_user.roomid.toString()], result.list)
-            // console.log('c')
-            // console.log(changedGuardStates)
             GuardStates[roomid_user.roomid.toString()] = result.list
             for (const state of changedGuardStates) {
                 const user = marked_Users.getUserByUID(state.uid)
@@ -47,7 +45,6 @@ async function guardMain(roomid_Users: Users, marked_Users: Users) {
                 }
             }
             await new Promise(resolve => { setTimeout(resolve, SLEEP_TIME) })
-            // console.log(roomid_user)
         }
     }
 }
