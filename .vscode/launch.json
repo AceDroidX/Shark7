@@ -1,0 +1,14 @@
+{
+    "configurations": [
+    {
+        "name": "run test",
+        "program": "${workspaceFolder}/build/test.ts",
+        "request": "launch",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        // "preLaunchTask": "",
+        "type": "pwa-node"
+    }
+    ]
+}
