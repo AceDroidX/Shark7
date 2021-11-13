@@ -9,10 +9,12 @@ import { sendMsgToKHL, timePrefix } from './utils'
 import { Users } from './model/Users';
 import { User } from './model/User';
 import { guardMain } from './guard';
+import { WeiboController } from './weibo';
 
 var marked_uid: number[]
 var marked_Users: Users
 var roomid_Users: Users
+var weibo_Controller: WeiboController
 
 // init
 if (require.main === module) {
@@ -55,6 +57,16 @@ async function main() {
     });
 
     guardMain(roomid_Users, marked_Users)
+
+    const weibo_id_str  =  config.get('weibo_id')
+    if (typeof weibo_id_str != "string") {
+        console.error('请设置weibo_id')
+        process.exit(1)
+    }
+    // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
+    const weibo_id = parseInt(weibo_id_str)
+    weibo_Controller = await WeiboController.getFromID(weibo_id)
+    weibo_Controller.run()
 }
 
 function getFiltedMsg(id: any) {

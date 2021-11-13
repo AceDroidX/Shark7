@@ -29,8 +29,12 @@ function timePrefix() {
     return `[${getTime()}]`
 }
 //get time 
-function getTime() {
-    var now = new Date();
+function getTime(timestamp = undefined) {
+    if (timestamp === undefined) {
+        var now = new Date();
+    }else{
+        var now = new Date(timestamp);
+    }
     var year = now.getFullYear();
     var month = now.getMonth() + 1;
     var day = now.getDate();

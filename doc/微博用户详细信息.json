@@ -1,0 +1,74 @@
+// https://weibo.com/ajax/profile/detail?uid=7198559139
+{
+    "data": {
+        "sunshine_credit": {
+            "level": "信用较好"
+        },
+        "birthday": "2003-07-15 巨蟹座",
+        "created_at": "2019-06-17 16:18:44",
+        "description": "蓝色饭团",
+        "gender": "f",
+        "location": "上海",
+        "followers": {
+            "total_number": 6,
+            "users": [
+                {
+                    "screen_name": "阿梓从小就很可爱",
+                    "avatar_large": "https://tvax3.sinaimg.cn/crop.0.0.1080.1080.180/8351d064ly8gw4i7d2w2hj20u00u0adp.jpg?KID=imgbed,tva&Expires=1636374801&ssig=kO%2Br1T6qmZ",
+                    "id": 2203177060
+                },
+                {
+                    "screen_name": "弥希MIKI",
+                    "avatar_large": "https://tvax1.sinaimg.cn/crop.0.0.600.600.180/008gJxDjly8gv8rdrji4hj60go0go0u702.jpg?KID=imgbed,tva&Expires=1636374801&ssig=Pm1cQPe6TI",
+                    "id": 7576338081
+                },
+                {
+                    "screen_name": "游研社",
+                    "avatar_large": "https://tvax1.sinaimg.cn/crop.0.0.1080.1080.180/9d0d09ably8glrvx3m804j20u00u0dgf.jpg?KID=imgbed,tva&Expires=1636374801&ssig=kOo2pKoxZ%2F",
+                    "id": 2634877355
+                }
+            ]
+        },
+        "label_desc": [
+            {
+                "name": "《2060》嘉宾推荐",
+                "normal_mode": {
+                    "word_color": "#FF507DAF",
+                    "background_color": "#1A578AC3"
+                },
+                "dark_mode": {
+                    "word_color": "#FF5885B6",
+                    "background_color": "#FF181818"
+                },
+                "scheme_url": "https://m.weibo.cn/z/recommend/aggregation?activity_id=101356&showmenu=0"
+            },
+            {
+                "name": "昨日发博14，阅读数100万+，互动数5.9万",
+                "normal_mode": {
+                    "word_color": "#FFFF6200",
+                    "background_color": "#59FFDDCB"
+                },
+                "dark_mode": {
+                    "word_color": "#FFEA8011",
+                    "background_color": "#FF181818"
+                },
+                "scheme_url": "sinaweibo://cardlist?containerid=2313537198559139"
+            },
+            {
+                "name": "视频累计播放量126.8万",
+                "normal_mode": {
+                    "word_color": "#FFFF6200",
+                    "background_color": "#59FFDDCB"
+                },
+                "dark_mode": {
+                    "word_color": "#FFEA8011",
+                    "background_color": "#FF181818"
+                },
+                "scheme_url": ""
+            }
+        ],
+        "desc_text": "江苏卫视《2060》虚拟形象",
+        "verified_url": "https://verified.weibo.com/verify?fr=myverified?uid=7198559139"
+    },
+    "ok": 1
+}

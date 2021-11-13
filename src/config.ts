@@ -15,7 +15,7 @@ export class ConfigManager {
             this.json = JSON.parse(fs.readFileSync(configpath, "utf8"));
         }
         else {
-            console.log("没有找到设置文件，将采用环境变量获取设置")
+            console.info("没有找到设置文件，将采用环境变量获取设置")
         }
     }
 
@@ -23,7 +23,7 @@ export class ConfigManager {
         if (this.json === undefined) {
             var env = process.env[key]
             if (env == undefined) {
-                console.log('设置中没有这个key')
+                console.warn('设置中没有这个key')
                 return undefined
             } else {
                 var n=Number(env)
@@ -37,7 +37,7 @@ export class ConfigManager {
             if (isValidKey(key, this.json)) {
                 return this.json[key];
             } else {
-                console.log('设置中没有这个key')
+                console.warn('设置中没有这个key')
                 return undefined
             }
         }

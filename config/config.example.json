@@ -2,5 +2,7 @@
     "khl_token": "aaaaaaaaaaaaaa",
     "channel_id": "1145141919",
     "room_id": "114514,1919",
-    "marked_uid": "11451419,145141"
+    "marked_uid": "11451419,145141",
+    "weibo_id": "1111",
+    "weibo_cookie": "aaaa:bbbb;cccc:dddd"
 }

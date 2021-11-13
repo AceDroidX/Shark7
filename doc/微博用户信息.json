@@ -1,0 +1,58 @@
+{
+    "ok": 1,
+    "data": {
+        "user": {
+            "id": 7198559139,
+            "idstr": "7198559139",
+            "pc_new": 7,
+            "screen_name": "七海Nana7mi",
+            "profile_image_url": "https://tvax1.sinaimg.cn/crop.0.0.512.512.50/007Raq4zly8gw1pr4mg0vj30e80e8753.jpg?KID=imgbed,tva&Expires=1636384791&ssig=TbAzn5wlG9",
+            "profile_url": "/u/7198559139",
+            "verified": true,
+            "verified_type": 0,
+            "domain": "",
+            "weihao": "",
+            "verified_type_ext": 1,
+            "avatar_large": "https://tvax1.sinaimg.cn/crop.0.0.512.512.180/007Raq4zly8gw1pr4mg0vj30e80e8753.jpg?KID=imgbed,tva&Expires=1636384791&ssig=Rs4zlIPokO",
+            "avatar_hd": "https://tvax1.sinaimg.cn/crop.0.0.512.512.1024/007Raq4zly8gw1pr4mg0vj30e80e8753.jpg?KID=imgbed,tva&Expires=1636384791&ssig=G09hfsczRe",
+            "follow_me": false,
+            "following": true,
+            "mbrank": 5,
+            "mbtype": 12,
+            "planet_video": false,
+            "verified_reason": "江苏卫视《2060》虚拟形象",
+            "description": "蓝色饭团",
+            "location": "上海",
+            "gender": "f",
+            "followers_count": 231429,
+            "followers_count_str": "23.1万",
+            "friends_count": 99,
+            "statuses_count": 1706,
+            "url": "",
+            "cover_image_phone": "http://wx3.sinaimg.cn/crop.0.0.640.640.640/007Raq4zly1gujqickm2ij60yi0yiaj002.jpg;http://wx2.sinaimg.cn/crop.0.0.640.640.640/007Raq4zly1grlfr37usaj30yi0yi0v3.jpg;http://wx4.sinaimg.cn/crop.0.0.640.640.640/007Raq4zly1gqsau9r1u7j30e80e8aaq.jpg;http://wx4.sinaimg.cn/crop.0.0.640.640.640/007Raq4zly1gqqjhiwwgnj30yi0yiadi.jpg;http://wx4.sinaimg.cn/crop.0.0.640.640.640/007Raq4zgy1gj9zl1xf24j30yi0yi42e.jpg;http://wx3.sinaimg.cn/crop.0.0.640.640.640/007Raq4zgy1glr2tboc3hj30yi0yi416.jpg",
+            "top_user": 1,
+            "user_type": 0,
+            "wenda": "0",
+            "is_muteuser": false,
+            "special_follow": true
+        },
+        "tabList": [
+            {
+                "name": "home",
+                "tabName": "精选"
+            },
+            {
+                "name": "feed",
+                "tabName": "微博"
+            },
+            {
+                "name": "newVideo",
+                "tabName": "视频"
+            },
+            {
+                "name": "album",
+                "tabName": "相册"
+            }
+        ]
+    }
+}

@@ -1,6 +1,10 @@
+import config from '../config'
+
 export {
     FiltedMsg,
-    GuardState
+    GuardState,
+    WeiboMsg,
+    WeiboHeader
 }
 
 class FiltedMsg {
@@ -27,3 +31,38 @@ class GuardState {
         this.isOnline = state;
     }
 }
+
+class WeiboMsg {
+    id: number;
+    mblogid: string;
+    text: string;
+    text_raw: string;
+    created_at: string;
+    visible_type: number;
+    pic_ids: string[];
+    pic_infos: any[];
+    isTop: boolean;
+
+    timestamp: number;
+    raw: any
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.mblogid = data.mblogid;
+        this.text = data.text;
+        this.text_raw = data.text_raw;
+        this.created_at = data.created_at;
+        this.visible_type = data.visible.type;
+        this.pic_ids = data.pic_ids;
+        this.pic_infos = data.pic_infos;
+        this.isTop = data.isTop;
+        this.raw = data
+        this.timestamp = new Date(data.created_at).getTime()
+    }
+}
+
+const WeiboCookie = config.get('weibo_cookie')
+if (typeof WeiboCookie != 'string') {
+    throw new Error('weibo cookie not found')
+}
+const WeiboHeader = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36', 'cookie': WeiboCookie }
