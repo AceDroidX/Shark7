@@ -110,6 +110,12 @@ async function msgFilter(data: any) {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}舰长进入直播间`, data)
+        }
+    } else if (data['cmd'] == 'INTERACT_WORD') {
+        const uid = data['data']['uid']
+        if (marked_uid.includes(uid)) {
+            const user = marked_Users.getUserByUID(uid)
             return new FiltedMsg(0, `${user.name}进入直播间`, data)
         }
     } else if (data['cmd'] == 'SEND_GIFT') {

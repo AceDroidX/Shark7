@@ -8,10 +8,11 @@ import { WeiboUser } from "./model/WeiboUser";
 import axios from "axios";
 import { WeiboController } from "./weibo";
 import logger from './logger'
+import url from 'url'
 
 // getAllMsg(4351529)
 
-test5()
+test6()
 
 async function test1() {
     logger.info((await new User().initByUID(39373763)).toString());
@@ -47,4 +48,16 @@ async function test4() {
 async function test5() {
     var weibo_Controller = await WeiboController.getFromID(7198559139)
     weibo_Controller.run()
+}
+
+async function test6() {
+    const live = new KeepLiveTCP(4351529)
+    live.on('msg', (data) => {
+        console.log(data)
+    })
+}
+
+function test7() {
+    const u = new url.URL('https://tvax4.sinaimg.cn/crop.0.0.1080.1080.1024/007Raq4zly8gw94itqv5zj30u00u0780.jpg?KID=imgbed,tva&Expires=1636888358&ssig=3IWcea2zRE')
+    url.format(u, { search: false })
 }
