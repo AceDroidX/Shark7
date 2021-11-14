@@ -59,7 +59,7 @@ export class WeiboUser {
             logger.error(JSON.stringify(result.data));
             return {};
         }
-        if(result.data.ok != 1){
+        if (result.data.ok != 1) {
             logger.error(`getRawUserInfo error:`);
             logger.error(JSON.stringify(result.data));
             return {};
@@ -112,11 +112,20 @@ export class WeiboUser {
         var result = [];
         if (raw.screen_name != this.screen_name) {
             result.push(`微博昵称更改\n原：${this.screen_name}现：${raw.screen_name}`);
-            if (this.avatar_hd != raw.avatar_hd) {
-                result.push(`微博头像更改\n原：${this.avatar_hd}现：${raw.avatar_hd}`);
-            }
-            this.setInfoFromRaw(raw);
-            return result;
         }
+        if (this.avatar_hd != raw.avatar_hd) {
+            result.push(`微博头像更改\n原：${this.avatar_hd}现：${raw.avatar_hd}`);
+        }
+        if (this.friends_count != raw.friends_count) {
+            result.push(`微博关注数更改\n原：${this.friends_count}现：${raw.friends_count}`);
+        }
+        if (this.description != raw.description) {
+            result.push(`微博简介更改\n原：${this.description}现：${raw.description}`);
+        }
+        if (this.verified_reason != raw.verified_reason) {
+            result.push(`微博认证更改\n原：${this.verified_reason}现：${raw.verified_reason}`);
+        }
+        this.setInfoFromRaw(raw);
+        return result;
     }
 }
