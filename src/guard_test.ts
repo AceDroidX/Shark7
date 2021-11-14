@@ -1,6 +1,7 @@
 import { guardMain, isGuardOnline, makeURL } from "./guard";
 import { GuardList } from "./model/GuardList";
 import { Users } from "./model/Users";
+import logger from "./logger";
 
 var j = [
     {
@@ -56,12 +57,12 @@ var j = [
     }
 ]
 // var gl = new GuardList(21452505, [39373763, 369331])
-// console.log(gl.pageFilter(j))
-// console.log(gl.competed())
-// console.log(makeURL(21452505, 434334701, 1))
+// logger.log(gl.pageFilter(j))
+// logger.log(gl.competed())
+// logger.log(makeURL(21452505, 434334701, 1))
 main2()
 async function main1() {
-    console.log(await isGuardOnline(21696950, 480680646, [39373763, 434334701]));   
+    logger.info(await isGuardOnline(21696950, 480680646, [39373763, 434334701]));   
 }
 async function main2() {
     const user=new Users()

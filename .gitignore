@@ -1,6 +1,7 @@
 config/config.json
 src/**/*.js
 build/
+log/
 
 # Logs
 logs

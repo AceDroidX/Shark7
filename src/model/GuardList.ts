@@ -1,4 +1,5 @@
 import { GuardState } from './model';
+import logger from '../logger';
 
 export class GuardList {
     list: GuardState[] = [];
@@ -25,7 +26,7 @@ export class GuardList {
         var result = page.some((element: any) => {
             if (this.isUIDinMarkList(element['uid'])) {
                 this.addGuard(element['uid'], element['is_alive']);
-                console.debug(`uid:${element['uid']}`);
+                logger.debug(`uid:${element['uid']}`);
                 if (this.competed()) {
                     return true;
                 }

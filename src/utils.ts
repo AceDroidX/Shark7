@@ -1,7 +1,7 @@
 import axios from "axios";
 import { KHLAPIPREFIX } from "./constants";
 import config from "./config";
-
+import logger from "./logger";
 export {
     sendMsgToKHL,
     timePrefix
@@ -18,10 +18,10 @@ function sendMsgToKHL(msg: string) {
         }
     })
         .then(function (response) {
-            // console.debug(response);
+            // logger.debug(response);
         })
         .catch(function (error) {
-            console.error(error);
+            logger.error(error);
         });
 }
 

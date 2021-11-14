@@ -7,9 +7,8 @@
     "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean",
-    "build": "tsc",
     "dev": "tsc -w",
-    "prepare": "npm run build",
+    "build": "tsc",
     "serve": "tsc&&node build/index.js"
   },
   "author": "AceDroidX",
@@ -20,7 +19,8 @@
     "puppeteer": "^11.0.0",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
-    "typescript": "latest"
+    "typescript": "latest",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "cz-conventional-changelog": "^3.3.0"
