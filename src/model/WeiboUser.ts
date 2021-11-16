@@ -115,7 +115,7 @@ export class WeiboUser {
             result.push(`微博昵称更改\n原：${this.screen_name}现：${raw.screen_name}`);
         }
         if (this.avatar_hd != url.format(new url.URL(raw.avatar_hd), { search: false })) {
-            result.push(`微博头像更改\n原：${this.avatar_hd}现：${raw.avatar_hd}`);
+            result.push(`微博头像更改\n原：${this.avatar_hd}\n现：\n${url.format(new url.URL(raw.avatar_hd), { search: false })}`);
         }
         if (this.friends_count != raw.friends_count) {
             result.push(`微博关注数更改\n原：${this.friends_count}现：${raw.friends_count}`);

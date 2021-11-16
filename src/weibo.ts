@@ -2,6 +2,7 @@ import axios from "axios";
 import { WeiboUser } from "./model/WeiboUser";
 import { sendMsgToKHL, timePrefix } from "./utils";
 import logger from "./logger";
+import { refreshWeiboCookie } from "./puppeteer";
 
 export class WeiboController {
     user: WeiboUser
@@ -29,7 +30,7 @@ export class WeiboController {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
         }).catch(e => {
-            logger.error(timePrefix() + "抓取微博出错");
+            logger.error(timePrefix() + "抓取微博出错：");
             logger.error(e);
         })
     }
@@ -42,15 +43,18 @@ export class WeiboController {
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }).catch(e => {
-            logger.error(timePrefix() + "抓取用户信息出错");
+            logger.error(timePrefix() + "抓取用户信息出错：");
             logger.error(e);
         })
     }
     public async run() {
         while (true) {
-            this.fetchMblog()
-            this.fetchUserInfo()
-            await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+            refreshWeiboCookie()
+            for (var i = 0; i < 60; i++) {
+                this.fetchMblog()
+                this.fetchUserInfo()
+                await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+            }
         }
     }
 }

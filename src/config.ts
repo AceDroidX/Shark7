@@ -9,7 +9,7 @@ const configpath = path.resolve(__dirname, '..') + '/config/config.json'
 // export default ConfigManager;
 
 export class ConfigManager {
-    json: Object | undefined;
+    json: any;
     constructor() {
         logger.info(configpath)
         if (fs.existsSync(configpath)) {
@@ -21,13 +21,14 @@ export class ConfigManager {
     }
 
     get(key: string): string | undefined | number {
-        if (this.json === undefined) {
+        this.json = JSON.parse(fs.readFileSync(configpath, "utf8"));
+        if (!fs.existsSync(configpath) || this.json == undefined) {
             var env = process.env[key]
             if (env == undefined) {
                 logger.warn('设置中没有这个key')
                 return undefined
             } else {
-                var n=Number(env)
+                var n = Number(env)
                 if (isNaN(n)) {
                     return env
                 } else {
@@ -42,6 +43,16 @@ export class ConfigManager {
                 return undefined
             }
         }
+    }
+
+    set(key: string, value: string) {
+        this.json = JSON.parse(fs.readFileSync(configpath, "utf8"));
+        if (this.json == undefined) {
+            return false
+        }
+        this.json[key] = value
+        fs.writeFileSync(configpath, JSON.stringify(this.json), "utf8")
+        return true
     }
 }
 const config = new ConfigManager()

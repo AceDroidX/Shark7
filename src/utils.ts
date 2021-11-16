@@ -8,6 +8,10 @@ export {
 }
 
 function sendMsgToKHL(msg: string) {
+    if(config==undefined){
+        console.debug("config is undefined")
+        return
+    }
     axios.post(KHLAPIPREFIX + '/api/v3/message/create', {
         target_id: config.get('channel_id'),
         content: msg
