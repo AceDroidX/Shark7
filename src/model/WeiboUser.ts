@@ -36,7 +36,7 @@ export class WeiboUser {
     }
 
     static getFromRaw(raw: any): WeiboUser {
-        logger.debug(raw)
+        // logger.debug('getFromRaw\n'+JSON.stringify(raw));
         return new WeiboUser(
             raw.id,
             raw.screen_name,

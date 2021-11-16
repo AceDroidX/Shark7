@@ -25,7 +25,7 @@ export class ConfigManager {
         if (!fs.existsSync(configpath) || this.json == undefined) {
             var env = process.env[key]
             if (env == undefined) {
-                logger.warn('设置中没有这个key')
+                logger.warn('设置中没有这个key:'+key)
                 return undefined
             } else {
                 var n = Number(env)
@@ -39,7 +39,7 @@ export class ConfigManager {
             if (isValidKey(key, this.json)) {
                 return this.json[key];
             } else {
-                logger.warn('设置中没有这个key')
+                logger.warn('设置中没有这个key:'+key)
                 return undefined
             }
         }

@@ -14,7 +14,7 @@ export class WeiboController {
         return new WeiboController(await WeiboUser.getFromID(uid));
     }
     fetchMblog() {
-        logger.debug(timePrefix() + "开始抓取微博");
+        logger.debug("开始抓取微博");
         this.user.checkAndGetNewMblogs().then(async (new_mblogs) => {
             for (const nmb of new_mblogs) {
                 if (nmb.visible_type == 0) {
@@ -30,12 +30,15 @@ export class WeiboController {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
         }).catch(e => {
-            logger.error(timePrefix() + "抓取微博出错：");
-            logger.error(e);
+            if (e.status == 500) {
+                logger.error(`抓取微博出错：\n${e.message}`);
+            }else{
+                logger.error(`抓取微博出错：\n${e}`);
+            }
         })
     }
     fetchUserInfo() {
-        logger.debug(timePrefix() + "开始抓取用户信息");
+        logger.debug("开始抓取用户信息");
         this.user.checkAndGetUserInfo().then(async (user_info) => {
             for (const ui of user_info) {
                 logger.info(`<${this.user.screen_name}>${ui}`)
@@ -43,8 +46,11 @@ export class WeiboController {
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }).catch(e => {
-            logger.error(timePrefix() + "抓取用户信息出错：");
-            logger.error(e);
+            if (e.status == 500) {
+                logger.error(`抓取用户信息出错：\n${e.message}`);
+            }else{
+                logger.error(`抓取用户信息出错：\n${e}`);
+            }
         })
     }
     public async run() {

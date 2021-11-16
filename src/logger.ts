@@ -1,8 +1,9 @@
 import winston, { config } from 'winston';
 import { createLogger, format, transports } from 'winston';
+import { TimestampOptions } from 'logform';
 const { combine, timestamp, label, printf } = format;
 import Transport from 'winston-transport';
-import { sendMsgToKHL } from './utils';
+import { sendLogToKHL, getTime } from './utils';
 
 
 class KHLTransport extends Transport {
@@ -24,12 +25,18 @@ class KHLTransport extends Transport {
     //   this.emit('logged', info);
     // });
     // if (info.level !== 'info' && info.level !== 'debug') {
-    sendMsgToKHL(JSON.stringify(info));
+    sendLogToKHL(JSON.stringify(info));
     // }
     // Perform the writing to the remote service
     callback();
   }
 };
+
+class MyTimestamp implements TimestampOptions {
+  format() {
+    return getTime();
+  }
+}
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${level}] ${message}`;
@@ -38,7 +45,7 @@ const logger = winston.createLogger({
   level: 'debug',
   format: combine(
     label({ label: 'default' }),
-    timestamp(),
+    timestamp(new MyTimestamp()),
     myFormat
   ),
   // defaultMeta: { service: 'user-service' },
@@ -47,7 +54,7 @@ const logger = winston.createLogger({
     // - Write all logs with level `error` and below to `error.log`
     // - Write all logs with level `info` and below to `combined.log`
     //
-    new KHLTransport({level: 'warn'}),
+    new KHLTransport({ level: 'warn' }),
     new winston.transports.File({ filename: 'log/info.log', level: 'info' }),
     new winston.transports.File({ filename: 'log/warn.log', level: 'warn' }),
     new winston.transports.File({ filename: 'log/error.log', level: 'error' }),

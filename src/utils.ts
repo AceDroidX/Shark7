@@ -4,29 +4,42 @@ import config from "./config";
 import logger from "./logger";
 export {
     sendMsgToKHL,
-    timePrefix
+    sendLogToKHL,
+    timePrefix,
+    getTime
 }
 
-function sendMsgToKHL(msg: string) {
-    if(config==undefined){
+async function sendMsgToKHL(msg: string) {
+    return await sendToKHL(msg, 'msg')
+}
+
+async function sendLogToKHL(log: string) {
+    return await sendToKHL(log, 'log')
+}
+
+async function sendToKHL(msg: string, type: string = 'msg') {
+    if (config == undefined) {
         console.debug("config is undefined")
         return
     }
-    axios.post(KHLAPIPREFIX + '/api/v3/message/create', {
-        target_id: config.get('channel_id'),
-        content: msg
-    }, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bot ' + config.get('khl_token')
+    try {
+        if (type == 'log') {
+            var target_id = config.get('khl_log_channel_id')
+        } else {
+            var target_id = config.get('khl_msg_channel_id')
         }
-    })
-        .then(function (response) {
-            // logger.debug(response);
+        await axios.post(KHLAPIPREFIX + '/api/v3/message/create', {
+            target_id: target_id,
+            content: msg
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bot ' + config.get('khl_token')
+            }
         })
-        .catch(function (error) {
-            logger.error(error);
-        });
+    } catch (error) {
+        logger.error(`开黑啦消息发送错误：\n${JSON.stringify(error)}`);
+    };
 }
 
 function timePrefix() {
@@ -36,17 +49,17 @@ function timePrefix() {
 function getTime(timestamp = undefined) {
     if (timestamp === undefined) {
         var now = new Date();
-    }else{
+    } else {
         var now = new Date(timestamp);
     }
     var year = now.getFullYear();
-    var month = now.getMonth() + 1;
-    var day = now.getDate();
-    var hour = now.getHours();
-    var minute = now.getMinutes();
-    var second = now.getSeconds();
-    var milli = now.getMilliseconds();
-    var time = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+    var month = (now.getMonth() + 1).toString().padStart(2, '0');
+    var day = now.getDate().toString().padStart(2, '0');
+    var hour = now.getHours().toString().padStart(2, '0');
+    var minute = now.getMinutes().toString().padStart(2, '0');
+    var second = now.getSeconds().toString().padStart(2, '0');
+    var milli = now.getMilliseconds().toString().padStart(3, '0');
+    var time = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + '.' + milli;
     return time;
 }
 
