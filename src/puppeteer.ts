@@ -2,15 +2,22 @@ import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import config from './config'
 import logger from './logger'
+import fs from 'fs'
 
 export async function refreshWeiboCookie() {
   try {
     puppeteer.use(StealthPlugin())
     // logger.debug('使用StealthPlugin')
+    if (fs.existsSync('/usr/bin/google-chrome')) {
+      var exepath = '/usr/bin/google-chrome'
+    }
+    else {
+      var exepath = ''
+    }
     var browser = await puppeteer.launch({
       // pipe: true,
-      executablePath: '/usr/bin/google-chrome',
-      args: ['--no-sandbox'],
+      executablePath: exepath,
+      args: ['--no-sandbox', "--single-process", "--no-zygote"],
       // args: ['--no-sandbox', '--disable-setuid-sandbox',
       //   '--disable-dev-shm-usage', '--single-process'],
       headless: true
@@ -28,12 +35,19 @@ export async function refreshWeiboCookie() {
     for (const item of weibo_cookie_json) {
       await page.setCookie(item)
     }
+    logger.debug('puppeteer:setViewport')
+    await page.setViewport({ width: 1920, height: 1080 });
     logger.debug('puppeteer:goto')
     await page.goto('https://weibo.com/u/7198559139')
     logger.debug('puppeteer:waitForTimeout')
     await page.waitForTimeout(5000)
+    logger.debug('puppeteer:url:' + page.url())
+    if (page.url() != 'https://weibo.com/u/7198559139') {
+      logger.error('微博cookie失效，请手动刷新')
+      return false
+    }
     logger.debug('puppeteer:screenshot')
-    await page.screenshot({ path: 'log/weibo.png', fullPage: true })
+    await page.screenshot({ path: 'log/weibo.png', fullPage: false })
     logger.debug('puppeteer:cookies')
     var new_cookie = await page.cookies()
     // logger.debug(JSON.stringify(new_cookie))

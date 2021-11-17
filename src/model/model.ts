@@ -1,4 +1,5 @@
 import config from '../config'
+import { WeiboUser } from './WeiboUser';
 
 export {
     FiltedMsg,
@@ -43,6 +44,9 @@ class WeiboMsg {
     pic_ids: string[];
     pic_infos: any[];
     isTop: boolean;
+    title: string;
+
+    user: WeiboUser;
 
     timestamp: number;
     raw: any
@@ -58,6 +62,12 @@ class WeiboMsg {
         this.pic_ids = data.pic_ids;
         this.pic_infos = data.pic_infos;
         this.isTop = data.isTop;
+        if (data.title == undefined) {
+            this.title = "";
+        } else {
+            this.title = data.title.text;
+        }
+        this.user = WeiboUser.getFromRaw(data.user);
         this.raw = data
         this.timestamp = new Date(data.created_at).getTime()
     }

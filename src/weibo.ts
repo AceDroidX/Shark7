@@ -17,7 +17,11 @@ export class WeiboController {
         logger.debug("开始抓取微博");
         this.user.checkAndGetNewMblogs().then(async (new_mblogs) => {
             for (const nmb of new_mblogs) {
-                if (nmb.visible_type == 0) {
+                if (nmb.user.id != this.user.id) {
+                    logger.info(`<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`)
+                    sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`)
+                }
+                else if (nmb.visible_type == 0) {
                     logger.info(`<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
                     sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
                 } else if (nmb.visible_type == 10) {
@@ -32,7 +36,7 @@ export class WeiboController {
         }).catch(e => {
             if (e.status == 500) {
                 logger.error(`抓取微博出错：\n${e.message}`);
-            }else{
+            } else {
                 logger.error(`抓取微博出错：\n${e}`);
             }
         })
@@ -48,7 +52,7 @@ export class WeiboController {
         }).catch(e => {
             if (e.status == 500) {
                 logger.error(`抓取用户信息出错：\n${e.message}`);
-            }else{
+            } else {
                 logger.error(`抓取用户信息出错：\n${e}`);
             }
         })
