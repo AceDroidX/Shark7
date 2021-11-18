@@ -31,7 +31,7 @@ export async function refreshWeiboCookie() {
     }
     logger.debug('puppeteer:setCookie')
     var weibo_cookie_json = strToJson(weibo_cookie_str)
-    // logger.debug(JSON.stringify(weibo_cookie_json))
+    logger.debug(JSON.stringify(weibo_cookie_json))
     for (const item of weibo_cookie_json) {
       await page.setCookie(item)
     }
@@ -50,8 +50,8 @@ export async function refreshWeiboCookie() {
     await page.screenshot({ path: 'log/weibo.png', fullPage: false })
     logger.debug('puppeteer:cookies')
     var new_cookie = await page.cookies()
-    // logger.debug(JSON.stringify(new_cookie))
-    // logger.debug(jsonToStr(new_cookie))
+    logger.debug(JSON.stringify(new_cookie))
+    logger.debug(jsonToStr(new_cookie))
     config.set('weibo_cookie', jsonToStr(new_cookie))
     for (const item of new_cookie) {
       if (item.name == 'WBPSESS') {
@@ -75,7 +75,16 @@ export async function refreshWeiboCookie() {
 }
 
 function strToJson(source: string) {
-  return source.replace(/; /g, ';').replace(/;$/g, '').split(';').map(item => { return { name: item.split('=')[0], value: item.split('=')[1], domain: 'weibo.com' } })
+  return source.replace(/; /g, ';').replace(/;$/g, '').split(';').map(item => {
+    var name = item.match(/^.*?(?==)/)
+    var value = item.match(/(?<==)(.*)$/)
+    if (name == null || value == null) {
+      throw new Error('cookie格式错误')
+    }
+    return {
+      name: name[0], value: value[0], domain: 'weibo.com'
+    }
+  })
 }
 function jsonToStr(source: any) {
   var result = ''

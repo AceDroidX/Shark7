@@ -45,6 +45,7 @@ class WeiboMsg {
     pic_infos: any[];
     isTop: boolean;
     title: string;
+    repost_type: number;
 
     user: WeiboUser;
 
@@ -67,6 +68,7 @@ class WeiboMsg {
         } else {
             this.title = data.title.text;
         }
+        this.repost_type = data.repost_type;
         this.user = WeiboUser.getFromRaw(data.user);
         this.raw = data
         this.timestamp = new Date(data.created_at).getTime()

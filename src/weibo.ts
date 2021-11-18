@@ -22,11 +22,21 @@ export class WeiboController {
                     sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`)
                 }
                 else if (nmb.visible_type == 0) {
-                    logger.info(`<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
-                    sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
+                    if (nmb.repost_type == 1) {
+                        logger.info(`<${this.user.screen_name}>微博转发\n${nmb.text_raw}\n原动态\n`)
+                        sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博转发\n${nmb.text_raw}`)
+                    } else {
+                        logger.info(`<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
+                        sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
+                    }
                 } else if (nmb.visible_type == 10) {
-                    logger.info(`<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`)
-                    sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`)
+                    if (nmb.repost_type == 1) {
+                        logger.info(`<${this.user.screen_name}>微博仅粉丝可见转发\n${nmb.text_raw}原动态\n`)
+                        sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博仅粉丝可见转发\n${nmb.text_raw}`)
+                    } else {
+                        logger.info(`<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`)
+                        sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`)
+                    }
                 } else {
                     logger.info(`<${this.user.screen_name}>微博动态(visible_type=${nmb.visible_type})\n${nmb.text_raw}`)
                     sendMsgToKHL(timePrefix() + `<${this.user.screen_name}>微博动态(visible_type=${nmb.visible_type})\n${nmb.text_raw}`)
