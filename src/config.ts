@@ -3,6 +3,7 @@ import path from 'path';
 import logger from './logger';
 
 const configpath = path.resolve(__dirname, '..') + '/config/config.json'
+const weibocookiepath = path.resolve(__dirname, '..') + '/config/weibo_cookie.json'
 
 // export const config = getConfig()
 
@@ -25,7 +26,7 @@ export class ConfigManager {
         if (!fs.existsSync(configpath) || this.json == undefined) {
             var env = process.env[key]
             if (env == undefined) {
-                logger.warn('设置中没有这个key:'+key)
+                logger.warn('设置中没有这个key:' + key)
                 return undefined
             } else {
                 var n = Number(env)
@@ -39,7 +40,7 @@ export class ConfigManager {
             if (isValidKey(key, this.json)) {
                 return this.json[key];
             } else {
-                logger.warn('设置中没有这个key:'+key)
+                logger.warn('设置中没有这个key:' + key)
                 return undefined
             }
         }
@@ -53,6 +54,17 @@ export class ConfigManager {
         this.json[key] = value
         fs.writeFileSync(configpath, JSON.stringify(this.json), "utf8")
         return true
+    }
+
+    getWeiboCookie(): any {
+        if (fs.existsSync(weibocookiepath)) {
+            return JSON.parse(fs.readFileSync(weibocookiepath, "utf8"))
+        } else {
+            return false
+        }
+    }
+    setWeiboCookie(cookie: any) {
+        fs.writeFileSync(weibocookiepath, JSON.stringify(cookie), "utf8")
     }
 }
 const config = new ConfigManager()

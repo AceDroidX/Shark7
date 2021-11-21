@@ -12,6 +12,7 @@ import { guardMain } from './guard';
 import { WeiboController } from './weibo';
 import winston from 'winston';
 import logger from './logger';
+import { refreshWeiboCookie } from './puppeteer';
 
 var marked_uid: number[]
 var marked_Users: Users
@@ -21,6 +22,7 @@ var weibo_Controller: WeiboController
 
 // init
 if (require.main === module) {
+    // refreshWeiboCookie()
     main()
 }
 async function main() {
@@ -61,6 +63,8 @@ async function main() {
     });
 
     guardMain(roomid_Users, marked_Users)
+
+    await refreshWeiboCookie()
 
     const weibo_id_str = config.get('weibo_id')
     if (typeof weibo_id_str != "string") {

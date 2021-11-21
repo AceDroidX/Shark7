@@ -69,12 +69,12 @@ export class WeiboController {
     }
     public async run() {
         while (true) {
-            refreshWeiboCookie()
             for (var i = 0; i < 60; i++) {
                 this.fetchMblog()
                 this.fetchUserInfo()
                 await new Promise(resolve => setTimeout(resolve, 10 * 1000));
             }
+            refreshWeiboCookie()
         }
     }
 }

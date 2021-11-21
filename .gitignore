@@ -1,7 +1,9 @@
 config/config.json
+config/weibo_cookie.json
 src/**/*.js
 build/
 log/
+bak/
 
 # Logs
 logs
