@@ -1,5 +1,5 @@
-import { guardMain, isGuardOnline, makeURL } from "./guard";
-import { GuardList } from "./model/GuardList";
+import { guardMain } from "./guard";
+import { RoomGuard } from "./model/Guard";
 import { Users } from "./model/Users";
 import logger from "./logger";
 
@@ -62,7 +62,7 @@ var j = [
 // logger.log(makeURL(21452505, 434334701, 1))
 main2()
 async function main1() {
-    logger.info(await isGuardOnline(21696950, 480680646, [39373763, 434334701]));   
+    // logger.info(await isGuardOnline(21696950, 480680646, [39373763, 434334701]));   
 }
 async function main2() {
     const user=new Users()

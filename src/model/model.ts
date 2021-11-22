@@ -3,7 +3,6 @@ import { WeiboUser } from './WeiboUser';
 
 export {
     FiltedMsg,
-    GuardState,
     WeiboMsg,
     WeiboHeader
 }
@@ -18,21 +17,6 @@ class FiltedMsg {
         this.raw = raw;
     }
 }
-
-class GuardState {
-    uid: number;
-    roomid: number;
-    // 2: 未找到(不是舰长)
-    // 1: 在线
-    // 0: 不在线
-    isOnline: number;
-    constructor(uid: number, roomid: number, state: number) {
-        this.uid = uid;
-        this.roomid = roomid;
-        this.isOnline = state;
-    }
-}
-
 class WeiboMsg {
     id: number;
     mblogid: string;
