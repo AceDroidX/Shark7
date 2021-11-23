@@ -12,14 +12,29 @@ import { guardMain } from './guard';
 import { WeiboController } from './weibo';
 import winston from 'winston';
 import logger from './logger';
-import { refreshWeiboCookie } from './puppeteer';
+import { WeiboPuppeteer } from './puppeteer';
 
 var marked_uid: number[]
 var marked_Users: Users
 var roomid_Users: Users
 var weibo_Controller: WeiboController
 
-
+process.on('uncaughtException', function (err) {
+    //打印出错误 
+    if (err.name == 'WeiboError') {
+        logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
+    } else {
+        logger.error(`uncaughtException:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`);
+        process.exit(2);
+    }
+    //打印出错误的调用栈方便调试 
+    // console.log(err.stack);
+});
+// process.on('unhandledRejection', (reason, promise) => {
+//     promise.catch((err) => {logger.error(err)});
+//     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
+//     process.exit(2);
+// });
 // init
 if (require.main === module) {
     // refreshWeiboCookie()
@@ -64,8 +79,6 @@ async function main() {
 
     guardMain(roomid_Users, marked_Users)
 
-    await refreshWeiboCookie()
-
     const weibo_id_str = config.get('weibo_id')
     if (typeof weibo_id_str != "string") {
         logger.error('请设置weibo_id')
@@ -73,7 +86,7 @@ async function main() {
     }
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_id = parseInt(weibo_id_str)
-    weibo_Controller = await WeiboController.getFromID(weibo_id)
+    weibo_Controller = await WeiboController.init(weibo_id)
     weibo_Controller.run()
 }
 

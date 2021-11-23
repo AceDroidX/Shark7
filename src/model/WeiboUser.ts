@@ -1,7 +1,8 @@
 import axios from "axios";
-import { WeiboHeader, WeiboMsg } from "./model";
+import { WeiboMsg } from "./model";
 import logger from "../logger";
 import url from 'url'
+import { WeiboHTTP } from "./WeiboHTTP";
 const profile_info_prefix = 'https://weibo.com/ajax/profile/info?uid='
 const weibo_mblog_prefix = "https://weibo.com/ajax/statuses/mymblog?page=1&feature=0&uid="
 export class WeiboUser {
@@ -54,16 +55,19 @@ export class WeiboUser {
     }
 
     static async getRawUserInfo(id: number): Promise<any> {
-        var result = await axios.get(profile_info_prefix + id, { headers: WeiboHeader })
+        var result = await WeiboHTTP.getURL(profile_info_prefix + id)
         if (result.status != 200) {
-            logger.error(`getRawUserInfo status!=200:`);
-            logger.error(JSON.stringify(result.data));
+            logger.error(`getRawUserInfo status!=200:\n${JSON.stringify(result.data)}`);
             return {};
         }
         if (result.data.ok != 1) {
-            logger.error(`getRawUserInfo error:`);
-            logger.error(JSON.stringify(result.data));
-            return {};
+            if (result.data.url == 'https://weibo.com/login.php') {
+                logger.error(`cookie已失效:getRawUserInfo error:\n${JSON.stringify(result.data)}`);
+                return {};
+            } else {
+                logger.error(`getRawUserInfo error:\n${JSON.stringify(result.data)}`);
+                return {};
+            }
         }
         return result.data['data']['user'];
     }
@@ -73,7 +77,7 @@ export class WeiboUser {
             logger.error(`getMblogs ID not set`);
             throw new Error("ID not set");
         }
-        const raw = await axios.get(weibo_mblog_prefix + this.id, { headers: WeiboHeader });
+        const raw = await WeiboHTTP.getURL(weibo_mblog_prefix + this.id)
         if (raw.status != 200) {
             logger.error(`getMblogs status!=200:`);
             logger.error(JSON.stringify(raw.data));

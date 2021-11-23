@@ -2,16 +2,27 @@ import axios from "axios";
 import { WeiboUser } from "./model/WeiboUser";
 import { sendMsgToKHL, timePrefix } from "./utils";
 import logger from "./logger";
-import { refreshWeiboCookie } from "./puppeteer";
+import { WeiboPuppeteer } from "./puppeteer";
+import { WeiboHTTP } from "./model/WeiboHTTP";
 
 export class WeiboController {
-    user: WeiboUser
+    static wc: WeiboController;
 
-    constructor(user: WeiboUser) {
+    user: WeiboUser
+    wp: WeiboPuppeteer
+
+    constructor(user: WeiboUser, wp: WeiboPuppeteer) {
         this.user = user;
+        this.wp = wp;
     }
-    static async getFromID(uid: number) {
-        return new WeiboController(await WeiboUser.getFromID(uid));
+    static async init(uid: number) {
+        if (this.wc != undefined) {
+            return this.wc;
+        }
+        const wp = await WeiboPuppeteer.getInstance()
+        WeiboHTTP.wp = wp;
+        await wp.refreshWeiboCookie()
+        return new WeiboController(await WeiboUser.getFromID(uid), wp);
     }
     fetchMblog() {
         logger.debug("开始抓取微博");
@@ -74,7 +85,7 @@ export class WeiboController {
                 this.fetchUserInfo()
                 await new Promise(resolve => setTimeout(resolve, 10 * 1000));
             }
-            refreshWeiboCookie()
+            await this.wp.refreshWeiboCookie()
         }
     }
 }

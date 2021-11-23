@@ -4,6 +4,7 @@ src/**/*.js
 build/
 log/
 bak/
+data/
 
 # Logs
 logs

@@ -3,7 +3,6 @@ import path from 'path';
 import logger from './logger';
 
 const configpath = path.resolve(__dirname, '..') + '/config/config.json'
-const weibocookiepath = path.resolve(__dirname, '..') + '/config/weibo_cookie.json'
 
 // export const config = getConfig()
 
@@ -54,17 +53,6 @@ export class ConfigManager {
         this.json[key] = value
         fs.writeFileSync(configpath, JSON.stringify(this.json), "utf8")
         return true
-    }
-
-    getWeiboCookie(): any {
-        if (fs.existsSync(weibocookiepath)) {
-            return JSON.parse(fs.readFileSync(weibocookiepath, "utf8"))
-        } else {
-            return false
-        }
-    }
-    setWeiboCookie(cookie: any) {
-        fs.writeFileSync(weibocookiepath, JSON.stringify(cookie), "utf8")
     }
 }
 const config = new ConfigManager()

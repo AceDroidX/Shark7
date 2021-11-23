@@ -3,7 +3,7 @@ import { getAllMsg } from "./index";
 import { User } from "./model/User";
 import fs from 'fs';
 import path from 'path';
-import { WeiboHeader, WeiboMsg } from "./model/model";
+import { WeiboMsg } from "./model/model";
 import { WeiboUser } from "./model/WeiboUser";
 import axios from "axios";
 import { WeiboController } from "./weibo";
@@ -46,7 +46,7 @@ async function test4() {
 }
 
 async function test5() {
-    var weibo_Controller = await WeiboController.getFromID(7198559139)
+    var weibo_Controller = await WeiboController.init(7198559139)
     weibo_Controller.run()
 }
 

@@ -14,6 +14,7 @@ RUN ls -al\
     && npm --registry https://registry.npm.taobao.org install
 COPY src/ /root/src/
 COPY config/ /root/config/
+COPY data/ /root/data/
 RUN npm run build
 ENV TZ=Asia/Shanghai
 CMD ["npm","run","start"]
