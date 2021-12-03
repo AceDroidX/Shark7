@@ -2,5 +2,7 @@ version: "3.7"
 services:
     shark7:
         build: ./
+        volumes:
+            - ./data:/root/data
         container_name: shark7
         restart: unless-stopped
