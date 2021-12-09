@@ -4,8 +4,9 @@ import axios from "axios"
 import { GuardState, RoomGuard } from "./model/Guard"
 import { Users } from "./model/Users"
 import { User } from "./model/User"
-import { sendMsgToKHL, timePrefix } from "./utils"
+import { sendMsg, timePrefix } from "./utils"
 import logger from "./logger"
+import { MsgType } from "./model/model"
 
 export {
     guardMain
@@ -35,13 +36,13 @@ async function guardMain(roomid_Users: Users, marked_Users: Users) {
             for (const state of changedGuardStates) {
                 if (state.isOnline == 0) {
                     logger.info(`<${roomguard.name}/${roomguard.roomid}>${state.name}离线`)
-                    sendMsgToKHL(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}离线`)
+                    sendMsg(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}离线`, MsgType.live.GuardOnline)
                 } else if (state.isOnline == 1) {
                     logger.info(`<${roomguard.name}/${roomguard.roomid}>${state.name}在线`)
-                    sendMsgToKHL(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}在线`)
+                    sendMsg(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}在线`, MsgType.live.GuardOnline)
                 } else {
                     logger.info(`<${roomguard.name}/${roomguard.roomid}>${state.name}未找到`)
-                    sendMsgToKHL(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}未找到`)
+                    sendMsg(timePrefix() + `<${roomguard.name}/${roomguard.roomid}>${state.name}未找到`, MsgType.live.GuardOnline)
                 }
             }
             await new Promise(resolve => { setTimeout(resolve, SLEEP_TIME) })

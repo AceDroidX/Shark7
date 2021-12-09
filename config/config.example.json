@@ -1,7 +1,9 @@
 {
     "khl_token": "aaaaaaaaaaaaaa",
-    "khl_msg_channel_id": "1145141919",
+    "khl_msg_channel_id": "1145141919,1919810",
     "khl_log_channel_id": "1145141919",
+    "qq_host": "127.0.0.1",
+    "qq_port": "6700",
     "room_id": "114514,1919",
     "marked_uid": "11451419,145141",
     "weibo_id": "1111"

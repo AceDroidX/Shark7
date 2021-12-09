@@ -11,7 +11,7 @@ const configpath = path.resolve(__dirname, '..') + '/config/config.json'
 export class ConfigManager {
     json: any;
     constructor() {
-        logger.info(configpath)
+        // logger.info(configpath)
         if (fs.existsSync(configpath)) {
             this.json = JSON.parse(fs.readFileSync(configpath, "utf8"));
         }
@@ -53,6 +53,14 @@ export class ConfigManager {
         this.json[key] = value
         fs.writeFileSync(configpath, JSON.stringify(this.json), "utf8")
         return true
+    }
+
+    getStr(key: string): string {
+        let value = this.get(key)
+        if (typeof value != 'string') {
+            throw new Error('请在配置文件中设置' + key)
+        }
+        return value
     }
 }
 const config = new ConfigManager()

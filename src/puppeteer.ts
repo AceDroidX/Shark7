@@ -18,17 +18,23 @@ export class WeiboPuppeteer {
     }
     static async getInstance() {
         puppeteer.use(StealthPlugin())
-        // logger.debug('使用StealthPlugin')
+        logger.debug('使用StealthPlugin')
         if (fs.existsSync('/usr/bin/google-chrome')) {
             var exepath = '/usr/bin/google-chrome'
+        } else if (fs.existsSync('/usr/bin/chromium-browser')) {
+            var exepath = '/usr/bin/chromium-browser'
         } else {
-            var exepath = ''
+            if (process.platform === "win32") {
+                var exepath = String.raw`D:\cli-tools\win64-901912\chrome-win\chrome.exe`
+            } else {
+                var exepath = ''
+            }
         }
         return new WeiboPuppeteer(await puppeteer.launch({
             // pipe: true,
             userDataDir: './data/puppeteer',
             executablePath: exepath,
-            args: ['--no-sandbox', "--single-process", "--no-zygote"],
+            args: ['--no-sandbox', "--single-process", "--no-zygote", '--disable-dev-shm-usage'],
             // args: ['--no-sandbox', '--disable-setuid-sandbox',
             //   '--disable-dev-shm-usage', '--single-process'],
             headless: true
@@ -59,13 +65,15 @@ export class WeiboPuppeteer {
     async refreshWeiboCookie() {
         // try {
         logger.info('puppeteer:刷新微博cookie')
+        logger.debug(`puppeteer:pages:${(await this.browser.pages()).length}`)
         const page = await this.browser.newPage()
         logger.debug('puppeteer:setViewport')
         await page.setViewport({ width: 1920, height: 1080 });
-        logger.debug('puppeteer:goto')
-        await page.goto('https://weibo.com/u/7198559139')
-        logger.debug('puppeteer:waitForResponse')
-        await page.waitForTimeout(5000)
+        logger.debug('puppeteer:goto and wait')
+        await Promise.all([
+            page.goto('https://weibo.com/u/7198559139', { timeout: 10000 }),
+            page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+        ])
         logger.debug(`puppeteer:更新前cookie\n${JSON.stringify(this.cookie)}`)
         await page.screenshot({ path: 'log/weibo-0.png', fullPage: false })
         const login_btn = await page.$(login_btn_selector)

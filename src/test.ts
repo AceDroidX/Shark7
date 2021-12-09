@@ -1,5 +1,4 @@
 import { KeepLiveTCP } from "bilibili-live-ws";
-import { getAllMsg } from "./index";
 import { User } from "./model/User";
 import fs from 'fs';
 import path from 'path';
@@ -12,7 +11,21 @@ import url from 'url'
 
 // getAllMsg(4351529)
 
-test6()
+function getAllMsg(id: number) {
+    const live = new KeepLiveTCP(id)
+    live.on('open', () => console.log(`<${id}>WebSocket连接上了`))
+    live.on('live', () => console.log(`<${id}>成功登入房间`))
+    live.on('heartbeat', (online) => console.log(`<${id}>当前人气值${online}`))
+    live.on('msg', (data) => console.log(`<${id}>收到消息\n${JSON.stringify(data)}`))
+    live.on('close', () => console.log(`<${id}>连接关闭`))
+    live.on('error', (e) => console.log(`<${id}>连接错误`))
+}
+
+test()
+
+async function test() {
+    getAllMsg(21452505)
+}
 
 async function test1() {
     logger.info((await new User().initByUID(39373763)).toString());

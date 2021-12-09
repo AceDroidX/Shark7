@@ -2,32 +2,45 @@ import axios from "axios";
 import { KHLAPIPREFIX } from "./constants";
 import config from "./config";
 import logger from "./logger";
+import { MsgType } from "./model/model";
 export {
-    sendMsgToKHL,
+    sendMsg,
     sendLogToKHL,
     timePrefix,
+    logAxiosError,
+    logError,
     getTime
 }
 
-async function sendMsgToKHL(msg: string) {
-    return await sendToKHL(msg, 'msg')
+function isGolbalMsg(type: string) {
+    switch (type) {
+        case MsgType.weibo:
+        case MsgType.live.Live:
+            return true;
+        default:
+            return false;
+    }
 }
 
-async function sendLogToKHL(log: string) {
-    return await sendToKHL(log, 'log')
-}
-
-async function sendToKHL(msg: string, type: string = 'msg') {
+async function sendMsg(msg: string, type: string = 'msg') {
     if (config == undefined) {
         console.debug("config is undefined")
         return
     }
+    const msg_channel_id = config.getStr("khl_msg_channel_id").split(',')
+    if (isGolbalMsg(type)) {
+        return await Promise.all([sendToKHL(msg, msg_channel_id[0]), sendToKHL(msg, msg_channel_id[1])])
+    } else {
+        return await sendToKHL(msg, msg_channel_id[0])
+    }
+}
+
+async function sendLogToKHL(log: string) {
+    return await sendToKHL(log, config.getStr('khl_log_channel_id'))
+}
+
+async function sendToKHL(msg: string, target_id: string) {
     try {
-        if (type == 'log') {
-            var target_id = config.get('khl_log_channel_id')
-        } else {
-            var target_id = config.get('khl_msg_channel_id')
-        }
         await axios.post(KHLAPIPREFIX + '/api/v3/message/create', {
             target_id: target_id,
             content: msg
@@ -65,4 +78,27 @@ function getTime(timestamp = undefined) {
 
 function isValidKey(key: string | number | symbol, object: object): key is keyof typeof object {
     return key in object;
+}
+
+function logAxiosError(error: any) {
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        logger.debug(error.response.data);
+        logger.debug(error.response.status);
+        logger.debug(error.response.headers);
+    } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        logger.debug(error.request);
+    } else {
+        // Something happened in setting up the request that triggered an Error
+        logger.debug('Error', error.message);
+    }
+    logger.debug(error.config);
+}
+
+function logError(msg: string, error: any) {
+    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`)
 }
