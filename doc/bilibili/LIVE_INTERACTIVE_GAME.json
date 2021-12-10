@@ -1,0 +1,25 @@
+{
+    "cmd": "LIVE_INTERACTIVE_GAME",
+    "data": {
+        "type": 1,
+        "uid": 39373763,
+        "uname": "AceDroidX",
+        "uface": "http://i2.hdslb.com/bfs/face/e2533e608d067acc457c7376df238c13bc5cd067.jpg",
+        "gift_id": 30607,
+        "gift_name": "小心心",
+        "gift_num": 1,
+        "price": 0,
+        "paid": false,
+        "msg": "",
+        "fans_medal_level": 24,
+        "guard_level": 0,
+        "timestamp": 1639099982,
+        "anchor_lottery": null,
+        "pk_info": null,
+        "anchor_info": {
+            "uid": 434334701,
+            "uname": "七海Nana7mi",
+            "uface": "http://i2.hdslb.com/bfs/face/ad0e4a59f4e798c53d20ee01dec25d06bbb5cc71.jpg"
+        }
+    }
+}

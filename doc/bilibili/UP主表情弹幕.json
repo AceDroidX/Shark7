@@ -6,23 +6,32 @@
             4,
             25,
             14893055,
-            1636031197789,
-            1636027813,
+            1639098140045,
+            1639098005,
             0,
             "37022eda",
             0,
             0,
             5,
             "#1453BAFF,#4C2263A2,#3353BAFF",
-            0,
-            "{}",
+            1,
+            {
+                "bulge_display": 1,
+                "emoticon_unique": "room_21452505_191",
+                "height": 162,
+                "in_player_area": 1,
+                "is_dynamic": 1,
+                "url": "http://i0.hdslb.com/bfs/live/f1f2cb500de4bd3a5992f85ae2be574dd65a605d.png",
+                "width": 162
+            },
             "{}",
             {
                 "mode": 0,
-                "extra": ""
+                "show_player_type": 0,
+                "extra": "{\"send_from_me\":false,\"mode\":0,\"color\":14893055,\"dm_type\":1,\"font_size\":25,\"player_mode\":1,\"show_player_type\":0,\"content\":\"哈哈\",\"user_hash\":\"922889946\",\"emoticon_unique\":\"room_21452505_191\",\"direction\":0,\"pk_direction\":0,\"space_type\":\"\",\"space_url\":\"\"}"
             }
         ],
-        "test",
+        "哈哈",
         [
             39373763,
             "AceDroidX",
@@ -34,7 +43,7 @@
             "#00D1F1"
         ],
         [
-            23,
+            24,
             "脆鲨",
             "七海Nana7mi",
             21452505,
@@ -63,8 +72,8 @@
         3,
         null,
         {
-            "ts": 1636031197,
-            "ct": "58C05EE3"
+            "ts": 1639098140,
+            "ct": "8ED7E6FA"
         },
         0,
         0,

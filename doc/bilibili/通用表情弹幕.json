@@ -1,0 +1,85 @@
+{
+    "cmd": "DANMU_MSG",
+    "info": [
+        [
+            0,
+            4,
+            25,
+            14893055,
+            1639099506521,
+            1639098005,
+            0,
+            "37022eda",
+            0,
+            0,
+            5,
+            "#1453BAFF,#4C2263A2,#3353BAFF",
+            1,
+            {
+                "bulge_display": 0,
+                "emoticon_unique": "official_8",
+                "height": 60,
+                "in_player_area": 1,
+                "is_dynamic": 1,
+                "url": "https://i0.hdslb.com/bfs/live/08f1aebaa4d9c170aa79cbafe521ef0891bdf2b5.png",
+                "width": 165
+            },
+            "{}",
+            {
+                "mode": 0,
+                "show_player_type": 0,
+                "extra": "{\"send_from_me\":false,\"mode\":0,\"color\":14893055,\"dm_type\":1,\"font_size\":25,\"player_mode\":1,\"show_player_type\":0,\"content\":\"mua\",\"user_hash\":\"922889946\",\"emoticon_unique\":\"official_8\",\"direction\":0,\"pk_direction\":0,\"space_type\":\"\",\"space_url\":\"\"}"
+            }
+        ],
+        "mua",
+        [
+            39373763,
+            "AceDroidX",
+            0,
+            0,
+            0,
+            10000,
+            1,
+            "#00D1F1"
+        ],
+        [
+            24,
+            "脆鲨",
+            "七海Nana7mi",
+            21452505,
+            1725515,
+            "",
+            0,
+            6809855,
+            1725515,
+            5414290,
+            3,
+            1,
+            434334701
+        ],
+        [
+            32,
+            0,
+            10512625,
+            ">50000",
+            0
+        ],
+        [
+            "",
+            ""
+        ],
+        0,
+        3,
+        null,
+        {
+            "ts": 1639099506,
+            "ct": "BB2E8D7E"
+        },
+        0,
+        0,
+        null,
+        null,
+        0,
+        105
+    ]
+}
