@@ -6,29 +6,29 @@ import { User } from "../model/User"
 import { Users } from "../model/Users"
 import { sendLogToKHL, sendMsg, timePrefix } from "../utils"
 
-export function getFiltedMsg(id: any, marked_uid: number[], marked_Users: Users, roomid_Users: Users) {
-    const live = new KeepLiveTCP(id)
+export function getFiltedMsg(roomid: any, marked_uid: number[], marked_Users: Users, roomid_Users: Users) {
+    const live = new KeepLiveTCP(roomid)
     // live.on('open', () => logger.info(`<${id}>WebSocket连接上了`))
-    live.on('live', () => logger.info(`<${id}>成功登入房间`))
+    live.on('live', () => logger.info(`<${roomid}>成功登入房间`))
     // live.on('heartbeat', (online) => logger.info(`<${id}>当前人气值${online}`))
     live.on('msg', async (data) => {
         try {
-            const filter = await msgFilter(data, marked_uid, marked_Users)
+            const filter = await msgFilter(data, marked_uid, marked_Users, roomid)
             if (filter.code == 0) {
-                const targetuser = roomid_Users.getUserByRoomid(id)
-                logger.info(`<${targetuser.name}/${id}>${filter.msg}`)
-                sendMsg(timePrefix() + `<${targetuser.name}/${id}>${filter.msg}`, filter.type)
+                const targetuser = roomid_Users.getUserByRoomid(roomid)
+                logger.info(`<${targetuser.name}/${roomid}>${filter.msg}`)
+                sendMsg(timePrefix() + `<${targetuser.name}/${roomid}>${filter.msg}`, filter.type)
             }
         } catch (error) {
-            logger.info(`<${id}>遇到错误，请检查日志；\n${error}`)
-            sendLogToKHL(timePrefix() + `<${id}>遇到错误，请检查日志；\n${error}`)
+            logger.info(`<${roomid}>遇到错误，请检查日志；\n${error}`)
+            sendLogToKHL(timePrefix() + `<${roomid}>遇到错误，请检查日志；\n${error}`)
         }
     })
-    live.on('close', () => logger.info(`<${id}>连接关闭`))
-    live.on('error', (e) => logger.info(`<${id}>连接错误：${e}`))
+    live.on('close', () => logger.info(`<${roomid}>连接关闭`))
+    live.on('error', (e) => logger.info(`<${roomid}>连接错误：${e}`))
 }
 
-async function msgFilter(data: any, marked_uid: number[], marked_Users: Users) {
+async function msgFilter(data: any, marked_uid: number[], marked_Users: Users, roomid: number) {
     // if (!isValidKey('cmd', data)) {
     //     throw Error('invalid sequence');
     // }
@@ -83,6 +83,11 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: Users) {
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
             return new FiltedMsg(0, `${user.name}发送SC：[${data['data']['price']}CNY]${data['data']['message']}`, MsgType.live.Gift, data)
+        }
+    } else if (data['cmd'] == 'ROOM_CHANGE') {
+        if (marked_uid.includes(roomid)) {
+            const user = await new User().initByRoomid(roomid)
+            return new FiltedMsg(0, `${user.name}更改直播间标题：${data['data']['title']}`, MsgType.live.Gift, data)
         }
     } else {
         // if(JSON.stringify(data).includes(`uid:${marked_uid}`)){
