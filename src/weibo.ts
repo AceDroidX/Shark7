@@ -2,29 +2,31 @@ import axios from "axios";
 import { WeiboUser } from "./model/WeiboUser";
 import { logAxiosError, logError, sendMsg, timePrefix } from "./utils";
 import logger from "./logger";
-import { WeiboPuppeteer } from "./puppeteer";
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { AxiosError } from "axios";
 import { MsgType } from "./model/model";
+import { Web } from "./model/Web";
+import { Puppeteer } from "./puppeteer";
 
 export class WeiboController {
     static wc: WeiboController;
 
     user: WeiboUser
-    wp: WeiboPuppeteer
+    weiboWeb: Web
 
-    constructor(user: WeiboUser, wp: WeiboPuppeteer) {
+    constructor(user: WeiboUser, weiboWeb: Web) {
         this.user = user;
-        this.wp = wp;
+        this.weiboWeb = weiboWeb;
     }
     static async init(uid: number) {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const wp = await WeiboPuppeteer.getInstance()
-        WeiboHTTP.wp = wp;
-        await wp.refreshWeiboCookie()
-        return new WeiboController(await WeiboUser.getFromID(uid), wp);
+        const weiboWeb = await (await Puppeteer.getInstance()).weiboweb
+        WeiboHTTP.web = weiboWeb;
+        await weiboWeb.refresh()
+        this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb)
+        return this.wc;
     }
     fetchMblog() {
         logger.debug("开始抓取微博");
@@ -81,11 +83,14 @@ export class WeiboController {
                 this.fetchUserInfo()
                 await new Promise(resolve => setTimeout(resolve, 10 * 1000));
             }
-            Promise.race([this.wp.refreshWeiboCookie(), new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))]).then(
-                value => {
-                    if (value == 'timeout') {
+            Promise.race([
+                this.weiboWeb.refresh(),
+                new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
+            ]).then(
+                r => {
+                    if (r == 'timeout') {
                         logger.error(`刷新cookie超时`);
-                        process.exit(1);
+                        process.exit(1)
                     }
                 }
             )

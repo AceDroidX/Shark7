@@ -9,7 +9,9 @@ export {
     timePrefix,
     logAxiosError,
     logError,
-    getTime
+    getTime,
+    cookieStrToJson,
+    cookieJsonToStr
 }
 
 function isGolbalMsg(type: string) {
@@ -101,4 +103,25 @@ function logAxiosError(error: any) {
 
 function logError(msg: string, error: any) {
     logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`)
+}
+
+function cookieStrToJson(source: string) {
+    if (source == '') return []
+    return source.replace(/; /g, ';').replace(/;$/g, '').split(';').map(item => {
+        var name = item.match(/^.*?(?==)/)
+        var value = item.match(/(?<==)(.*)$/)
+        if (name == null || value == null) {
+            throw new Error('cookie格式错误')
+        }
+        return {
+            name: name[0], value: value[0], domain: 'weibo.com'
+        }
+    })
+}
+function cookieJsonToStr(source: any) {
+    var result = ''
+    source.forEach((element: any) => {
+        result += `${element['name']}=${element['value']};`
+    });
+    return result.replace(/;$/g, '')
 }

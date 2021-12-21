@@ -24,7 +24,7 @@ function getAllMsg(id: number) {
 test()
 
 async function test() {
-    getAllMsg(21452505)
+    getAllMsg(4351529)
 }
 
 async function test1() {
