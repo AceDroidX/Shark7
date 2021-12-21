@@ -1,12 +1,10 @@
-import axios from "axios";
-import { WeiboUser } from "./model/WeiboUser";
-import { logAxiosError, logError, sendMsg, timePrefix } from "./utils";
-import logger from "./logger";
-import { WeiboHTTP } from "./model/WeiboHTTP";
-import { AxiosError } from "axios";
-import { MsgType } from "./model/model";
-import { Web } from "./model/Web";
-import { Puppeteer } from "./puppeteer";
+import { WeiboUser } from "../model/WeiboUser";
+import { logAxiosError, logError, sendMsg, timePrefix } from "../utils";
+import logger from "../logger";
+import { WeiboHTTP } from "../model/WeiboHTTP";
+import { MsgType } from "../model/model";
+import { Web } from "../model/Web";
+import { Puppeteer } from "../puppeteer";
 
 export class WeiboController {
     static wc: WeiboController;

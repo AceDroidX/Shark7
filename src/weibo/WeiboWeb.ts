@@ -1,9 +1,5 @@
-import { Browser } from 'puppeteer'
-import puppeteer from 'puppeteer-extra'
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import logger from "../logger"
 import { WeiboError } from "../model/model"
-import fs from 'fs'
 import { cookieJsonToStr } from '../utils'
 import { Web } from '../model/Web'
 

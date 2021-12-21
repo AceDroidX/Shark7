@@ -1,10 +1,8 @@
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import config from './config'
 import logger from './logger'
 import fs from 'fs'
 import { Browser } from 'puppeteer-extra-plugin/dist/puppeteer'
-import { WeiboError } from './model/model'
 import { WeiboWeb } from './weibo/WeiboWeb'
 
 export class Puppeteer {

@@ -2,7 +2,7 @@ import config from './config'
 import { logError } from './utils'
 import { Users } from './model/Users';
 import { guardMain } from './guard';
-import { WeiboController } from './weibo';
+import { WeiboController } from './weibo/weibo';
 import logger from './logger';
 import { getFiltedMsg } from './bilibili/live';
 

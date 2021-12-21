@@ -1,9 +1,5 @@
-import axios from "axios"
-
-
 import { GuardState, RoomGuard } from "./model/Guard"
 import { Users } from "./model/Users"
-import { User } from "./model/User"
 import { sendMsg, timePrefix } from "./utils"
 import logger from "./logger"
 import { MsgType } from "./model/model"

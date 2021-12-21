@@ -4,8 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { WeiboMsg } from "./model/model";
 import { WeiboUser } from "./model/WeiboUser";
-import axios from "axios";
-import { WeiboController } from "./weibo";
+import { WeiboController } from "./weibo/weibo";
 import logger from './logger'
 import url from 'url'
 
