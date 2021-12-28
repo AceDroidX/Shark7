@@ -1,5 +1,5 @@
 import config from './config'
-import { logError } from './utils'
+import { logErrorDetail } from './utils'
 import { Users } from './model/Users';
 import { guardMain } from './guard';
 import { WeiboController } from './weibo/weibo';
@@ -16,7 +16,7 @@ process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
-        logError('未捕获的错误', err)
+        logErrorDetail('未捕获的错误', err)
         process.exit(2);
     }
     //打印出错误的调用栈方便调试 
