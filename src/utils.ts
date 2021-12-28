@@ -8,7 +8,9 @@ export {
     sendLogToKHL,
     timePrefix,
     logAxiosError,
+    logErrorDetail,
     logError,
+    logWarn,
     getTime,
     cookieStrToJson,
     cookieJsonToStr
@@ -101,8 +103,14 @@ function logAxiosError(error: any) {
     logger.debug(error.config);
 }
 
-function logError(msg: string, error: any) {
+function logErrorDetail(msg: string, error: any) {
     logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`)
+}
+function logError(msg: string, error: any) {
+    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}`)
+}
+function logWarn(msg: string, error: any){
+    logger.warn(`${msg}\nname:${error.name}\nmessage:${error.message}`)
 }
 
 function cookieStrToJson(source: string) {

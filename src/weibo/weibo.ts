@@ -1,5 +1,5 @@
 import { WeiboUser } from "../model/WeiboUser";
-import { logAxiosError, logError, sendMsg, timePrefix } from "../utils";
+import { logAxiosError, logError, logErrorDetail, logWarn, sendMsg, timePrefix } from "../utils";
 import logger from "../logger";
 import { WeiboHTTP } from "../model/WeiboHTTP";
 import { MsgType } from "../model/model";
@@ -26,9 +26,25 @@ export class WeiboController {
         this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb)
         return this.wc;
     }
-    fetchMblog() {
+    async fetchMblog() {
         logger.debug("开始抓取微博");
-        this.user.checkAndGetNewMblogs().then(async (new_mblogs) => {
+        let new_mblogs
+        try {
+            new_mblogs = await this.user.checkAndGetNewMblogs()
+        } catch (e: any) {
+            logAxiosError(e);
+            if (e.response) {
+                if (e.response.status >= 500) {
+                    logWarn('抓取微博出错', e)
+                } else {
+                    logError('抓取微博出错', e)
+                }
+            } else {
+                logErrorDetail('抓取微博出错', e)
+            }
+            return false
+        }
+        try {
             for (const nmb of new_mblogs) {
                 if (nmb.user.id != this.user.id) {
                     logger.info(`<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`)
@@ -56,10 +72,9 @@ export class WeiboController {
                 }
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
-        }).catch(e => {
-            logError('抓取微博出错', e)
-            logAxiosError(e);
-        })
+        } catch (e) {
+            logErrorDetail('抓取微博出错', e)
+        }
     }
     fetchUserInfo() {
         logger.debug("开始抓取用户信息");
@@ -70,7 +85,7 @@ export class WeiboController {
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }).catch(e => {
-            logError('抓取用户信息出错', e)
+            logErrorDetail('抓取用户信息出错', e)
             logAxiosError(e);
         })
     }
