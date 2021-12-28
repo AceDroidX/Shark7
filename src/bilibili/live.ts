@@ -28,7 +28,7 @@ export function getFiltedMsg(roomid: any, marked_uid: number[], marked_Users: Us
     live.on('error', (e) => logger.info(`<${roomid}>连接错误：${e}`))
 }
 
-async function msgFilter(data: any, marked_uid: number[], marked_Users: Users, roomid: number) {
+async function msgFilter(data: any, marked_uid: number[], marked_Users: Users, msgRoomid: number) {
     // if (!isValidKey('cmd', data)) {
     //     throw Error('invalid sequence');
     // }
@@ -85,9 +85,22 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: Users, r
             return new FiltedMsg(0, `${user.name}发送SC：[${data['data']['price']}CNY]${data['data']['message']}`, MsgType.live.Gift, data)
         }
     } else if (data['cmd'] == 'ROOM_CHANGE') {
-        if (marked_uid.includes(roomid)) {
-            const user = await new User().initByRoomid(roomid)
-            return new FiltedMsg(0, `${user.name}更改直播间标题：${data['data']['title']}`, MsgType.live.Gift, data)
+        const user = await new User().initByRoomid(msgRoomid)
+        if (marked_uid.includes(user.uid)) {
+            const user = await new User().initByRoomid(msgRoomid)
+            return new FiltedMsg(0, `${user.name}更改直播间标题：${data['data']['title']}`, MsgType.live.Live, data)
+        }
+    } else if (data['cmd'] == 'GUARD_BUY') {
+        const uid = data['data']['uid']
+        if (marked_uid.includes(uid)) {
+            const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}上舰：${data['data']['gift_name']}`, MsgType.live.Gift, data)
+        }
+    } else if (data['cmd'] == 'COMBO_SEND') {
+        const uid = data['data']['uid']
+        if (marked_uid.includes(uid)) {
+            const user = marked_Users.getUserByUID(uid)
+            return new FiltedMsg(0, `${user.name}连续送出礼物：${data['data']['gift_name']}x${data['data']['combo_num']}`, MsgType.live.Gift, data)
         }
     } else {
         // if(JSON.stringify(data).includes(`uid:${marked_uid}`)){
