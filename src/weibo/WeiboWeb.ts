@@ -12,7 +12,7 @@ export class WeiboWeb extends Web{
     async refresh() {
         // try {
         logger.info('puppeteer:刷新微博cookie')
-        const r: any = await Promise.race([this.browser.pages(), new Promise(resolve => setTimeout(resolve, 3000, 'timeout'))])
+        const r: any = await Promise.race([this.browser.pages(), new Promise(resolve => setTimeout(resolve, 1000, 'timeout'))])
         if (r == 'timeout') {
             logger.error(`puppeteer:获取pages超时`);
             process.exit(1)

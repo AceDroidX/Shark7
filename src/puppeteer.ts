@@ -35,9 +35,10 @@ export class Puppeteer {
             // pipe: true,
             userDataDir: './data/puppeteer',
             executablePath: exepath,
-            args: ['--no-sandbox', "--single-process", "--no-zygote", '--disable-dev-shm-usage'],
+            // args: ['--no-sandbox', "--single-process", "--no-zygote", '--disable-dev-shm-usage'],
             // args: ['--no-sandbox', '--disable-setuid-sandbox',
-            //   '--disable-dev-shm-usage', '--single-process'],
+            //   '--disable-dev-shm-usage', '--single-process',"--no-zygote"],
+            args: ['--no-sandbox', '--disable-dev-shm-usage'],
             headless: true
         }))
         return this.puppeteer

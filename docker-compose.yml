@@ -3,6 +3,8 @@ services:
     shark7:
         build: ./
         volumes:
-            - ./data:/root/data
+            - ./data:/app/data
         container_name: shark7
+        cap_add:
+            - SYS_ADMIN
         restart: unless-stopped
