@@ -2,6 +2,7 @@ import { WeiboMsg } from "./model";
 import logger from "../logger";
 import url from 'url'
 import { WeiboHTTP } from "./WeiboHTTP";
+import { MongoController } from "../MongoController";
 const profile_info_prefix = 'https://weibo.com/ajax/profile/info?uid='
 const weibo_mblog_prefix = "https://weibo.com/ajax/statuses/mymblog?page=1&feature=0&uid="
 export class WeiboUser {
@@ -13,8 +14,6 @@ export class WeiboUser {
 
     verified_reason: string | undefined;
     description: string | undefined;
-
-    mblogs: WeiboMsg[] = [];
 
     constructor(id: number, screen_name: string, profile_image_url: string, avatar_hd: string, friends_count: number, verified_reason: string | undefined, description: string | undefined) {
         this.id = id;
@@ -91,23 +90,18 @@ export class WeiboUser {
         return mblogs;
     }
 
-    async checkAndGetNewMblogs(): Promise<WeiboMsg[]> {
+    async checkAndGetNewMblogs(mongo: MongoController): Promise<WeiboMsg[]> {
         var result = [];
         const new_mblogs = await this.getMblogs();
         if (new_mblogs.length == 0) {
             return [];
         }
-        if (this.mblogs.length == 0) {
-            logger.info(`${this.screen_name}首次获取微博 this.mblogs为空`);
-            this.mblogs = new_mblogs;
-            return []
-        }
         for (const nmb of new_mblogs.reverse()) {
-            if (this.mblogs.findIndex(mb => mb.id == nmb.id) == -1) {
-                result.unshift(nmb);
-                //保存当前微博到列表第一个
-                this.mblogs.unshift(nmb);
+            const exist = await mongo.isMblogIDExist(nmb.id);
+            if (exist) {
+                continue;
             }
+            result.push(nmb);
         }
         return result;
     }

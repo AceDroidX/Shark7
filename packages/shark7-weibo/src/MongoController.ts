@@ -19,12 +19,12 @@ class MongoController {
     static async getInstance() {
         const client = new MongoClient(
             process.env.NODE_ENV == 'development'
-                ? 'mongodb://localhost:27017/weibo'
+                ? 'mongodb://localhost:27017/'
                 : 'mongodb://admin:' +
                 process.env.MONGODB_PASS +
                 '@' +
                 process.env.MONGODB_IP +
-                ':27017/weibo?authMechanism=DEFAULT'
+                ':27017/?authMechanism=DEFAULT'
         )
         let mblogsDB, userDB
         try {
@@ -36,7 +36,7 @@ class MongoController {
             console.log(err)
             process.exit(1)
         }
-        mblogsDB.createIndex({ ts: -1, })
+        mblogsDB.createIndex({ id: -1, })
         logger.info('数据库已连接')
         return new MongoController(client, mblogsDB, userDB)
     }
@@ -47,6 +47,10 @@ class MongoController {
         await this.mblogsDB.updateOne({ id: mblog.id }, {
             $set: mblog
         }, { upsert: true })
+    }
+    async isMblogIDExist(id: number): Promise<boolean> {
+        const res = await this.mblogsDB.findOne({ id: id })
+        return res != null
     }
     async insertUserInfo(user: WeiboUser) {
         await this.userDB.updateOne({ id: user.id }, {

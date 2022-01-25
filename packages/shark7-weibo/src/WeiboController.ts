@@ -33,7 +33,7 @@ export class WeiboController {
         logger.debug("开始抓取微博");
         let new_mblogs
         try {
-            new_mblogs = await this.user.checkAndGetNewMblogs()
+            new_mblogs = await this.user.checkAndGetNewMblogs(this.mongo)
         } catch (e: any) {
             logAxiosError(e);
             if (e.response) {

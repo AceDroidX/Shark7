@@ -30,13 +30,13 @@ async function main() {
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: new MongoClient(
             process.env.NODE_ENV == 'development'
-                ? 'mongodb://localhost:27017/weibo'
+                ? 'mongodb://localhost:27017/'
                 : 'mongodb://admin:' +
                 process.env.MONGODB_PASS +
                 '@' +
                 process.env.MONGODB_IP +
-                ':27017/weibo?authMechanism=DEFAULT'
-        ).connect(), collection: 'log', tryReconnect: true
+                ':27017/?authMechanism=DEFAULT'
+        ).connect(), collection: 'log-weibo', tryReconnect: true
     }))
 
     const weibo_id = config.get('weibo_id')
