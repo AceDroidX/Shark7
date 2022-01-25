@@ -19,6 +19,7 @@
     "puppeteer": "13.0.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "toad-scheduler": "^1.6.0",
     "typescript": "latest",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0",

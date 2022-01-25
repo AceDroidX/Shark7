@@ -5,6 +5,7 @@ import { WeiboHTTP } from "../model/WeiboHTTP";
 import { MsgType } from "../model/model";
 import { Web } from "../model/Web";
 import { Puppeteer } from "../puppeteer";
+import { ToadScheduler, SimpleIntervalJob, Task, AsyncTask } from 'toad-scheduler';
 
 export class WeiboController {
     static wc: WeiboController;
@@ -105,23 +106,33 @@ export class WeiboController {
         }
     }
     public async run() {
-        while (true) {
-            for (var i = 0; i < 60; i++) {
-                this.fetchMblog()
-                this.fetchUserInfo()
-                await new Promise(resolve => setTimeout(resolve, 10 * 1000));
-            }
-            Promise.race([
-                this.weiboWeb.refresh(),
-                new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
-            ]).then(
-                r => {
-                    if (r == 'timeout') {
-                        logger.error(`刷新cookie超时`);
-                        process.exit(1)
-                    }
+        const scheduler = new ToadScheduler()
+        const fetchMblogTask = new Task(
+            'fetchMblog',
+            () => { this.fetchMblog() },
+            (err: Error) => { logError('未知错误', err) }
+        )
+        const fetchUserInfoTask = new Task(
+            'fetchUserInfo',
+            () => { this.fetchUserInfo() },
+            (err: Error) => { logError('未知错误', err) }
+        )
+        const refreshCookieTask = new AsyncTask(
+            'refreshCookie',
+            async () => {
+                const r = await Promise.race([
+                    this.weiboWeb.refresh(),
+                    new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
+                ]);
+                if (r == 'timeout') {
+                    logger.error(`刷新cookie超时`);
+                    process.exit(1);
                 }
-            )
-        }
+            },
+            (err: Error) => { logError('未知错误', err) }
+        )
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 5, }, fetchMblogTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 5, }, fetchUserInfoTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ minutes: 10, }, refreshCookieTask))
     }
 }
