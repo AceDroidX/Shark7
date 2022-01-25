@@ -1,5 +1,11 @@
 FROM node:16-slim
 
+WORKDIR /app
+# Uncomment to skip the chromium download when installing puppeteer.
+ENV TZ=Asia/Shanghai \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN apt-get update && apt-get -yq upgrade && apt-get autoremove -yq && apt-get autoclean -yq 
 
@@ -39,11 +45,10 @@ RUN apt-get install -y ca-certificates curl wget gnupg --no-install-recommends \
 
 # ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
 # RUN chmod +x /usr/local/bin/dumb-init
-RUN apt-get install -yq dumb-init
+RUN apt-get install -yq dumb-init && apt-get autoremove -yq && apt-get autoclean -yq 
 
 COPY package.json tsconfig.json /app/
 #COPY local.conf /etc/fonts/local.conf
-WORKDIR /app
 
 # Install deps for server.
 RUN ls -al\
@@ -51,9 +56,6 @@ RUN ls -al\
 COPY src/ /app/src/
 COPY config/ /app/config/
 RUN npm run build
-
-# Uncomment to skip the chromium download when installing puppeteer.
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Install puppeteer so it can be required by user code that gets run in
 # server.js. Cache bust so we always get the latest version of puppeteer when

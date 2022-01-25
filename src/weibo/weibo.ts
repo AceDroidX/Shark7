@@ -76,18 +76,33 @@ export class WeiboController {
             logErrorDetail('抓取微博出错', e)
         }
     }
-    fetchUserInfo() {
+    async fetchUserInfo() {
         logger.debug("开始抓取用户信息");
-        this.user.checkAndGetUserInfo().then(async (user_info) => {
+        let user_info
+        try {
+            user_info = await this.user.checkAndGetUserInfo()
+        } catch (e: any) {
+            logAxiosError(e);
+            if (e.response) {
+                if (e.response.status >= 500) {
+                    logWarn('抓取用户信息出错', e)
+                } else {
+                    logError('抓取用户信息出错', e)
+                }
+            } else {
+                logErrorDetail('抓取用户信息出错', e)
+            }
+            return false
+        }
+        try {
             for (const ui of user_info) {
                 logger.info(`<${this.user.screen_name}>${ui}`)
                 sendMsg(timePrefix() + `<${this.user.screen_name}>${ui}`, MsgType.weibo)
             }
             await new Promise(resolve => setTimeout(resolve, 100));
-        }).catch(e => {
+        } catch (e: any) {
             logErrorDetail('抓取用户信息出错', e)
-            logAxiosError(e);
-        })
+        }
     }
     public async run() {
         while (true) {
