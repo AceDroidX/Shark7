@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+    shark7-mongo:
+        image: mongo
+        restart: unless-stopped
+        container_name: shark7-mongo
+        volumes:
+            - mongodata:/data/db
+            - ./backup:/backup
+        networks:
+            - default
+        ports:
+            - "127.0.0.1:27017:27017"
+        environment:
+             - MONGO_INITDB_ROOT_USERNAME=admin
+             - MONGO_INITDB_ROOT_PASSWORD=shark7
+    shark7-weibo:
+        build: ./packages/shark7-weibo
+        volumes:
+            - ./packages/shark7-weibo/data:/app/data
+        container_name: shark7-weibo
+        depends_on:
+            - shark7-mongo
+        networks:
+            - default
+        environment:
+            # - NODE_ENV=development
+            - MONGODB_PASS=shark7
+            - MONGODB_IP=shark7-mongo
+            - weibo_id=123456
+    # shark7:
+    #     build: ./
+    #     volumes:
+    #         - ./data:/app/data
+    #     container_name: shark7
+    #     # cap_add:
+    #     #     - SYS_ADMIN
+    #     restart: unless-stopped
+volumes:
+    mongodata:
+
+networks:
+    default:
+        driver: bridge

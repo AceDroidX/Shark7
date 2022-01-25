@@ -1,5 +1,5 @@
 {
-  "name": "shark7",
+  "name": "shark7-weibo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "latest",
-    "bilibili-live-ws": "latest",
     "mongodb": "^4.3.1",
     "puppeteer": "13.0.1",
     "puppeteer-extra": "^3.2.3",
@@ -23,20 +22,6 @@
     "toad-scheduler": "^1.6.0",
     "typescript": "latest",
     "winston": "^3.3.3",
-    "winston-mongodb": "^5.0.7",
-    "winston-transport": "^4.4.0",
-    "ws": "^8.3.0"
-  },
-  "devDependencies": {
-    "@types/ws": "^8.2.1",
-    "cz-conventional-changelog": "^3.3.0"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "winston-mongodb": "^5.0.7"
   }
 }

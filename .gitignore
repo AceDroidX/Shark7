@@ -1,3 +1,6 @@
+docker-compose.yml
+docker-compose-dev.yml
+
 config/config.json
 config/weibo_cookie.json
 src/**/*.js
