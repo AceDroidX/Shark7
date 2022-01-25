@@ -1,12 +1,12 @@
 import logger from "../logger"
 import { WeiboError } from "../model/model"
-import { cookieJsonToStr } from '../utils'
+import { cookieJsonToStr, logError } from '../utils'
 import { Web } from '../model/Web'
 
 const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
 
-export class WeiboWeb extends Web{
+export class WeiboWeb extends Web {
     name: string = 'weibo'
 
     async refresh() {
@@ -48,7 +48,11 @@ export class WeiboWeb extends Web{
                 logger.debug('puppeteer:waitForResponse')
                 const finalResponse = await page.waitForResponse(response => response.url().includes('v2.qr.weibo.cn'), { timeout: 10000 });
                 logger.warn('请在60秒内扫描此二维码登录weibo：\n' + JSON.stringify(finalResponse.url()));
-                await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' })
+                try {
+                    await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' })
+                } catch (e: any) {
+                    throw new WeiboError('登录超时')
+                }
                 logger.info('登录成功')
             } else {
                 logger.error('puppeteer:未知页面')

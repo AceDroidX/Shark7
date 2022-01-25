@@ -110,12 +110,12 @@ export class WeiboController {
         const fetchMblogTask = new Task(
             'fetchMblog',
             () => { this.fetchMblog() },
-            (err: Error) => { logError('未知错误', err) }
+            (err: Error) => { logError('fetchMblog错误', err) }
         )
         const fetchUserInfoTask = new Task(
             'fetchUserInfo',
             () => { this.fetchUserInfo() },
-            (err: Error) => { logError('未知错误', err) }
+            (err: Error) => { logError('fetchUserInfo错误', err) }
         )
         const refreshCookieTask = new AsyncTask(
             'refreshCookie',
@@ -129,10 +129,10 @@ export class WeiboController {
                     process.exit(1);
                 }
             },
-            (err: Error) => { logError('未知错误', err) }
+            (err: Error) => { logError('refreshCookie错误', err) }
         )
         scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 5, }, fetchMblogTask))
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 5, }, fetchUserInfoTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 20, }, fetchUserInfoTask))
         scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ minutes: 10, }, refreshCookieTask))
     }
 }
