@@ -1,8 +1,8 @@
-import { GuardState, RoomGuard } from "./model/Guard"
-import { Users } from "./model/Users"
-import { sendMsg, timePrefix } from "./utils"
-import logger from "./logger"
-import { MsgType } from "./model/model"
+import { GuardState, RoomGuard } from "../model/Guard"
+import { Users } from "../model/Users"
+import { sendMsg, timePrefix } from "../utils"
+import logger from "../logger"
+import { MsgType } from "../model/model"
 
 export {
     guardMain

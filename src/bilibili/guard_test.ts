@@ -1,7 +1,7 @@
 import { guardMain } from "./guard";
-import { RoomGuard } from "./model/Guard";
-import { Users } from "./model/Users";
-import logger from "./logger";
+import { RoomGuard } from "../model/Guard";
+import { Users } from "../model/Users";
+import logger from "../logger";
 
 var j = [
     {
