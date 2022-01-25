@@ -131,7 +131,7 @@ export class WeiboController {
             },
             (err: Error) => { logError('refreshCookie错误', err) }
         )
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 5, }, fetchMblogTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, fetchMblogTask))
         scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 20, }, fetchUserInfoTask))
         scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ minutes: 10, }, refreshCookieTask))
     }
