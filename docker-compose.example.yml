@@ -1,7 +1,7 @@
 version: "3.7"
 services:
     shark7-mongo:
-        image: mongo
+        build: ./packages/shark7-mongo
         restart: unless-stopped
         container_name: shark7-mongo
         volumes:
@@ -12,8 +12,20 @@ services:
         ports:
             - "127.0.0.1:27017:27017"
         environment:
-             - MONGO_INITDB_ROOT_USERNAME=admin
-             - MONGO_INITDB_ROOT_PASSWORD=shark7
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=shark7
+    shark7-mongo-init:
+        image: mongo
+        container_name: shark7-mongo-init
+        networks:
+            - default
+        depends_on:
+            - shark7-mongo
+        command:
+            - mongo
+            - mongodb://admin:shark7@shark7-mongo:27017/admin
+            - --eval
+            - 'rs.initiate({ _id: "rs0", members: [{_id:1,host:"shark7-mongo:27017"}]})'
     shark7-weibo:
         build: ./packages/shark7-weibo
         volumes:
@@ -28,6 +40,17 @@ services:
             - MONGODB_PASS=shark7
             - MONGODB_IP=shark7-mongo
             - weibo_id=123456
+    shark7-main:
+        build: ./packages/shark7-main
+        container_name: shark7-main
+        depends_on:
+            - shark7-mongo
+        networks:
+            - default
+        environment:
+            # - NODE_ENV=development
+            - MONGODB_PASS=shark7
+            - MONGODB_IP=shark7-mongo
     # shark7:
     #     build: ./
     #     volumes:

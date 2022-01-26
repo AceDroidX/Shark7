@@ -44,6 +44,7 @@ class MongoController {
         await this.client.close()
     }
     async insertMblog(mblog: WeiboMsg) {
+        logger.info('数据库添加新微博', mblog.mblogid)
         await this.mblogsDB.updateOne({ id: mblog.id }, {
             $set: mblog
         }, { upsert: true })
