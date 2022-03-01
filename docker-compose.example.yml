@@ -20,37 +20,52 @@ services:
         networks:
             - default
         depends_on:
-            - shark7-mongo
+            - mongo
         command:
             - mongo
-            - mongodb://admin:shark7@shark7-mongo:27017/admin
+            - mongodb://admin:shark7@mongo:27017/admin
             - --eval
-            - 'rs.initiate({ _id: "rs0", members: [{_id:1,host:"shark7-mongo:27017"}]})'
+            - 'rs.initiate({ _id: "rs0", members: [{_id:1,host:"mongo:27017"}]})'
     weibo:
         build: ./packages/shark7-weibo
         volumes:
             - ./packages/shark7-weibo/data:/app/data
         container_name: shark7-weibo
         depends_on:
-            - shark7-mongo
+            - mongo
         networks:
             - default
         environment:
             # - NODE_ENV=development
             - MONGODB_PASS=shark7
-            - MONGODB_IP=shark7-mongo
+            - MONGODB_IP=mongo
             - weibo_id=123456
+    apex:
+        build: ./packages/shark7-apex
+        container_name: shark7-apex
+        depends_on:
+            - mongo
+        networks:
+            - default
+        environment:
+            # - NODE_ENV=development
+            - MONGODB_PASS=shark7
+            - MONGODB_IP=mongo
+            - apex_uid=DisplayName:1001234567890
     main:
         build: ./packages/shark7-main
         container_name: shark7-main
         depends_on:
-            - shark7-mongo
+            - mongo
         networks:
             - default
         environment:
             # - NODE_ENV=development
             - MONGODB_PASS=shark7
-            - MONGODB_IP=shark7-mongo
+            - MONGODB_IP=mongo
+            - khl_token=aaaabbbbb
+            - khl_msg_channel_id=123456,234567
+            - khl_log_channel_id=123456
     # shark7:
     #     build: ./
     #     volumes:
