@@ -1,0 +1,41 @@
+import { ChangeStreamDocument } from "mongodb"
+import config from "./config"
+import { sendMsg } from "./khl"
+import logger from "./logger"
+import { MsgType, WeiboMsg } from "./model/model"
+import { timePrefix } from "./utils"
+
+const weibo_id = config.get("weibo_id")
+
+export function onMblogEvent(event: ChangeStreamDocument) {
+    if (event.operationType !== "insert") {
+        logger.warn('未知的操作类型', event.operationType)
+        return
+    }
+    event.fullDocument
+    const nmb = new WeiboMsg(event.fullDocument)
+    if (nmb.user.id != weibo_id) {
+        logger.info(`<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`)
+        sendMsg(timePrefix() + `<${this.user.screen_name}>${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`, MsgType.weibo)
+    }
+    else if (nmb.visible_type == 0) {
+        if (nmb.repost_type == 1) {
+            logger.info(`<${this.user.screen_name}>微博转发\n${nmb.text_raw}\n原动态\n`)
+            sendMsg(timePrefix() + `<${this.user.screen_name}>微博转发\n${nmb.text_raw}`, MsgType.weibo)
+        } else {
+            logger.info(`<${this.user.screen_name}>微博动态\n${nmb.text_raw}`)
+            sendMsg(timePrefix() + `<${this.user.screen_name}>微博动态\n${nmb.text_raw}`, MsgType.weibo)
+        }
+    } else if (nmb.visible_type == 10) {
+        if (nmb.repost_type == 1) {
+            logger.info(`<${this.user.screen_name}>微博仅粉丝可见转发\n${nmb.text_raw}原动态\n`)
+            sendMsg(timePrefix() + `<${this.user.screen_name}>微博仅粉丝可见转发\n${nmb.text_raw}`, MsgType.weibo)
+        } else {
+            logger.info(`<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`)
+            sendMsg(timePrefix() + `<${this.user.screen_name}>微博仅粉丝可见动态\n${nmb.text_raw}`, MsgType.weibo)
+        }
+    } else {
+        logger.info(`<${this.user.screen_name}>微博动态(visible_type=${nmb.visible_type})\n${nmb.text_raw}`)
+        sendMsg(timePrefix() + `<${this.user.screen_name}>微博动态(visible_type=${nmb.visible_type})\n${nmb.text_raw}`, MsgType.weibo)
+    }
+}

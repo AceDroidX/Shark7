@@ -1,0 +1,91 @@
+import config from '../config'
+import { WeiboUser } from './WeiboUser';
+
+export {
+    FiltedMsg,
+    WeiboMsg,
+    WeiboError,
+    MsgType
+}
+
+enum LiveMsgType {
+    GuardOnline = 'GuardOnline',
+    GuardEntry = 'GuardEntry',
+    Entry = 'Entry',
+    Danmaku = 'Danmaku',
+    Gift = 'Gift',
+    Live = 'Live',
+}
+
+const MsgType = {
+    msg: 'msg',
+    log: 'log',
+    weibo: 'weibo',
+    live: LiveMsgType,
+    apex: 'apex',
+}
+
+class FiltedMsg {
+    code: number;
+    msg: string;
+    type: string;
+    raw: object;
+    constructor(code: number, msg: string, type: string, raw: object) {
+        this.code = code;
+        this.msg = msg;
+        this.type = type;
+        this.raw = raw;
+    }
+}
+class WeiboMsg {
+    id: number;
+    mblogid: string;
+    text: string;
+    text_raw: string;
+    created_at: string;
+    visible_type: number;
+    pic_num: number;
+    pic_ids: string[];
+    pic_infos: any[];
+    isTop: boolean;
+    title: string;
+    repost_type: number;
+
+    user: WeiboUser;
+
+    _timestamp: number;
+    _userid: number;
+    _raw: any
+
+    constructor(data: any, userid: number) {
+        this.id = data.id;
+        this.mblogid = data.mblogid;
+        this.text = data.text;
+        this.text_raw = data.text_raw;
+        this.created_at = data.created_at;
+        this.visible_type = data.visible.type;
+        this.pic_num = data.pic_num;
+        this.pic_ids = data.pic_ids;
+        this.pic_infos = data.pic_infos;
+        this.isTop = data.isTop;
+        if (data.title == undefined) {
+            this.title = "";
+        } else {
+            this.title = data.title.text;
+        }
+        this.repost_type = data.repost_type;
+        this.user = WeiboUser.getFromRaw(data.user);
+        this._userid = userid;
+        this._raw = data
+        this._timestamp = new Date(data.created_at).getTime()
+    }
+}
+
+class WeiboError extends Error {
+    code: number;
+    name = "WeiboError";
+    constructor(msg: string, code = 0) {
+        super(msg);
+        this.code = code;
+    }
+}
