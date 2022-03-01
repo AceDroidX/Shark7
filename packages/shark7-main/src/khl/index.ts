@@ -13,6 +13,7 @@ function isGolbalMsg(type: string) {
     switch (type) {
         case MsgType.weibo:
         case MsgType.live.Live:
+        case MsgType.apex:
             return true;
         default:
             return false;
