@@ -34,6 +34,8 @@ export function onUserInfoEvent(event: any) {
             case 'partyInMatch':
                 sendMsg(`[${getTime()}]<${displayName}>比赛状态改变: ${updated[field]}`, MsgType.apex)
                 break;
+            case 'timeSinceServerChange':
+                break;
             default:
                 sendMsg(`[${getTime()}]<${displayName}>未知数据改变: ${field}: ${updated[field]}`, MsgType.apex)
                 break;
