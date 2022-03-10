@@ -6,7 +6,7 @@ export function onUserInfoEvent(event: any) {
     const displayName = event.fullDocument._name
     const updated = event.updateDescription.updatedFields
     for (const field in updated) {
-        if(field.startsWith('_')){
+        if (field.startsWith('_')) {
             continue
         }
         switch (field) {
@@ -23,7 +23,15 @@ export function onUserInfoEvent(event: any) {
                 sendMsg(`[${getTime()}]<${displayName}>群隐私改变: ${updated[field]}`, MsgType.apex)
                 break;
             case 'online':
-                sendMsg(`[${getTime()}]<${displayName}>在线状态改变: ${updated[field]}`, MsgType.apex)
+                let onlineStatus
+                if (updated[field] == 0) {
+                    onlineStatus = '离线'
+                } else if (updated[field] == 1) {
+                    onlineStatus = '在线'
+                } else {
+                    onlineStatus = `未知${updated[field]}`
+                }
+                sendMsg(`[${getTime()}]<${displayName}>在线状态改变: ${onlineStatus}`, MsgType.apex)
                 break;
             case 'joinable':
                 sendMsg(`[${getTime()}]<${displayName}>可加入状态改变: ${updated[field]}`, MsgType.apex)
@@ -33,6 +41,17 @@ export function onUserInfoEvent(event: any) {
                 break;
             case 'partyInMatch':
                 sendMsg(`[${getTime()}]<${displayName}>比赛状态改变: ${updated[field]}`, MsgType.apex)
+                break;
+            case 'cdata31':
+                let gameStatus
+                if (updated[field] == 0) {
+                    gameStatus = '大厅在线'
+                } else if (updated[field] == 1) {
+                    gameStatus = '游戏中'
+                } else {
+                    gameStatus = `未知${updated[field]}`
+                }
+                sendMsg(`[${getTime()}]<${displayName}>游戏状态改变: ${gameStatus}`, MsgType.apex)
                 break;
             case 'timeSinceServerChange':
                 break;
