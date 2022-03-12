@@ -42,6 +42,8 @@ export function onUserInfoEvent(event: any) {
             case 'partyInMatch':
                 sendMsg(`[${getTime()}]<${displayName}>比赛状态改变: ${updated[field]}`, MsgType.apex)
                 break;
+            case 'charVer':
+                break;
             case 'cdata31':
                 let gameStatus
                 if (updated[field] == 0) {
