@@ -1,7 +1,7 @@
 import { sendMsg } from "../khl"
 import { MsgType } from "../model/model"
 import { getTime } from "../utils";
-import { getBadgeName, getTracerName } from "./cdataType";
+import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
 
 export function onUserInfoEvent(event: any) {
     const displayName = event.fullDocument._name
@@ -45,6 +45,18 @@ export function onUserInfoEvent(event: any) {
                 break;
             case 'charVer':
                 break;
+            case 'cdata3':
+                const skinName = getSkinName(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>皮肤改变: ${skinName}`, MsgType.apex)
+                break;
+            case 'cdata4':
+                const frameName = getFrameName(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>边框改变: ${frameName}`, MsgType.apex)
+                break;
+            case 'cdata5':
+                const posName = getPosName(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>姿势改变: ${posName}`, MsgType.apex)
+                break;
             case 'cdata6':
             case 'cdata8':
             case 'cdata10':
@@ -67,6 +79,9 @@ export function onUserInfoEvent(event: any) {
             case 'cdata17':
                 sendMsg(`[${getTime()}]<${displayName}>第${(parseInt(field.slice(-1)) - 1) / 2}个追踪器数据改变: ${updated[field]}`, MsgType.apex)
                 break;
+            case 'cdata18':
+                const introVoice = getIntroVoice(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>开场台词改变: ${introVoice}`, MsgType.apex)
             case 'cdata23':
                 sendMsg(`[${getTime()}]<${displayName}>玩家等级改变: ${updated[field]}`, MsgType.apex)
                 break;
