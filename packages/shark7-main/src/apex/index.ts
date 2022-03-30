@@ -1,6 +1,7 @@
 import { sendMsg } from "../khl"
 import { MsgType } from "../model/model"
 import { getTime } from "../utils";
+import { getBadgeName, getTracerName } from "./cdataType";
 
 export function onUserInfoEvent(event: any) {
     const displayName = event.fullDocument._name
@@ -43,6 +44,31 @@ export function onUserInfoEvent(event: any) {
                 sendMsg(`[${getTime()}]<${displayName}>比赛状态改变: ${updated[field]}`, MsgType.apex)
                 break;
             case 'charVer':
+                break;
+            case 'cdata6':
+            case 'cdata8':
+            case 'cdata10':
+                let badgeName = getBadgeName(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>第${parseInt(field.replace('cdata', '')) / 2 - 2}个徽章类型改变: ${badgeName}`, MsgType.apex)
+                break;
+            case 'cdata7':
+            case 'cdata9':
+            case 'cdata11':
+                sendMsg(`[${getTime()}]<${displayName}>第${(parseInt(field.replace('cdata', '')) - 1) / 2 - 2}个徽章数据改变: ${updated[field]}`, MsgType.apex)
+                break;
+            case 'cdata12':
+            case 'cdata14':
+            case 'cdata16':
+                let tracerName = getTracerName(updated[field])
+                sendMsg(`[${getTime()}]<${displayName}>第${parseInt(field.slice(-1)) / 2}个追踪器类型改变: ${tracerName}`, MsgType.apex)
+                break;
+            case 'cdata13':
+            case 'cdata15':
+            case 'cdata17':
+                sendMsg(`[${getTime()}]<${displayName}>第${(parseInt(field.slice(-1)) - 1) / 2}个追踪器数据改变: ${updated[field]}`, MsgType.apex)
+                break;
+            case 'cdata23':
+                sendMsg(`[${getTime()}]<${displayName}>玩家等级改变: ${updated[field]}`, MsgType.apex)
                 break;
             case 'cdata31':
                 let gameStatus
