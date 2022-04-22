@@ -104,5 +104,7 @@ export function onUserInfoEvent(event: any) {
                 break;
         }
     }
-    sendMsg(`[${getTime()}]<${displayName}>${msg}`, MsgType.apex)
+    if (msg !== '') {
+        sendMsg(`[${getTime()}]<${displayName}>${msg}`, MsgType.apex)
+    }
 }
