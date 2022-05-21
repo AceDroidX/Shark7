@@ -1,11 +1,10 @@
-import config from './config'
-import { logErrorDetail } from './utils'
-import logger from './logger';
-import { MongoClient } from 'mongodb';
+if (process.env.NODE_ENV != 'production') {
+    require('dotenv').config({ debug: true })
+}
+import { logErrorDetail } from 'shark7-shared/dist/utils'
+import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import winston from 'winston';
-
-var marked_uid: number[]
 
 process.on('uncaughtException', function (err) {
     //打印出错误 
@@ -32,15 +31,7 @@ async function main() {
     const mongo = await MongoController.getInstance()
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: new MongoClient(
-            process.env.NODE_ENV == 'development'
-                ? 'mongodb://localhost:27017/'
-                : 'mongodb://admin:' +
-                process.env.MONGODB_PASS +
-                '@' +
-                process.env.MONGODB_IP +
-                ':27017/?authMechanism=DEFAULT'
-        ).connect(), collection: 'log-main', tryReconnect: true
+        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-main', tryReconnect: true
     }))
 
     mongo.run()

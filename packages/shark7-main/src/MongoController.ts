@@ -1,53 +1,25 @@
-import { Collection, MongoClient } from "mongodb"
 import { onUserInfoEvent } from "./apex"
-import logger from "./logger"
+import logger from "shark7-shared/dist/logger"
 // import { onMblogEvent } from "./weibo.ts"
-import { MongoDBs } from "./model/MongoDBs"
+import { MongoControllerBase, MongoDBs } from "shark7-shared/dist/database"
 
 export {
     MongoController
 }
 
-class MongoController {
-    client: MongoClient
-    dbs: MongoDBs
-
-    constructor(client: MongoClient, dbs: MongoDBs) {
-        this.client = client
-        this.dbs = dbs
-    }
+class MongoController extends MongoControllerBase<MongoDBs> {
     static async getInstance() {
-        const client = new MongoClient(
-            process.env.NODE_ENV == 'development'
-                ? 'mongodb://localhost:27017/'
-                : 'mongodb://admin:' +
-                process.env.MONGODB_PASS +
-                '@' +
-                process.env.MONGODB_IP +
-                ':27017/?authMechanism=DEFAULT'
-        )
-        let dbs
         try {
+            const client = this.getMongoClientConfig()
             await client.connect()
-            dbs = new MongoDBs({
-                weibo: {
-                    mblogsDB: client.db('weibo').collection('mblogs'),
-                    userDB: client.db('weibo').collection('users')
-                },
-                apex: {
-                    userinfoDB: client.db('apex').collection('userinfo')
-                }
-            })
+            let dbs = MongoDBs.getInstance(client)
+            logger.info('数据库已连接')
+            return new MongoController(client, dbs)
         } catch (err) {
-            console.log('ERR when connect to AMDB')
+            console.log(`ERR when connect to DBS`)
             console.log(err)
             process.exit(1)
         }
-        logger.info('数据库已连接')
-        return new MongoController(client, dbs)
-    }
-    async close() {
-        await this.client.close()
     }
     run() {
         const userDBChangeStream = this.dbs.weibo.userDB.watch();

@@ -4,32 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "tsc --build --clean",
-    "dev": "tsc -w",
-    "build": "tsc",
-    "serve": "tsc&&node build/index.js"
+    "clean": "pnpm run -F shark7-shared -F shark7-main clean",
+    "dev": "concurrently -k \"npm:dev:*\"",
+    "dev:main": "pnpm run -F shark7-main dev",
+    "dev:apex": "pnpm run -F shark7-apex dev",
+    "dev:shared": "pnpm run -F shark7-shared dev",
+    "build:main": "pnpm run build:shared && pnpm run -F shark7-main build",
+    "build:apex": "pnpm run build:shared && pnpm run -F shark7-apex build",
+    "build:shared": "pnpm run -F shark7-shared build",
+    "start:main": "pnpm run -F shark7-main start",
+    "start:apex": "pnpm run -F shark7-apex start"
   },
   "author": "AceDroidX",
   "license": "ISC",
-  "dependencies": {
-    "axios": "latest",
-    "bilibili-live-ws": "latest",
-    "mongodb": "^4.3.1",
-    "puppeteer": "13.0.1",
-    "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-stealth": "^2.9.0",
-    "toad-scheduler": "^1.6.0",
-    "typescript": "latest",
-    "winston": "^3.3.3",
-    "winston-mongodb": "^5.0.7",
-    "winston-transport": "^4.4.0",
-    "ws": "^8.3.0"
-  },
   "devDependencies": {
-    "@types/ws": "^8.2.1",
-    "cz-conventional-changelog": "^3.3.0"
+    "concurrently": "latest",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "latest",
+    "nodemon": "latest"
   },
   "workspaces": [
     "packages/*"

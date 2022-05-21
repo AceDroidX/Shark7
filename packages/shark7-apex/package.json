@@ -2,23 +2,24 @@
   "name": "shark7-apex",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean",
-    "dev": "tsc -w",
+    "dev": "concurrently -k \"tsc -w\" \"nodemon\"",
     "build": "tsc",
-    "serve": "tsc&&node build/index.js"
+    "serve": "tsc&&node dist/index.js"
   },
   "author": "AceDroidX",
   "license": "ISC",
   "dependencies": {
     "axios": "latest",
-    "mongodb": "^4.3.1",
-    "toad-scheduler": "^1.6.0",
+    "mongodb": "latest",
+    "shark7-shared": "workspace:",
+    "toad-scheduler": "latest",
     "typescript": "latest",
-    "winston": "^3.3.3",
-    "winston-mongodb": "^5.0.7"
+    "winston": "latest",
+    "winston-mongodb": "latest"
   }
 }

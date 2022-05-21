@@ -1,6 +1,6 @@
 import { sendMsg } from "../khl"
 import { MsgType } from "../model/model"
-import { getTime } from "../utils";
+import { getTime } from "shark7-shared/dist/utils";
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
 
 export function onUserInfoEvent(event: any) {

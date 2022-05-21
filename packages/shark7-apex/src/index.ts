@@ -1,9 +1,10 @@
-import config from './config'
-import { logAxiosError, logError, logErrorDetail, toNumOrStr } from './utils'
-import logger from './logger';
+if (process.env.NODE_ENV != 'production') {
+    require('dotenv').config({ debug: true })
+}
+import { logAxiosError, logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils'
+import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import winston from 'winston';
-import { MongoClient } from 'mongodb';
 import axios from 'axios';
 import { AsyncTask, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
 
@@ -29,20 +30,12 @@ async function main() {
     const mongo = await MongoController.getInstance()
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: new MongoClient(
-            process.env.NODE_ENV == 'development'
-                ? 'mongodb://localhost:27017/'
-                : 'mongodb://admin:' +
-                process.env.MONGODB_PASS +
-                '@' +
-                process.env.MONGODB_IP +
-                ':27017/?authMechanism=DEFAULT'
-        ).connect(), collection: 'log-apex', tryReconnect: true
+        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-apex', tryReconnect: true
     }))
 
-    const apex_uid_str = config.get('apex_uid')
-    if (typeof apex_uid_str != 'string') {
-        logger.error('apex_uid配置项必须是字符串')
+    const apex_uid_str = process.env['apex_uid']
+    if (!apex_uid_str) {
+        logger.error('apex_uid配置项未配置')
         process.exit(2)
     }
     // const apex_uid = apex_uid_str.split(',').map(player => { return player.split(':').map(e => { return toNumOrStr(e) }) })
