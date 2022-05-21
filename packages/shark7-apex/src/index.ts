@@ -14,13 +14,13 @@ process.on('uncaughtException', function (err) {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
         logErrorDetail('未捕获的错误', err)
-        process.exit(2);
+        process.exit(1);
     }
 });
 // process.on('unhandledRejection', (reason, promise) => {
 //     promise.catch((err) => {logger.error(err)});
 //     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
-//     process.exit(2);
+//     process.exit(1);
 // });
 // init
 if (require.main === module) {
@@ -36,7 +36,7 @@ async function main() {
     const apex_uid_str = process.env['apex_uid']
     if (!apex_uid_str) {
         logger.error('apex_uid配置项未配置')
-        process.exit(2)
+        process.exit(1)
     }
     // const apex_uid = apex_uid_str.split(',').map(player => { return player.split(':').map(e => { return toNumOrStr(e) }) })
     const apex_uid = apex_uid_str.split(':').map(e => { return toNumOrStr(e) })
@@ -57,6 +57,8 @@ async function main() {
         (err: Error) => { logErrorDetail('refreshUserInfo错误', err) }
     )
     scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, refreshUserInfoTask))
+
+    mongo.run()
 }
 
 async function getUserInfo(uid: number) {

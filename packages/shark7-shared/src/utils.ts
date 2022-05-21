@@ -19,7 +19,7 @@ function timePrefix() {
     return `[${getTime()}]`
 }
 //get time 
-function getTime(timestamp = undefined) {
+function getTime(timestamp?: number) {
     if (timestamp === undefined) {
         var now = new Date();
     } else {

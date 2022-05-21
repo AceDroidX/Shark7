@@ -12,7 +12,7 @@ process.on('uncaughtException', function (err) {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
         logErrorDetail('未捕获的错误', err)
-        process.exit(2);
+        process.exit(1);
     }
     //打印出错误的调用栈方便调试 
     // console.log(err.stack);
@@ -20,7 +20,7 @@ process.on('uncaughtException', function (err) {
 // process.on('unhandledRejection', (reason, promise) => {
 //     promise.catch((err) => {logger.error(err)});
 //     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
-//     process.exit(2);
+//     process.exit(1);
 // });
 // init
 if (require.main === module) {

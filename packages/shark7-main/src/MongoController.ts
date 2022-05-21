@@ -1,7 +1,9 @@
-import { onUserInfoEvent } from "./apex"
 import logger from "shark7-shared/dist/logger"
 // import { onMblogEvent } from "./weibo.ts"
 import { MongoControllerBase, MongoDBs } from "shark7-shared/dist/database"
+import { Shark7Event } from "shark7-shared"
+import { ChangeStreamInsertDocument } from "mongodb"
+import { sendEvent } from "./event"
 
 export {
     MongoController
@@ -22,19 +24,20 @@ class MongoController extends MongoControllerBase<MongoDBs> {
         }
     }
     run() {
-        const userDBChangeStream = this.dbs.weibo.userDB.watch();
-        userDBChangeStream.on("change", event => {
-            logger.info(`用户信息数据库改变: \n${JSON.stringify(event)}`)
-            // onMblogEvent(event)
-        });
-        const mblogsDBChangeStream = this.dbs.weibo.mblogsDB.watch();
-        mblogsDBChangeStream.on("change", event => {
-            logger.info(`微博数据库改变: \n${JSON.stringify(event)}`)
-        });
-        const userinfoDBChangeStream = this.dbs.apex.userinfoDB.watch([], { fullDocument: "updateLookup" });
-        userinfoDBChangeStream.on("change", event => {
-            logger.info(`Apex用户信息数据库改变: \n${JSON.stringify(event)}`)
-            onUserInfoEvent(event)
+        // const userDBChangeStream = this.dbs.weibo.userDB.watch();
+        // userDBChangeStream.on("change", event => {
+        //     logger.info(`用户信息数据库改变: \n${JSON.stringify(event)}`)
+        //     // onMblogEvent(event)
+        // });
+        // const mblogsDBChangeStream = this.dbs.weibo.mblogsDB.watch();
+        // mblogsDBChangeStream.on("change", event => {
+        //     logger.info(`微博数据库改变: \n${JSON.stringify(event)}`)
+        // });
+        const apexEventChangeStream = this.dbs.apex.event.watch()
+        apexEventChangeStream.on("change", event => {
+            logger.info(`Apex事件改变: \n${JSON.stringify(event)}`)
+            const apexEvent = event as ChangeStreamInsertDocument<Shark7Event>
+            sendEvent(apexEvent.fullDocument)
         })
     }
 }

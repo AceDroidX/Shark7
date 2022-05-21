@@ -1,9 +1,13 @@
-import { sendMsg } from "../khl"
-import { MsgType } from "../model/model"
-import { getTime } from "shark7-shared/dist/utils";
+import { ChangeStreamUpdateDocument } from 'mongodb';
+import { Shark7Event, Scope } from 'shark7-shared'
+import logger from 'shark7-shared/dist/logger';
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
 
-export function onUserInfoEvent(event: any) {
+export function onUserInfoEvent(event: ChangeStreamUpdateDocument): Shark7Event | undefined {
+    if (!event.fullDocument) {
+        logger.error('event.fullDocument为空')
+        process.exit(1)
+    }
     const displayName = event.fullDocument._name
     const updated = event.updateDescription.updatedFields
     let msg = ''
@@ -105,6 +109,10 @@ export function onUserInfoEvent(event: any) {
         }
     }
     if (msg !== '') {
-        sendMsg(`[${getTime()}]<${displayName}>${msg}`, MsgType.apex)
+        const time = Number(new Date())
+        msg = msg.trimStart()
+        return { ts: time, name: displayName, scope: Scope.APEX, msg }
+    } else {
+        return undefined
     }
 }
