@@ -1,0 +1,23 @@
+{
+    "_id": {
+        "_data": "8261F144F2000000012B022C0100296E5A100408BC85656FC9426A855E4FF2978AFB3346645F6964006461F05E74673728AE888EF1BA0004"
+    },
+    "operationType": "update",
+    "clusterTime": {
+        "$timestamp": "7057497897239052289"
+    },
+    "ns": {
+        "db": "weibo",
+        "coll": "users"
+    },
+    "documentKey": {
+        "_id": "61f05e74673728ae888ef1ba"
+    },
+    "updateDescription": {
+        "updatedFields": {
+            "verified_reason": null
+        },
+        "removedFields": [],
+        "truncatedArrays": []
+    }
+}
