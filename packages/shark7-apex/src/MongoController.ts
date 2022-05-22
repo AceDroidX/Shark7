@@ -14,7 +14,7 @@ class MongoController extends MongoControllerBase<ApexDBs> {
             const client = this.getMongoClientConfig()
             await client.connect()
             let dbs = ApexDBs.getInstance(client)
-            logger.info('数据库已连接')
+            logger.info('ApexDBs数据库已连接')
             return new MongoController(client, dbs)
         } catch (err) {
             console.log(`ERR when connect to DBS`)
@@ -27,16 +27,13 @@ class MongoController extends MongoControllerBase<ApexDBs> {
             $set: user
         }, { upsert: true })
     }
-    async addEvent(event: Shark7Event) {
-        await this.dbs.event.insertOne(event)
-    }
     run() {
         const userinfoDBChangeStream = this.dbs.userinfoDB.watch([], { fullDocument: "updateLookup" });
         userinfoDBChangeStream.on("change", event => {
             logger.info(`Apex用户信息数据库改变: \n${JSON.stringify(event)}`)
             const userinfoEvent = onUserInfoEvent(event as ChangeStreamUpdateDocument)
             if (!userinfoEvent) return
-            this.addEvent(userinfoEvent)
+            this.addShark7Event(userinfoEvent)
         })
     }
 }

@@ -1,5 +1,5 @@
 import { WeiboMsg } from "./model";
-import logger from "../logger";
+import logger from "shark7-shared/dist/logger";
 import url from 'url'
 import { WeiboHTTP } from "./WeiboHTTP";
 import { MongoController } from "../MongoController";
@@ -86,7 +86,7 @@ export class WeiboUser {
             logger.error(JSON.stringify(raw.data));
             return [];
         }
-        const mblogs = raw.data.data.list.map((mblog: any) => new WeiboMsg(mblog))
+        const mblogs = raw.data.data.list.map((mblog: any) => new WeiboMsg(mblog, this.id));
         return mblogs;
     }
 

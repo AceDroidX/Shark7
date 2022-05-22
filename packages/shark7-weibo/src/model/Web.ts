@@ -1,5 +1,5 @@
 import { Browser, Protocol } from "puppeteer";
-import logger from "../logger";
+import logger from "shark7-shared/dist/logger";
 
 interface IWeb {
     name: string;
@@ -13,7 +13,7 @@ interface IWeb {
 export class Web implements IWeb {
     name: string = 'web'
 
-    cookie: any = {}
+    cookie: any = undefined
     cookie_str: string = ''
     browser: Browser;
     constructor(browser: Browser) {

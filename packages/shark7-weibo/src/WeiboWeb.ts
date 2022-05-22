@@ -1,6 +1,6 @@
-import logger from "./logger"
+import logger from "shark7-shared/dist/logger"
 import { WeiboError } from "./model/model"
-import { cookieJsonToStr } from './utils'
+import { cookieJsonToStr } from 'shark7-shared/dist/utils'
 import { Web } from './model/Web'
 
 const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
@@ -24,7 +24,7 @@ export class WeiboWeb extends Web {
         logger.debug('puppeteer:goto and wait')
         await Promise.all([
             page.goto('https://weibo.com/u/7198559139', { timeout: 10000 }),
-            page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+            page.waitForNavigation({ waitUntil: 'networkidle2' })
         ])
         logger.debug(`puppeteer:更新前cookie\n${JSON.stringify(this.cookie)}`)
         await page.screenshot({ path: 'log/weibo-0.png', fullPage: false })
@@ -65,34 +65,8 @@ export class WeiboWeb extends Web {
         var new_cookie = await page.cookies()
         logger.debug('puppeteer:new_cookie\n' + JSON.stringify(new_cookie))
 
-        const newvalue = () => {
-            for (const item of new_cookie) {
-                if (item.name == 'WBPSESS') {
-                    return item.value
-                }
-            }
-        }
-        const oldvalue = () => {
-            if (this.cookie == undefined) {
-                return ''
-            }
-            for (const i2 of this.cookie) {
-                if (i2.name == 'WBPSESS') {
-                    return i2.value
-                }
-            }
-        }
-        logger.debug(`puppeteer:oldvalue:${oldvalue()}`)
-        logger.debug(`puppeteer:newvalue:${newvalue()}`)
-        if (oldvalue() === newvalue()) {
-            logger.info('微博cookie未更新')
-        } else {
-            if (oldvalue() == '') {
-                logger.info('微博cookie已载入')
-            } else {
-                logger.warn('微博cookie已更新')
-            }
-        }
+        this.isCookieChanged('WBPSESS', new_cookie)
+
         this.cookie_str = cookieJsonToStr(new_cookie)
         this.cookie = new_cookie
         await page.close()

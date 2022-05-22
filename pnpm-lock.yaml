@@ -67,16 +67,16 @@ importers:
   packages/shark7-weibo:
     specifiers:
       axios: latest
-      logform: ^2.4.0
-      mongodb: ^4.3.1
+      logform: latest
+      mongodb: latest
       puppeteer: 13.0.1
       puppeteer-extra: ^3.2.3
       puppeteer-extra-plugin-stealth: ^2.9.0
       shark7-shared: 'workspace:'
       toad-scheduler: ^1.6.0
       typescript: latest
-      winston: ^3.3.3
-      winston-mongodb: ^5.0.7
+      winston: latest
+      winston-mongodb: latest
     dependencies:
       axios: 0.27.2
       logform: 2.4.0

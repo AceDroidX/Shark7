@@ -1,6 +1,6 @@
 import { WeiboUser } from "./model/WeiboUser";
-import { logAxiosError, logError, logErrorDetail, logWarn, timePrefix } from "./utils";
-import logger from "./logger";
+import { logAxiosError, logError, logErrorDetail, logWarn} from "shark7-shared/dist/utils";
+import logger from "shark7-shared/dist/logger";
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { Web } from "./model/Web";
 import { Puppeteer } from "./model/puppeteer";
@@ -82,6 +82,7 @@ export class WeiboController {
         }
     }
     public async run() {
+        await this.fetchUserInfo()
         const scheduler = new ToadScheduler()
         const fetchMblogTask = new Task(
             'fetchMblog',

@@ -21,10 +21,11 @@ class WeiboMsg {
 
     user: WeiboUser;
 
-    timestamp: number;
-    raw: any
+    _timestamp: number;
+    _userid: number;
+    _raw: any
 
-    constructor(data: any) {
+    constructor(data: any, userid: number) {
         this.id = data.id;
         this.mblogid = data.mblogid;
         this.text = data.text;
@@ -42,8 +43,9 @@ class WeiboMsg {
         }
         this.repost_type = data.repost_type;
         this.user = WeiboUser.getFromRaw(data.user);
-        this.raw = data
-        this.timestamp = new Date(data.created_at).getTime()
+        this._userid = userid;
+        this._raw = data
+        this._timestamp = new Date(data.created_at).getTime()
     }
 }
 

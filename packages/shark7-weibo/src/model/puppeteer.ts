@@ -1,8 +1,8 @@
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import logger from '../logger'
+import logger from 'shark7-shared/dist/logger'
 import fs from 'fs'
-import { Browser } from 'puppeteer-extra-plugin/dist/puppeteer'
+import { Browser } from 'puppeteer'
 import { WeiboWeb } from '../WeiboWeb'
 
 export class Puppeteer {

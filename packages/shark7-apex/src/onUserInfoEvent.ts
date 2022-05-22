@@ -1,5 +1,6 @@
 import { ChangeStreamUpdateDocument } from 'mongodb';
-import { Shark7Event, Scope } from 'shark7-shared'
+import { Shark7Event} from 'shark7-shared'
+import { Scope } from 'shark7-shared/dist/scope'
 import logger from 'shark7-shared/dist/logger';
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
 
@@ -111,7 +112,7 @@ export function onUserInfoEvent(event: ChangeStreamUpdateDocument): Shark7Event 
     if (msg !== '') {
         const time = Number(new Date())
         msg = msg.trimStart()
-        return { ts: time, name: displayName, scope: Scope.APEX, msg }
+        return { ts: time, name: displayName, scope: Scope.Apex, msg }
     } else {
         return undefined
     }

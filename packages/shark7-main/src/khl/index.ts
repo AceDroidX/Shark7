@@ -1,7 +1,6 @@
 import axios from "axios";
 import { KHLAPIPREFIX } from "../constants";
 import logger from "shark7-shared/dist/logger";
-import { MsgType } from "../model/model";
 
 export {
     sendMsg,
@@ -9,14 +8,15 @@ export {
 }
 
 function isGolbalMsg(type: string) {
-    switch (type) {
-        case MsgType.weibo:
-        case MsgType.live.Live:
-        case MsgType.apex:
-            return true;
-        default:
-            return false;
-    }
+    return true
+    // switch (type) {
+    //     case MsgType.weibo:
+    //     case MsgType.live.Live:
+    //     case MsgType.apex:
+    //         return true;
+    //     default:
+    //         return false;
+    // }
 }
 
 async function sendMsg(msg: string, type: string = 'msg') {

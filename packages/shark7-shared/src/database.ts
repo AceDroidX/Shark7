@@ -1,4 +1,5 @@
 import { Collection, MongoClient } from "mongodb";
+import { Shark7Event } from ".";
 
 class EventDBs {
     event: Collection
@@ -64,6 +65,9 @@ export class MongoControllerBase<T extends EventDBs> {
                 ? `mongodb://admin:${process.env.MONGODB_PASS}@${process.env.MONGODB_IP}:27017/?authMechanism=DEFAULT`
                 : 'mongodb://admin:admin@localhost:27017/'
         )
+    }
+    async addShark7Event(event: Shark7Event) {
+        await this.dbs.event.insertOne(event)
     }
     async close() {
         await this.client.close()

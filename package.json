@@ -10,12 +10,15 @@
     "dev": "concurrently -k \"npm:dev:*\"",
     "dev:main": "pnpm run -F shark7-main dev",
     "dev:apex": "pnpm run -F shark7-apex dev",
+    "dev:weibo":"pnpm run -F shark7-weibo dev",
     "dev:shared": "pnpm run -F shark7-shared dev",
     "build:main": "pnpm run build:shared && pnpm run -F shark7-main build",
     "build:apex": "pnpm run build:shared && pnpm run -F shark7-apex build",
+    "build:weibo": "pnpm run build:shared && pnpm run -F shark7-weibo build",
     "build:shared": "pnpm run -F shark7-shared build",
     "start:main": "pnpm run -F shark7-main start",
-    "start:apex": "pnpm run -F shark7-apex start"
+    "start:apex": "pnpm run -F shark7-apex start",
+    "start:weibo": "pnpm run -F shark7-weibo start"
   },
   "author": "AceDroidX",
   "license": "ISC",
