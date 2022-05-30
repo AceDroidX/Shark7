@@ -23,8 +23,10 @@
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "shark7-shared": "workspace:",
     "toad-scheduler": "latest",
-    "typescript": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest"
   }
 }

@@ -17,9 +17,10 @@
   "dependencies": {
     "logform": "latest",
     "mongodb": "latest",
-    "typescript": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "latest"
+  }
 }

@@ -28,9 +28,10 @@ importers:
       mongodb: 4.6.0
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
   packages/shark7-bililive:
     specifiers:
@@ -48,9 +49,10 @@ importers:
       mongodb: 4.6.0
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
   packages/shark7-bililive-guard:
     specifiers:
@@ -66,9 +68,10 @@ importers:
       mongodb: 4.6.0
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
   packages/shark7-main:
     specifiers:
@@ -84,9 +87,10 @@ importers:
       mongodb: 4.6.0
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
   packages/shark7-shared:
     specifiers:
@@ -98,9 +102,10 @@ importers:
     dependencies:
       logform: 2.4.0
       mongodb: 4.6.0
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
   packages/shark7-weibo:
     specifiers:
@@ -124,9 +129,10 @@ importers:
       puppeteer-extra-plugin-stealth: 2.9.0_puppeteer-extra@3.2.3
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
-      typescript: 4.7.2
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
 
 packages:
 
@@ -2682,6 +2688,7 @@ packages:
     resolution: {integrity: sha512-Mamb1iX2FDUpcTRzltPxgWMKy3fhg0TN378ylbktPGPK/99KbDtMQ4W1hwgsbPAsG3a0xKa1vmw4VKZQbkvz5A==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+    dev: true
 
   /unbzip2-stream/1.4.3:
     resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}

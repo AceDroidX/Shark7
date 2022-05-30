@@ -18,8 +18,10 @@
     "mongodb": "latest",
     "shark7-shared": "workspace:",
     "toad-scheduler": "latest",
-    "typescript": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest"
   }
 }
