@@ -107,7 +107,7 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
-      puppeteer: ^14.1.1
+      puppeteer: 14.1.1
       puppeteer-extra: ^3.2.3
       puppeteer-extra-plugin-stealth: ^2.9.0
       shark7-shared: 'workspace:'
@@ -1523,12 +1523,12 @@ packages:
     dev: false
 
   /is-extglob/2.1.1:
-    resolution: {integrity: sha1-qIwCU1eR8C7TfHahueqXc8gz+MI=}
+    resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
     engines: {node: '>=0.10.0'}
     dev: true
 
   /is-fullwidth-code-point/2.0.0:
-    resolution: {integrity: sha1-o7MKXE8ZkYMWeqq5O+764937ZU8=}
+    resolution: {integrity: sha512-VHskAKYM8RfSFXwee5t5cbN5PZeq1Wrh6qd5bkyiXIf6UQcN6w/A0eXM9r6t8d+GYOh+o6ZhiEnb88LN/Y8m2w==}
     engines: {node: '>=4'}
     dev: true
 
@@ -1585,7 +1585,7 @@ packages:
     dev: false
 
   /is-typedarray/1.0.0:
-    resolution: {integrity: sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=}
+    resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
     dev: true
 
   /is-utf8/0.2.1:
@@ -1602,7 +1602,7 @@ packages:
     dev: true
 
   /isarray/1.0.0:
-    resolution: {integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=}
+    resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
     dev: false
 
   /isexe/2.0.0:
@@ -1628,7 +1628,7 @@ packages:
     optional: true
 
   /json-buffer/3.0.0:
-    resolution: {integrity: sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=}
+    resolution: {integrity: sha512-CuUqjv0FUZIdXkHPI8MezCnFCdaTAacej1TZYulLoAg1h/PhwkdXFN4V/gzY4g+fMBCOV2xF+rp7t2XD2ns/NQ==}
     dev: true
 
   /json-buffer/3.0.1:
