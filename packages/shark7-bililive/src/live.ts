@@ -3,7 +3,7 @@ import logger from "shark7-shared/dist/logger"
 import { BiliUser } from "shark7-shared/dist/bililive/BiliUser"
 import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
 import { Shark7Event } from "shark7-shared"
-import { Scope } from "shark7-shared/dist/Scope"
+import { Scope } from "shark7-shared/dist/scope"
 import { MongoController } from "./MongoController"
 
 const BILILIVEPREFIX = 'https://live.bilibili.com'

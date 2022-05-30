@@ -3,7 +3,7 @@ import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
 import logger from "shark7-shared/dist/logger"
 import { MongoController } from "./MongoController"
 import { Shark7Event } from "shark7-shared"
-import { Scope } from "shark7-shared/dist/Scope"
+import { Scope } from "shark7-shared/dist/scope"
 
 export {
     guardMain
