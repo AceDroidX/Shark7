@@ -1,14 +1,13 @@
 {
-  "name": "shark7-shared",
+  "name": "shark7-bililive",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "start": "node dist/index.js",
-    "test": "node dist/test.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean",
-    "dev": "tsc -w",
+    "dev": "concurrently -k \"tsc -w\" \"nodemon\"",
     "build": "tsc",
     "serve": "tsc&&node dist/index.js"
   },
@@ -16,10 +15,12 @@
   "license": "ISC",
   "dependencies": {
     "axios": "latest",
-    "logform": "latest",
     "mongodb": "latest",
+    "shark7-shared": "workspace:",
+    "toad-scheduler": "latest",
     "winston": "latest",
-    "winston-mongodb": "latest"
+    "winston-mongodb": "latest",
+    "bilibili-live-ws": "latest"
   },
   "devDependencies": {
     "typescript": "latest"

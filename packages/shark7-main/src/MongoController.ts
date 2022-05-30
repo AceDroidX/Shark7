@@ -1,9 +1,6 @@
 import logger from "shark7-shared/dist/logger"
-// import { onMblogEvent } from "./weibo.ts"
 import { MongoControllerBase, MongoDBs } from "shark7-shared/dist/database"
-import { Shark7Event } from "shark7-shared"
-import { ChangeStreamInsertDocument } from "mongodb"
-import { onEventChange, sendEvent } from "./event"
+import { onEventChange } from "./event"
 
 export {
     MongoController
@@ -24,13 +21,8 @@ class MongoController extends MongoControllerBase<MongoDBs> {
         }
     }
     run() {
-        const weiboEventChangeStream = this.dbs.weibo.event.watch();
-        weiboEventChangeStream.on("change", onEventChange);
-        const apexEventChangeStream = this.dbs.apex.event.watch()
-        apexEventChangeStream.on("change", event => {
-            logger.info(`Apex事件改变: \n${JSON.stringify(event)}`)
-            const apexEvent = event as ChangeStreamInsertDocument<Shark7Event>
-            sendEvent(apexEvent.fullDocument)
-        })
+        this.dbs.weibo.event.watch().on("change", onEventChange);
+        this.dbs.apex.event.watch().on("change", onEventChange)
+        this.dbs.bililive.event.watch().on("change", onEventChange)
     }
 }

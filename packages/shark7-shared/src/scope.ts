@@ -5,7 +5,7 @@ enum WeiboScope {
 
 enum BiliLiveScope {
     GuardOnline = 'BiliLive.GuardOnline',
-    GuardEntry = 'BiliLive.GuardEntry',
+    EntryEffect = 'BiliLive.EntryEffect',
     Entry = 'BiliLive.Entry',
     Danmaku = 'BiliLive.Danmaku',
     Gift = 'BiliLive.Gift',
@@ -23,7 +23,7 @@ export enum ScopeName {
     'Weibo.User' = '微博用户信息',
     'Weibo.Mblog' = '微博动态',
     'BiliLive.GuardOnline' = '大航海在线',
-    'BiliLive.GuardEntry' = '大航海进入提示',
+    'BiliLive.EntryEffect' = '直播间进入效果',
     'BiliLive.Entry' = '直播间进入提示',
     'BiliLive.Danmaku' = '发送弹幕',
     'BiliLive.Gift' = '赠送礼物',

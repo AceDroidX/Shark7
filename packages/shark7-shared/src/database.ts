@@ -10,14 +10,16 @@ class EventDBs {
 export class MongoDBs extends EventDBs {
     weibo: WeiboDBs
     apex: ApexDBs
-    constructor(event: Collection, weibo: WeiboDBs, apex: ApexDBs) {
+    bililive: BiliLiveDBs
+    constructor(event: Collection, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs) {
         super(event)
         this.weibo = weibo
         this.apex = apex
+        this.bililive = bililive
     }
     static getInstance(client: MongoClient) {
         const event = client.db('main').collection('event')
-        return new MongoDBs(event, WeiboDBs.getInstance(client), ApexDBs.getInstance(client))
+        return new this(event, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client))
     }
 }
 
@@ -33,7 +35,7 @@ export class WeiboDBs extends EventDBs {
         const event = client.db('weibo').collection('event')
         const mblogsDB = client.db('weibo').collection('mblogs')
         const userDB = client.db('weibo').collection('users')
-        return new WeiboDBs(event, mblogsDB, userDB)
+        return new this(event, mblogsDB, userDB)
     }
 }
 
@@ -48,7 +50,15 @@ export class ApexDBs extends EventDBs {
         const userinfoDB = client.db('apex').collection('userinfo')
         event.createIndex({ ts: -1 })
         userinfoDB.createIndex({ uid: 1, })
-        return new ApexDBs(event, userinfoDB)
+        return new this(event, userinfoDB)
+    }
+}
+
+export class BiliLiveDBs extends EventDBs {
+    static getInstance(client: MongoClient) {
+        const event = client.db('bililive').collection('event')
+        event.createIndex({ ts: -1 })
+        return new this(event)
     }
 }
 

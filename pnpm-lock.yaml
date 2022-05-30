@@ -94,12 +94,14 @@ importers:
 
   packages/shark7-shared:
     specifiers:
+      axios: latest
       logform: latest
       mongodb: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
     dependencies:
+      axios: 0.27.2
       logform: 2.4.0
       mongodb: 4.6.0
       winston: 3.7.2
