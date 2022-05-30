@@ -53,7 +53,7 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             // const user = marked_Users.getUserByUID(uid)
-            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.EntryEffect, msg: data['data']['copy_writing_2'] }
+            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.EntryEffect, msg: data['data']['copy_writing_v2'] }
         }
     } else if (data['cmd'] == 'INTERACT_WORD') {
         const uid = data['data']['uid']

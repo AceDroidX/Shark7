@@ -3,7 +3,7 @@ import { Shark7Event } from "shark7-shared";
 import { getScopeName } from 'shark7-shared/dist/scope'
 import logger from "shark7-shared/dist/logger";
 import { getTime } from "shark7-shared/dist/utils";
-import { sendMsg } from "./khl";
+import { sendMsgWithScope } from "./sendMsg";
 
 export function sendEvent(event: Shark7Event) {
     const scopename = getScopeName(event.scope)
@@ -11,7 +11,7 @@ export function sendEvent(event: Shark7Event) {
         logger.warn(`未知scopename:${event}`)
     }
     const msg = `[${getTime(event.ts)}]<${event.name}>(${scopename})\n${event.msg}`
-    sendMsg(msg)
+    sendMsgWithScope(msg, event.scope)
 }
 
 export function onEventChange(raw: ChangeStreamDocument) {
