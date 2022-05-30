@@ -18,11 +18,11 @@
     "axios": "latest",
     "logform": "latest",
     "mongodb": "latest",
-    "puppeteer": "13.0.1",
+    "puppeteer": "14.1.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "shark7-shared": "workspace:",
-    "toad-scheduler": "^1.6.0",
+    "toad-scheduler": "latest",
     "typescript": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"

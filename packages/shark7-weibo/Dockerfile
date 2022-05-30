@@ -1,10 +1,20 @@
-FROM node:16-slim
-
+FROM node:16-alpine AS build
 WORKDIR /app
-# Uncomment to skip the chromium download when installing puppeteer.
 ENV TZ=Asia/Shanghai \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+  PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+RUN npm install -g pnpm@7.1.6 && npm cache clean --force
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
+COPY . ./
+RUN pnpm install --offline ; \
+  pnpm run build:weibo
+
+FROM node:16-slim
+WORKDIR /app
+ENV TZ=Asia/Shanghai \
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+  PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN apt-get update && apt-get -yq upgrade && apt-get autoremove -yq && apt-get autoclean -yq 
@@ -34,43 +44,35 @@ RUN apt-get update && apt-get -yq upgrade && apt-get autoremove -yq && apt-get a
 # installs, work.
 # https://www.ubuntuupdates.org/package/google_chrome/stable/main/base/google-chrome-unstable
 RUN apt-get install -y ca-certificates curl wget gnupg --no-install-recommends \
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
-      --no-install-recommends
-    # && rm -rf /var/lib/apt/lists/* \
-    # && apt-get purge --auto-remove -y curl \
-    # && rm -rf /src/*.deb
+  && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && apt-get update \
+  && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
+  --no-install-recommends
+# && rm -rf /var/lib/apt/lists/* \
+# && apt-get purge --auto-remove -y curl \
+# && rm -rf /src/*.deb
 
 # ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
 # RUN chmod +x /usr/local/bin/dumb-init
 RUN apt-get install -yq dumb-init && apt-get autoremove -yq && apt-get autoclean -yq 
 
 # Add pptr user.
-RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    && mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app
+# RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+#   && mkdir -p /home/pptruser/Downloads \
+#   && chown -R pptruser:pptruser /home/pptruser \
+#   && chown -R pptruser:pptruser /app
+
+RUN npm install -g pnpm@7.1.6 && npm cache clean --force
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch --prod
+COPY . ./
+COPY --from=build /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dist/
+COPY --from=build /app/packages/shark7-weibo/dist/ ./packages/shark7-weibo/dist/
+RUN pnpm install --offline --prod ; exit 0
 
 # Run user as non privileged.
-USER pptruser
-
-COPY package.json tsconfig.json /app/
-#COPY local.conf /etc/fonts/local.conf
-
-# Install deps for server.
-RUN ls -al\
-  && npm --registry https://registry.npm.taobao.org install
-COPY src/ /app/src/
-# COPY config/ /app/config/
-RUN npm run build
-
-# Install puppeteer so it can be required by user code that gets run in
-# server.js. Cache bust so we always get the latest version of puppeteer when
-# building the image.
-# ARG CACHEBUST=1
-# RUN npm install puppeteer
+# USER pptruser
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm","run","start"]
+CMD ["npm","run","start:weibo"]

@@ -26,7 +26,7 @@ export class Puppeteer {
             var exepath = '/usr/bin/chromium-browser'
         } else {
             if (process.platform === "win32") {
-                var exepath = String.raw`D:\cli-tools\win64-901912\chrome-win\chrome.exe`
+                var exepath = String.raw`D:\cli-tools\win64-991974\chrome-win\chrome.exe`
             } else {
                 var exepath = ''
             }
