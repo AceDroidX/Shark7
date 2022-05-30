@@ -3,7 +3,7 @@ import { WeiboError } from "./model/model"
 import { cookieJsonToStr } from 'shark7-shared/dist/utils'
 import { Web } from './model/Web'
 
-const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
+const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
 
 export class WeiboWeb extends Web {
@@ -23,9 +23,13 @@ export class WeiboWeb extends Web {
         await page.setViewport({ width: 1920, height: 1080 });
         logger.debug('puppeteer:goto and wait')
         await Promise.all([
-            page.goto('https://weibo.com/u/7198559139', { timeout: 10000 }),
+            page.goto('https://weibo.com/u/7198559139', { timeout: 30000 }),
             page.waitForNavigation({ waitUntil: 'networkidle2' })
         ])
+        if (page.url().startsWith('https://passport.weibo.com')) {
+            logger.debug('puppeteer:passport页面 等待中')
+            await page.waitForNavigation({ waitUntil: 'networkidle2' })
+        }
         logger.debug(`puppeteer:更新前cookie\n${JSON.stringify(this.cookie)}`)
         await page.screenshot({ path: 'log/weibo-0.png', fullPage: false })
         const login_btn = await page.$(login_btn_selector)

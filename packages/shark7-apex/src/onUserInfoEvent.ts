@@ -1,10 +1,19 @@
-import { ChangeStreamUpdateDocument } from 'mongodb';
-import { Shark7Event} from 'shark7-shared'
+import { ChangeStreamDocument, ChangeStreamUpdateDocument } from 'mongodb';
+import { Shark7Event } from 'shark7-shared'
 import { Scope } from 'shark7-shared/dist/scope'
 import logger from 'shark7-shared/dist/logger';
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
 
-export function onUserInfoEvent(event: ChangeStreamUpdateDocument): Shark7Event | undefined {
+export function onUserInfoEvent(event: ChangeStreamDocument): Shark7Event | undefined {
+    if (event.operationType === "insert") {
+        logger.warn(`Apex用户信息数据库改变: 新增用户 ${event.fullDocument.uid}`)
+        return
+    }
+    if (event.operationType !== "update") {
+        logger.warn(`Apex用户信息数据库改变: 未知操作类型 ${event.operationType}`)
+        return
+    }
+    event = event as ChangeStreamUpdateDocument
     if (!event.fullDocument) {
         logger.error('event.fullDocument为空')
         process.exit(1)
