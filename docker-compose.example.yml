@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-    mongo:
+    shark7-mongo:
         build: ./packages/shark7-mongo
         restart: unless-stopped
         container_name: shark7-mongo
@@ -13,69 +13,100 @@ services:
             - "127.0.0.1:27017:27017"
         environment:
             - MONGO_INITDB_ROOT_USERNAME=admin
-            - MONGO_INITDB_ROOT_PASSWORD=shark7
-    mongo-init:
+            - MONGO_INITDB_ROOT_PASSWORD=admin
+    shark7-mongo-init:
         image: mongo
         container_name: shark7-mongo-init
         networks:
             - default
         depends_on:
-            - mongo
+            - shark7-mongo
         command:
             - mongo
-            - mongodb://admin:shark7@mongo:27017/admin
+            - mongodb://admin:admin@shark7-mongo:27017/admin
             - --eval
-            - 'rs.initiate({ _id: "rs0", members: [{_id:1,host:"mongo:27017"}]})'
-    weibo:
-        build: ./packages/shark7-weibo
+            - 'sleep(5000);rs.initiate({ _id: "rs0", members: [{_id:1,host:"shark7-mongo:27017"}]})'
+    shark7-weibo:
+        build:
+            context: .
+            dockerfile: ./packages/shark7-weibo/Dockerfile
         volumes:
             - ./packages/shark7-weibo/data:/app/data
         container_name: shark7-weibo
         depends_on:
-            - mongo
+            - shark7-mongo
         networks:
             - default
+        security_opt:
+            - seccomp=./chrome_seccomp.json
         environment:
-            # - NODE_ENV=development
-            - MONGODB_PASS=shark7
-            - MONGODB_IP=mongo
-            - weibo_id=123456
-    apex:
-        build: ./packages/shark7-apex
+            - NODE_ENV=production
+            - MONGODB_PASS=admin
+            - MONGODB_IP=shark7-mongo
+            - weibo_id=
+    shark7-apex:
+        build:
+            context: .
+            dockerfile: ./packages/shark7-apex/Dockerfile
         container_name: shark7-apex
         depends_on:
-            - mongo
+            - shark7-mongo
         networks:
             - default
         environment:
-            # - NODE_ENV=development
-            - MONGODB_PASS=shark7
-            - MONGODB_IP=mongo
-            - apex_uid=DisplayName:1001234567890
-    main:
-        build: ./packages/shark7-main
+            - NODE_ENV=production
+            - MONGODB_PASS=admin
+            - MONGODB_IP=shark7-mongo
+            - apex_uid=YourUserName:10012345678
+    shark7-bililive:
+        build:
+            context: .
+            dockerfile: ./packages/shark7-bililive/Dockerfile
+        container_name: shark7-bililive
+        depends_on:
+            - shark7-mongo
+        networks:
+            - default
+        environment:
+            - NODE_ENV=production
+            - MONGODB_PASS=admin
+            - MONGODB_IP=shark7-mongo
+            - room_id=
+            - marked_uid=
+    shark7-bililive-guard:
+        build:
+            context: .
+            dockerfile: ./packages/shark7-bililive-guard/Dockerfile
+        container_name: shark7-bililive-guard
+        depends_on:
+            - shark7-mongo
+        networks:
+            - default
+        environment:
+            - NODE_ENV=production
+            - MONGODB_PASS=admin
+            - MONGODB_IP=shark7-mongo
+            - room_id=
+            - marked_uid=
+    shark7-main:
+        build:
+            context: .
+            dockerfile: ./packages/shark7-main/Dockerfile
         container_name: shark7-main
         depends_on:
-            - mongo
+            - shark7-mongo
         networks:
             - default
         environment:
-            # - NODE_ENV=development
-            - MONGODB_PASS=shark7
-            - MONGODB_IP=mongo
-            - khl_token=aaaabbbbb
-            - khl_msg_channel_id=123456,234567
-            - khl_log_channel_id=123456
-    # shark7:
-    #     build: ./
-    #     volumes:
-    #         - ./data:/app/data
-    #     container_name: shark7
-    #     # cap_add:
-    #     #     - SYS_ADMIN
-    #     restart: unless-stopped
+            - NODE_ENV=production
+            - MONGODB_PASS=admin
+            - MONGODB_IP=shark7-mongo
+            - khl_token=
+            - 'khl_channels=[{ "id": "123456", "include": ["all"],"exclude":["Apex"] }, { "id": "456789", "include": ["BiliLive.Danmaku"] }]'
+
 volumes:
     mongodata:
+
 
 networks:
     default:
