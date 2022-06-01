@@ -16,7 +16,7 @@ export function getFiltedMsg(mongo: MongoController, roomid: any, marked_uid: nu
     live.on('msg', async (data) => {
         try {
             if (process.env.NODE_ENV != 'production') {
-                logger.debug('弹幕服务器消息:\n'+JSON.stringify(data))
+                logger.debug('弹幕服务器消息:\n' + JSON.stringify(data))
             }
             const filter = await msgFilter(data, marked_uid, marked_Users, roomid)
             if (filter) {
@@ -45,6 +45,8 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送弹幕：${data['info'][1]}` }
             } else if (data['info'][0][12] == 1) {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送表情弹幕：[${data['info'][1]}](${data['info'][0][13]['url']})` }
+            } else if (data['info'][0][9] == 2) {
+                return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送抽奖弹幕：${data['info'][1]}` }
             } else {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送特殊弹幕(${data['info'][0][12]})：${data['info'][1]}` }
             }
@@ -59,7 +61,7 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
-            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Entry, msg: `${user.name}进入直播间` }
+            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.EntryWord, msg: `${user.name}进入直播间` }
         }
     } else if (data['cmd'] == 'SEND_GIFT') {
         const uid = data['data']['uid']

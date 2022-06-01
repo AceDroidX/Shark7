@@ -102,7 +102,7 @@ services:
             - MONGODB_PASS=admin
             - MONGODB_IP=shark7-mongo
             - khl_token=
-            - 'khl_channels=[{ "id": "123456", "include": ["all"],"exclude":["Apex"] }, { "id": "456789", "include": ["BiliLive.Danmaku"] }]'
+            - 'khl_channels=[{"id":"1234","exclude":[{"scope":"Apex"}]},{"id":"5678","include":[{"scope":"BiliLive.Danmaku"}]}]'
 
 volumes:
     mongodata:

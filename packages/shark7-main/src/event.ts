@@ -11,7 +11,7 @@ export function sendEvent(event: Shark7Event) {
         logger.warn(`未知scopename:${event}`)
     }
     const msg = `[${getTime(event.ts)}]<${event.name}>(${scopename})\n${event.msg}`
-    sendMsgWithScope(msg, event.scope)
+    sendMsgWithScope(msg, event.name, event.scope, event.msg)
 }
 
 export function onEventChange(raw: ChangeStreamDocument) {

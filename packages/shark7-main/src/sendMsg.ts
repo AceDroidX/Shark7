@@ -2,8 +2,14 @@ import { sendToKHL } from "./khl"
 
 type KHLChannel = {
     id: string,
-    include?: string[],
-    exclude?: string[],
+    include?: Rule[],
+    exclude?: Rule[],
+}
+
+type Rule = {
+    name?: string,
+    scope?: string,
+    msg?: string,
 }
 
 if (!process.env['khl_channels']) {
@@ -13,17 +19,29 @@ if (!process.env['khl_channels']) {
 
 const channelConfig = JSON.parse(process.env['khl_channels']) as KHLChannel[]
 
-export function sendMsgWithScope(msg: string, msgScope: string) {
+export function sendMsgWithScope(formatedMsg: string, name: string, scope: string, msg: string) {
     for (let channel of channelConfig) {
         if (channel.exclude) {
-            if (channel.exclude.some((e) => msgScope.startsWith(e))) {
-                continue
+            for (let rule of channel.exclude) {
+                let matched = 0
+                if (rule.name == name) matched++
+                if (rule.scope && scope.startsWith(rule.scope)) matched++
+                if (rule.msg && msg.includes(rule.msg)) matched++
+                if (matched == Object.keys(rule).length) continue
             }
         }
         if (channel.include) {
-            if (channel.include.some((e) => msgScope.startsWith(e)) || channel.include.includes('all')) {
-                sendToKHL(msg, channel.id)
+            for (let rule of channel.include) {
+                let matched = 0
+                if (rule.name == name) matched++
+                if (rule.scope && scope.startsWith(rule.scope)) matched++
+                if (rule.msg && msg.includes(rule.msg)) matched++
+                if (matched == Object.keys(rule).length) {
+                    sendToKHL(formatedMsg, channel.id)
+                }
             }
+        } else {
+            sendToKHL(formatedMsg, channel.id)
         }
     }
 }
