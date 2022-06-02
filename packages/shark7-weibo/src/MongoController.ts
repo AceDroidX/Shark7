@@ -3,7 +3,7 @@ import { WeiboMsg } from "./model/model"
 import { WeiboUser } from "./model/WeiboUser"
 import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
 import { onMblogEvent, onUserDBEvent } from "./event"
-import { toNumOrStr } from "shark7-shared/dist/utils"
+import { logErrorDetail, toNumOrStr } from "shark7-shared/dist/utils"
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
@@ -33,7 +33,14 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
                 logger.warn(`userDB添加: \n${JSON.stringify(event)}`)
             } else if (event.operationType == 'update') {
                 const userevent = event as ChangeStreamUpdateDocument<WeiboUser>
-                const shark7event = onUserDBEvent(tempWeiboUser, userevent)
+                let shark7event
+                try {
+                    shark7event = onUserDBEvent(tempWeiboUser, userevent)
+                } catch (err) {
+                    logErrorDetail('onUserDBEvent出错', err)
+                    logger.error(JSON.stringify(tempWeiboUser))
+                    return
+                }
                 if (userevent.fullDocument) tempWeiboUser = userevent.fullDocument
                 if (!shark7event) return
                 this.addShark7Event(shark7event)
