@@ -136,6 +136,29 @@ importers:
     devDependencies:
       typescript: 4.7.2
 
+  packages/shark7-weibo-app:
+    specifiers:
+      axios: latest
+      mongodb: latest
+      puppeteer: 14.1.1
+      shark7-shared: 'workspace:'
+      shark7-weibo: 'workspace:'
+      toad-scheduler: latest
+      typescript: latest
+      winston: latest
+      winston-mongodb: latest
+    dependencies:
+      axios: 0.27.2
+      mongodb: 4.6.0
+      puppeteer: 14.1.1
+      shark7-shared: link:../shark7-shared
+      shark7-weibo: link:../shark7-weibo
+      toad-scheduler: 1.6.1
+      winston: 3.7.2
+      winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
+
 packages:
 
   /@babel/code-frame/7.16.7:
@@ -1952,7 +1975,7 @@ packages:
     dev: true
 
   /nopt/1.0.10:
-    resolution: {integrity: sha1-bd0hvSoxQXuScn3Vhfim83YI6+4=}
+    resolution: {integrity: sha512-NWmpvLSqUrgrAC9HCuxEvb+PSloHpqVu+FqcO4eeF2h5qYRhA7ev6KvelyQAKtegUbC6RypJnlEOhd8vloNKYg==}
     hasBin: true
     dependencies:
       abbrev: 1.1.1
@@ -2104,7 +2127,7 @@ packages:
     dev: false
 
   /prepend-http/2.0.0:
-    resolution: {integrity: sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=}
+    resolution: {integrity: sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==}
     engines: {node: '>=4'}
     dev: true
 

@@ -2,12 +2,20 @@ import logger from "shark7-shared/dist/logger"
 import { WeiboError } from "./model/model"
 import { cookieJsonToStr } from 'shark7-shared/dist/utils'
 import { Web } from './model/Web'
+import { MongoController } from "./MongoController"
+import { Browser } from "puppeteer"
 
 const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
 
 export class WeiboWeb extends Web {
     name: string = 'weibo'
+    mongo: MongoController
+
+    constructor(browser: Browser, mongo: MongoController) {
+        super(browser)
+        this.mongo = mongo
+    }
 
     async refresh() {
         // try {
@@ -69,7 +77,7 @@ export class WeiboWeb extends Web {
         var new_cookie = await page.cookies()
         logger.debug('puppeteer:new_cookie\n' + JSON.stringify(new_cookie))
 
-        this.isCookieChanged('WBPSESS', new_cookie)
+        if (this.isCookieChanged('SUB', new_cookie)) this.mongo.updateCookie(new_cookie)
 
         this.cookie_str = cookieJsonToStr(new_cookie)
         this.cookie = new_cookie

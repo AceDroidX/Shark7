@@ -1,5 +1,5 @@
 import { WeiboUser } from "./model/WeiboUser";
-import { logAxiosError, logError, logErrorDetail, logWarn} from "shark7-shared/dist/utils";
+import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { Web } from "./model/Web";
@@ -23,7 +23,7 @@ export class WeiboController {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const weiboWeb = (await Puppeteer.getInstance()).weiboweb
+        const weiboWeb = (await Puppeteer.getInstance(mongo)).weiboweb
         WeiboHTTP.web = weiboWeb;
         await weiboWeb.refresh()
         this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb, mongo)

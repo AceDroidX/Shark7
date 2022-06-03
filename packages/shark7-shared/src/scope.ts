@@ -1,6 +1,7 @@
 enum WeiboScope {
     User = 'Weibo.User',
-    Mblog = 'Weibo.Mblog'
+    Mblog = 'Weibo.Mblog',
+    Like = 'Weibo.Like',
 }
 
 enum BiliLiveScope {
@@ -22,6 +23,7 @@ export enum ScopeName {
     'Apex' = 'Apex信息',
     'Weibo.User' = '微博用户信息',
     'Weibo.Mblog' = '微博动态',
+    'Weibo.Like' = '微博点赞',
     'BiliLive.GuardOnline' = '大航海在线',
     'BiliLive.EntryEffect' = '直播间进入效果',
     'BiliLive.EntryWord' = '直播间进入提示',

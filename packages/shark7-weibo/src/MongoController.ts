@@ -4,7 +4,9 @@ import { WeiboUser } from "./model/WeiboUser"
 import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
 import { onMblogEvent, onUserDBEvent } from "./event"
 import { logErrorDetail, toNumOrStr } from "shark7-shared/dist/utils"
+import { WeiboDataName } from 'shark7-shared/dist/datadb'
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
+import { Protocol } from "puppeteer"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     static async getInstance() {
@@ -80,5 +82,10 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
     async getUserInfoByID(id: number) {
         return await this.dbs.userDB.findOne({ id }) as WithId<WeiboUser>
+    }
+    async updateCookie(cookie: Protocol.Network.Cookie[]) {
+        return await this.dbs.data.updateOne({ name: WeiboDataName.Cookie }, {
+            $set: { data: cookie }
+        }, { upsert: true })
     }
 }

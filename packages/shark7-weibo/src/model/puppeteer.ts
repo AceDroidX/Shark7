@@ -4,17 +4,18 @@ import logger from 'shark7-shared/dist/logger'
 import fs from 'fs'
 import { Browser } from 'puppeteer'
 import { WeiboWeb } from '../WeiboWeb'
+import { MongoController } from '../MongoController'
 
 export class Puppeteer {
     static puppeteer: Puppeteer
 
     browser: Browser
     weiboweb: WeiboWeb
-    constructor(browser: Browser) {
+    constructor(browser: Browser, mongo: MongoController) {
         this.browser = browser
-        this.weiboweb = new WeiboWeb(this.browser)
+        this.weiboweb = new WeiboWeb(this.browser, mongo)
     }
-    static async getInstance() {
+    static async getInstance(mongo: MongoController) {
         if (this.puppeteer != undefined) {
             return this.puppeteer;
         }
@@ -40,7 +41,7 @@ export class Puppeteer {
             //   '--disable-dev-shm-usage', '--single-process',"--no-zygote"],
             args: ['--no-sandbox', '--disable-dev-shm-usage'],
             headless: true
-        }))
+        }), mongo)
         return this.puppeteer
     }
 }
