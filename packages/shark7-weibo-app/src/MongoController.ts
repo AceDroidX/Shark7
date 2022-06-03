@@ -24,7 +24,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         }
     }
     async run() {
-        this.cookieCache = (await this.getCookie()).data
+        this.cookieCache = (await this.getCookie())?.data
         this.dbs.data.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {
             if (event.operationType == 'insert') {
                 logger.warn(`data添加: \n${JSON.stringify(event)}`)
@@ -60,7 +60,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
             }
         })
     }
-    async getCookie(): Promise<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]>> {
+    async getCookie(): Promise<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]> | null> {
         return await this.dbs.data.findOne({ name: WeiboDataName.Cookie }) as WithId<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]>>
     }
     async insertLike(mblog: WeiboMsg) {
