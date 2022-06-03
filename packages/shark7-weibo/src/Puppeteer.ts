@@ -1,24 +1,13 @@
+import { PuppeteerBase } from 'shark7-shared/dist/Puppeteer'
+import { MongoController } from './MongoController';
+import { WeiboWeb } from './WeiboWeb';
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import logger from 'shark7-shared/dist/logger'
+import logger from 'shark7-shared/dist/logger';
 import fs from 'fs'
-import { Browser } from 'puppeteer'
-import { WeiboWeb } from '../WeiboWeb'
-import { MongoController } from '../MongoController'
 
-export class Puppeteer {
-    static puppeteer: Puppeteer
-
-    browser: Browser
-    weiboweb: WeiboWeb
-    constructor(browser: Browser, mongo: MongoController) {
-        this.browser = browser
-        this.weiboweb = new WeiboWeb(this.browser, mongo)
-    }
+export class Puppeteer extends PuppeteerBase<WeiboWeb>{
     static async getInstance(mongo: MongoController) {
-        if (this.puppeteer != undefined) {
-            return this.puppeteer;
-        }
         puppeteer.use(StealthPlugin())
         logger.debug('使用StealthPlugin')
         if (fs.existsSync('/usr/bin/google-chrome')) {
@@ -32,7 +21,7 @@ export class Puppeteer {
                 var exepath = ''
             }
         }
-        this.puppeteer = new Puppeteer(await puppeteer.launch({
+        const browser = await puppeteer.launch({
             // pipe: true,
             userDataDir: './data/puppeteer',
             executablePath: exepath,
@@ -41,8 +30,8 @@ export class Puppeteer {
             //   '--disable-dev-shm-usage', '--single-process',"--no-zygote"],
             args: ['--no-sandbox', '--disable-dev-shm-usage'],
             headless: true
-        }), mongo)
-        return this.puppeteer
+        })
+        const web = new WeiboWeb(browser, mongo)
+        return new this(browser, web)
     }
 }
-

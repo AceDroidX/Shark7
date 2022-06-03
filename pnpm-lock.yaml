@@ -73,6 +73,33 @@ importers:
     devDependencies:
       typescript: 4.7.2
 
+  packages/shark7-douyin:
+    specifiers:
+      axios: latest
+      logform: latest
+      mongodb: latest
+      puppeteer: 14.1.1
+      puppeteer-extra: ^3.2.3
+      puppeteer-extra-plugin-stealth: ^2.9.0
+      shark7-shared: 'workspace:'
+      toad-scheduler: latest
+      typescript: latest
+      winston: latest
+      winston-mongodb: latest
+    dependencies:
+      axios: 0.27.2
+      logform: 2.4.0
+      mongodb: 4.6.0
+      puppeteer: 14.1.1
+      puppeteer-extra: 3.2.3_puppeteer@14.1.1
+      puppeteer-extra-plugin-stealth: 2.9.0_puppeteer-extra@3.2.3
+      shark7-shared: link:../shark7-shared
+      toad-scheduler: 1.6.1
+      winston: 3.7.2
+      winston-mongodb: 5.0.7_winston@3.7.2
+    devDependencies:
+      typescript: 4.7.2
+
   packages/shark7-main:
     specifiers:
       axios: latest
@@ -97,6 +124,9 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
+      puppeteer: 14.1.1
+      puppeteer-extra: ^3.2.3
+      puppeteer-extra-plugin-stealth: ^2.9.0
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -104,6 +134,9 @@ importers:
       axios: 0.27.2
       logform: 2.4.0
       mongodb: 4.6.0
+      puppeteer: 14.1.1
+      puppeteer-extra: 3.2.3_puppeteer@14.1.1
+      puppeteer-extra-plugin-stealth: 2.9.0_puppeteer-extra@3.2.3
       winston: 3.7.2
       winston-mongodb: 5.0.7_winston@3.7.2
     devDependencies:

@@ -32,7 +32,9 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         userDBChangeStream.on("change", async event => {
             logger.info(`userDB改变: \n${JSON.stringify(event)}`)
             if (event.operationType == 'insert') {
-                logger.warn(`userDB添加: \n${JSON.stringify(event)}`)
+                logger.info(`userDB添加: \n${JSON.stringify(event)}`)
+                const userevent = event as ChangeStreamInsertDocument<WeiboUser>
+                tempWeiboUser = userevent.fullDocument
             } else if (event.operationType == 'update') {
                 const userevent = event as ChangeStreamUpdateDocument<WeiboUser>
                 let shark7event

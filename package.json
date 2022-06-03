@@ -14,6 +14,7 @@
     "dev:weibo-app":"pnpm run -F shark7-weibo-app dev",
     "dev:bililive":"pnpm run -F shark7-bililive dev",
     "dev:bililive-guard":"pnpm run -F shark7-bililive-guard dev",
+    "dev:douyin":"pnpm run -F shark7-douyin dev",
     "dev:shared": "pnpm run -F shark7-shared dev",
     "build:main": "pnpm run build:shared && pnpm run -F shark7-main build",
     "build:apex": "pnpm run build:shared && pnpm run -F shark7-apex build",
@@ -22,12 +23,14 @@
     "build:bililive": "pnpm run build:shared && pnpm run -F shark7-bililive build",
     "build:bililive-guard": "pnpm run build:shared && pnpm run -F shark7-bililive-guard build",
     "build:shared": "pnpm run -F shark7-shared build",
+    "build:douyin": "pnpm run build:shared && pnpm run -F shark7-douyin build",
     "start:main": "pnpm run -F shark7-main start",
     "start:apex": "pnpm run -F shark7-apex start",
     "start:weibo": "pnpm run -F shark7-weibo start",
     "start:weibo-app": "pnpm run -F shark7-weibo-app start",
     "start:bililive": "pnpm run -F shark7-bililive start",
-    "start:bililive-guard": "pnpm run -F shark7-bililive-guard start"
+    "start:bililive-guard": "pnpm run -F shark7-bililive-guard start",
+    "start:douyin": "pnpm run -F shark7-douyin start"
   },
   "author": "AceDroidX",
   "license": "ISC",

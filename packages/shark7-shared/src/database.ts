@@ -71,6 +71,21 @@ export class BiliLiveDBs extends EventDBs {
     }
 }
 
+export class DouyinDBs extends EventDBs {
+    userDB: Collection
+    constructor(event: Collection, data: Collection, userDB: Collection) {
+        super(event, data)
+        this.userDB = userDB
+    }
+    static getInstance(client: MongoClient) {
+        const event = client.db('douyin').collection('event')
+        const data = client.db('douyin').collection('data')
+        const userDB = client.db('douyin').collection('users')
+        event.createIndex({ ts: -1 })
+        return new this(event, data, userDB)
+    }
+}
+
 export class MongoControllerBase<T extends EventDBs> {
     client: MongoClient
     dbs: T

@@ -1,5 +1,5 @@
 import { Browser, Protocol } from "puppeteer";
-import logger from "shark7-shared/dist/logger";
+import logger from "../logger";
 
 interface IWeb {
     name: string;

@@ -1,7 +1,7 @@
 import logger from "shark7-shared/dist/logger"
 import { WeiboError } from "./model/model"
 import { cookieJsonToStr } from 'shark7-shared/dist/utils'
-import { Web } from './model/Web'
+import { Web } from 'shark7-shared/dist/Puppeteer/Web'
 import { MongoController } from "./MongoController"
 import { Browser } from "puppeteer"
 

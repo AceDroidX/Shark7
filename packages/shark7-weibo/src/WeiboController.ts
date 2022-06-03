@@ -2,10 +2,10 @@ import { WeiboUser } from "./model/WeiboUser";
 import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
 import { WeiboHTTP } from "./model/WeiboHTTP";
-import { Web } from "./model/Web";
-import { Puppeteer } from "./model/puppeteer";
+import { Puppeteer } from "./Puppeteer";
 import { ToadScheduler, SimpleIntervalJob, Task, AsyncTask } from 'toad-scheduler';
 import { MongoController } from "./MongoController";
+import { Web } from "shark7-shared/dist/Puppeteer/Web";
 
 export class WeiboController {
     static wc: WeiboController;
@@ -23,7 +23,7 @@ export class WeiboController {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const weiboWeb = (await Puppeteer.getInstance(mongo)).weiboweb
+        const weiboWeb = (await Puppeteer.getInstance(mongo)).web
         WeiboHTTP.web = weiboWeb;
         await weiboWeb.refresh()
         this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb, mongo)
