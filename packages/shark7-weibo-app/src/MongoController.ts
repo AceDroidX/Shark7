@@ -27,7 +27,11 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         this.cookieCache = (await this.getCookie())?.data
         this.dbs.data.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {
             if (event.operationType == 'insert') {
-                logger.warn(`data添加: \n${JSON.stringify(event)}`)
+                logger.info(`data添加: \n${JSON.stringify(event)}`)
+                if (event.fullDocument.name == WeiboDataName.Cookie) {
+                    const insertEvent = event as ChangeStreamInsertDocument<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]>>
+                    this.cookieCache = insertEvent.fullDocument.data
+                }
             } else if (event.operationType == 'update') {
                 const updateEvent = event as ChangeStreamUpdateDocument<DataDBDoc<WeiboDataName, any>>
                 logger.info(`data更新: \n${JSON.stringify(updateEvent)}`)
@@ -73,6 +77,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
 
 function onNewLike(user: WeiboUser, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event {
     const mblog = event.fullDocument
-    const msg = `${mblog.user.screen_name} 发布于${getTime(mblog._timestamp)}\n${mblog.text_raw ? mblog.text_raw : mblog.text}`
+    const msg = `${mblog.user.screen_name} 发布于${getTime(mblog._timestamp, false)}\n${mblog.text_raw ? mblog.text_raw : mblog.text}`
     return { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Like, msg }
 }

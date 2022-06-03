@@ -19,7 +19,7 @@ function timePrefix() {
     return `[${getTime()}]`
 }
 //get time 
-function getTime(timestamp?: number) {
+function getTime(timestamp?: number, withMiliSecond?: boolean) {
     let hasMilliSeconds = true
     let now
     if (timestamp === undefined) {
@@ -39,7 +39,7 @@ function getTime(timestamp?: number) {
     const second = now.getSeconds().toString().padStart(2, '0')
     const milli = now.getMilliseconds().toString().padStart(3, '0')
     let time
-    if (hasMilliSeconds) {
+    if (withMiliSecond) {
         time = `${year}-${month}-${day} ${hour}:${minute}:${second}.${milli}`
     } else {
         time = `${year}-${month}-${day} ${hour}:${minute}:${second}`
