@@ -79,7 +79,13 @@ async function fetchLike(mongo: MongoController, weibo_id: number) {
             return
         }
     } catch (error) {
-        logAxiosError(error)
+        if (axios.isAxiosError(error)) {
+            logger.error('抓取点赞失败:请求错误')
+            logAxiosError(error, 'error')
+        } else {
+            logErrorDetail('抓取点赞失败', error)
+        }
+        return
     }
     const data = JSON.parse(resp?.data)
     let cards: WeiboCard[] = data.cards

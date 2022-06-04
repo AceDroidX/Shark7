@@ -37,7 +37,7 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
     // if (!isValidKey('cmd', data)) {
     //     throw Error('invalid sequence');
     // }
-    if (data['cmd'] == 'DANMU_MSG') {
+    if (data['cmd'].startsWith('DANMU_MSG')) {
         const uid = data['info'][2][0]
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)

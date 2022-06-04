@@ -51,23 +51,23 @@ function isValidKey(key: string | number | symbol, object: object): key is keyof
     return key in object;
 }
 
-function logAxiosError(error: any) {
+function logAxiosError(error: any, level: 'error' | 'warn' | 'info' | 'debug' = 'warn') {
     if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        logger.debug(error.response.data);
-        logger.debug(error.response.status);
-        logger.debug(JSON.stringify(error.response.headers));
+        logger.log(level, error.response.data);
+        logger.log(level, error.response.status);
+        logger.log(level, JSON.stringify(error.response.headers));
     } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        logger.debug(error.request);
+        logger.log(level, error.request);
     } else {
         // Something happened in setting up the request that triggered an Error
-        logger.debug('Error', error.message);
+        logger.log(level, 'Error', error.message);
     }
-    logger.debug(JSON.stringify(error.config));
+    logger.log(level, JSON.stringify(error.config));
 }
 
 function logErrorDetail(msg: string, error: any) {

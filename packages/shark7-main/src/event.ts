@@ -6,9 +6,10 @@ import { getTime } from "shark7-shared/dist/utils";
 import { sendMsgWithScope } from "./sendMsg";
 
 export function sendEvent(event: Shark7Event) {
-    const scopename = getScopeName(event.scope)
+    let scopename = getScopeName(event.scope)
     if (!scopename) {
         logger.warn(`未知scopename:${event}`)
+        scopename = event.scope
     }
     const msg = `[${getTime(event.ts)}]<${event.name}>(${scopename})\n${event.msg}`
     sendMsgWithScope(msg, event.name, event.scope, event.msg)
