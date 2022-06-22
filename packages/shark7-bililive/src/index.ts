@@ -7,6 +7,7 @@ import { MongoController } from './MongoController';
 import winston from 'winston';
 import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
 import { getFiltedMsg } from './live';
+import { GetConfTask } from './GetConfTask';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {
@@ -55,9 +56,10 @@ async function main() {
         logger.info(user.toString())
         await new Promise(resolve => setTimeout(resolve, 200));
     }
-    roomid.forEach((value: number, index: number) => {
+    const confTask = new GetConfTask()
+    roomid_Users.roomidlist().forEach((value: number, index: number) => {
         // openOneRoom(parseInt(element))
         // getAllMsg(parseInt(element)) 
-        setTimeout(() => getFiltedMsg(mongo, value, marked_uid, marked_Users, roomid_Users), 500 * index)
+        setTimeout(() => getFiltedMsg(mongo, confTask, value, marked_uid, marked_Users, roomid_Users), 500 * index)
     });
 }
