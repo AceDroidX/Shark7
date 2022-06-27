@@ -42,7 +42,11 @@ async function main() {
         () => { fetchUserInfo(puppeteerClient) },
         (err: Error) => { logErrorDetail('fetchUserInfo错误', err) }
     )
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 60, }, fetchUserInfoTask))
+    let interval = 60
+    if (process.env['interval']) {
+        interval = Number(process.env['interval'])
+    }
+    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchUserInfoTask))
     logger.info('douyin模块已启动')
 }
 
