@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm install --offline
-RUN pnpm run build:bililive
+RUN pnpm run build:shared && pnpm run -F shark7-bililive build
 
 FROM node:16-alpine
 WORKDIR /app
@@ -22,4 +22,4 @@ COPY . ./
 COPY --from=build /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dist/
 COPY --from=build /app/packages/shark7-bililive/dist/ ./packages/shark7-bililive/dist/
 RUN pnpm install --offline --prod
-CMD ["npm","run","start:bililive"]
+CMD ["pnpm","run","-F","shark7-bililive","start"]

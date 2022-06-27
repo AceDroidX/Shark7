@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm install --offline
-RUN pnpm run build:main
+RUN pnpm run build:shared && pnpm run -F shark7-main build
 
 FROM node:16-alpine
 WORKDIR /app
@@ -22,4 +22,4 @@ COPY . ./
 COPY --from=build /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dist/
 COPY --from=build /app/packages/shark7-main/dist/ ./packages/shark7-main/dist/
 RUN pnpm install --offline --prod
-CMD ["npm","run","start:main"]
+CMD ["pnpm","run","-F","shark7-main","start"]

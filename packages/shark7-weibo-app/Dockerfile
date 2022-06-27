@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm install --offline
-RUN pnpm run build:weibo-app
+RUN pnpm run build:shared && pnpm run -F shark7-weibo build && pnpm run -F shark7-weibo-app build
 
 FROM node:16-alpine
 WORKDIR /app
@@ -23,4 +23,4 @@ COPY --from=build /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dis
 COPY --from=build /app/packages/shark7-weibo/dist/ ./packages/shark7-weibo/dist/
 COPY --from=build /app/packages/shark7-weibo-app/dist/ ./packages/shark7-weibo-app/dist/
 RUN pnpm install --offline --prod
-CMD ["npm","run","start:weibo-app"]
+CMD ["pnpm","run","-F","shark7-weibo-app","start"]

@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm install --offline
-RUN pnpm run build:douyin
+RUN pnpm run build:shared && pnpm run -F shark7-douyin build
 
 FROM zenika/alpine-chrome:101-with-node-16
 WORKDIR /app
@@ -24,4 +24,4 @@ COPY --chown=chrome . ./
 COPY --from=build --chown=chrome /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dist/
 COPY --from=build --chown=chrome /app/packages/shark7-douyin/dist/ ./packages/shark7-douyin/dist/
 RUN pnpm install --offline --prod
-CMD ["npm","run","start:douyin"]
+CMD ["pnpm","run","-F","shark7-douyin","start"]
