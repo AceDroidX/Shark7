@@ -45,7 +45,7 @@ export async function fetchURL(url: string, reqConfig: AxiosRequestConfig | unde
 
 export function onlineStatusCovent(desc1: string): boolean | undefined {
     if (desc1 == '微博在线了') return true
-    if (desc1 == '刚刚在线了' || desc1.endsWith('分钟前在线了')) return false
+    if (desc1 == '刚刚在线了' || desc1.endsWith('前在线了')) return false
 }
 
 function getCookieByKey(cookie: Protocol.Network.Cookie[], key: string): string | undefined {
