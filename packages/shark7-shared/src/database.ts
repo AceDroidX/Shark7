@@ -30,11 +30,13 @@ export class WeiboDBs extends EventDBs {
     mblogsDB: Collection
     userDB: Collection
     likeDB: Collection
-    constructor(event: Collection, data: Collection, mblogsDB: Collection, userDB: Collection, likeDB: Collection) {
+    onlineDB: Collection
+    constructor(event: Collection, data: Collection, mblogsDB: Collection, userDB: Collection, likeDB: Collection, onlineDB: Collection) {
         super(event, data)
         this.mblogsDB = mblogsDB
         this.userDB = userDB
         this.likeDB = likeDB
+        this.onlineDB = onlineDB
     }
     static getInstance(client: MongoClient) {
         const event = client.db('weibo').collection('event')
@@ -42,7 +44,8 @@ export class WeiboDBs extends EventDBs {
         const mblogsDB = client.db('weibo').collection('mblogs')
         const userDB = client.db('weibo').collection('users')
         const likeDB = client.db('weibo').collection('likes')
-        return new this(event, data, mblogsDB, userDB, likeDB)
+        const onlineDB = client.db('weibo').collection('online')
+        return new this(event, data, mblogsDB, userDB, likeDB, onlineDB)
     }
 }
 

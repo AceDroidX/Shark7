@@ -1,14 +1,13 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { logAxiosError, logErrorDetail } from 'shark7-shared/dist/utils'
+import { logErrorDetail } from 'shark7-shared/dist/utils'
 import logger from 'shark7-shared/dist/logger';
-import { WeiboMsg } from 'shark7-weibo/dist/model/model'
 import winston from 'winston';
 import { MongoController } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
-import axios, { AxiosRequestConfig } from 'axios';
-import { Protocol } from 'puppeteer';
+import { fetchLike } from './fetchLike';
+import { fetchOnline } from './fetchOnline';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -49,87 +48,17 @@ async function main() {
         () => { fetchLike(mongo, weibo_id) },
         (err: Error) => { logErrorDetail('fetchLike错误', err) }
     )
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 10, }, fetchLikeTask))
+    const fetchOnlineTask = new Task(
+        'fetchOnline',
+        () => { fetchOnline(mongo, weibo_id) },
+        (err: Error) => { logErrorDetail('fetchOnline错误', err) }
+    )
+    let interval = 10
+    if (process.env['interval']) {
+        interval = Number(process.env['interval'])
+    }
+    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchLikeTask))
+    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchOnlineTask))
     logger.info('weibo-app模块已启动')
 }
 
-async function fetchLike(mongo: MongoController, weibo_id: number) {
-    logger.debug('开始抓取点赞')
-    if (!mongo.cookieCache) {
-        logger.error('cookieCache为空')
-        return
-    }
-    const reqConfig: AxiosRequestConfig = {
-        params: {
-            c: 'android', lang: 'zh_CN',
-            page: '1', count: '20',
-            from: process.env['weibo_from'], s: process.env['weibo_s'], containerid: process.env['weibo_containerid'],
-            gsid: getCookieByKey(mongo.cookieCache, 'SUB')
-        },
-        headers: {
-            authorization: `WB-SUT ${getCookieByKey(mongo.cookieCache, 'SUB')}`
-        },
-        transformResponse: (r) => r,
-    }
-    let resp
-    try {
-        resp = await axios.get('https://api.weibo.cn/2/cardlist', reqConfig)
-        if (resp.status != 200) {
-            logger.error(`抓取点赞失败,状态码:${resp.status}\n${resp}`)
-            return
-        }
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            logger.error('抓取点赞失败:请求错误')
-            logAxiosError(error, 'error')
-        } else {
-            logErrorDetail('抓取点赞失败', error)
-        }
-        return
-    }
-    const data = JSON.parse(resp?.data)
-    let cards: WeiboCard[] = data.cards
-    cards.reverse()
-    cards.forEach(async (card: WeiboCard) => {
-        try {
-            if (card.card_type == 11) {
-                if (card.card_group?.length != 1) {
-                    logger.warn(`card_group长度不为1:${JSON.stringify(card)}`)
-                    return
-                }
-                if (!card.card_group[0].mblog) {
-                    logger.error(`card_group[0].mblog为空:${JSON.stringify(card)}`)
-                    return
-                }
-                const weiboMsg = new WeiboMsg(card.card_group[0].mblog, weibo_id)
-                await mongo.insertLike(weiboMsg)
-            } else if (card.card_type == 9) {
-                if (!card.mblog) {
-                    logger.error(`card.mblog为空:${JSON.stringify(card)}`)
-                    return
-                }
-                const weiboMsg = new WeiboMsg(card.mblog, weibo_id)
-                await mongo.insertLike(weiboMsg)
-            } else {
-                logger.warn(`card_type未知:${JSON.stringify(card)}`)
-            }
-        } catch (err) {
-            logErrorDetail('抓取点赞出错', err)
-            logger.error(`${JSON.stringify(card)}`)
-        }
-    })
-}
-
-function getCookieByKey(cookie: Protocol.Network.Cookie[], key: string): string | undefined {
-    for (const item of cookie) {
-        if (item.name == key) {
-            return item.value
-        }
-    }
-}
-
-type WeiboCard = {
-    card_type: number,
-    card_group?: WeiboCard[],
-    mblog?: WeiboMsg,
-}
