@@ -11,7 +11,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { Protocol } from 'puppeteer';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误 
+    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -61,9 +61,9 @@ async function fetchLike(mongo: MongoController, weibo_id: number) {
     }
     const reqConfig: AxiosRequestConfig = {
         params: {
-            c: 'android', from: '10C5095010', lang: 'zh_CN',
+            c: 'android', lang: 'zh_CN',
             page: '1', count: '20',
-            s: process.env['weibo_s'], containerid: process.env['weibo_containerid'],
+            from: process.env['weibo_from'], s: process.env['weibo_s'], containerid: process.env['weibo_containerid'],
             gsid: getCookieByKey(mongo.cookieCache, 'SUB')
         },
         headers: {
