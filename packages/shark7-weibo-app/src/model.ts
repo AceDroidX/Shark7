@@ -15,4 +15,5 @@ export type OnlineData = {
     id: number
     screen_name: string
     desc1: string
+    online: boolean
 }

@@ -124,13 +124,13 @@ function onNewOnlineData(origin: OnlineData, event: ChangeStreamUpdateDocument<O
         logger.warn(`event.updateDescription.updatedFields为${data}`)
         return
     }
-    if (!data.desc1) {
+    if (data.desc1 == undefined) {
         logger.warn(`data.desc1不存在${data}`)
         return
     }
-    if (origin.desc1.endsWith('分钟前在线了') && data.desc1.endsWith('分钟前在线了')) {
-        return
+    if (data.online != undefined) {
+        const msg = data.online ? '在线' : '离线'
+        logger.info(`<${origin.screen_name}>微博在线状态改变:${msg}`)
+        return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Weibo.Online, msg }
     }
-    logger.info(`<${origin.screen_name}>微博在线状态改变:${data.desc1}`)
-    return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Weibo.Online, msg: data.desc1 }
 }
