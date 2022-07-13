@@ -1,0 +1,31 @@
+name: "Shark7 bililive Build"
+
+on:
+  push:
+    branches:
+      - v2
+      - dev
+    paths:
+      - "packages/shark7-bililive/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "tsconfig.json"
+  workflow_dispatch:
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF##*/}
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+      - name: Build
+        run: docker build -f ./packages/shark7-bililive/Dockerfile -t acedroidx/shark7-bililive:${GITHUB_REF##*/} .
+      - name: Log In
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push
+        run: docker push acedroidx/shark7-bililive:${GITHUB_REF##*/}
