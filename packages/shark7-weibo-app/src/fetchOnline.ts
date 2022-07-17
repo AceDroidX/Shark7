@@ -1,7 +1,7 @@
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
-import { getReqConfig, fetchURL, onlineStatusCovent } from './utils';
+import { getReqConfig, fetchURL } from './utils';
 import { OnlineData, WeiboCard } from "./model";
 
 export async function fetchOnline(mongo: MongoController, weibo_id: number) {
@@ -33,11 +33,7 @@ export async function fetchOnline(mongo: MongoController, weibo_id: number) {
                             logger.warn(`inner_card.user不存在:${JSON.stringify(card)}`);
                             return;
                         }
-                        let online = onlineStatusCovent(inner_card.desc1)
-                        if (online == undefined) {
-                            logger.warn(`未知的在线状态${inner_card.desc1}`)
-                            online = false
-                        }
+                        let online = inner_card.desc1 == '微博在线了'
                         const data: OnlineData = {
                             id: weibo_id,
                             screen_name: inner_card.user.screen_name,
