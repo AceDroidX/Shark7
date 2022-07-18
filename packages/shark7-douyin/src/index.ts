@@ -6,10 +6,12 @@ import logger from 'shark7-shared/dist/logger';
 import winston from 'winston';
 import { MongoController } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
-import { Puppeteer } from './Puppeteer';
+import { Puppeteer } from 'shark7-shared/dist/Puppeteer'
+import { DouyinWeb } from './DouyinWeb';
+import { DouyinDBs } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误 
+    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -34,7 +36,7 @@ async function main() {
     }))
 
     await mongo.run()
-    const puppeteerClient = await Puppeteer.getInstance(mongo)
+    const puppeteerClient = await Puppeteer.getInstance(mongo, DouyinWeb)
     await fetchUserInfo(puppeteerClient)
     const scheduler = new ToadScheduler()
     const fetchUserInfoTask = new Task(
@@ -50,6 +52,6 @@ async function main() {
     logger.info('douyin模块已启动')
 }
 
-async function fetchUserInfo(puppeteerClient: Puppeteer) {
+async function fetchUserInfo(puppeteerClient: Puppeteer<DouyinWeb, DouyinDBs>) {
     await puppeteerClient.web.refresh()
 }

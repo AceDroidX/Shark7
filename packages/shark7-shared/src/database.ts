@@ -1,7 +1,7 @@
 import { Collection, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
 
-class EventDBs {
+export class EventDBs {
     event: Collection
     data: Collection
     constructor(event: Collection, data: Collection) {

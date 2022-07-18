@@ -2,19 +2,21 @@ import { WeiboUser } from "./model/WeiboUser";
 import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
 import { WeiboHTTP } from "./model/WeiboHTTP";
-import { Puppeteer } from "./Puppeteer";
+import { Puppeteer } from "shark7-shared/dist/Puppeteer";
 import { ToadScheduler, SimpleIntervalJob, Task, AsyncTask } from 'toad-scheduler';
 import { MongoController } from "./MongoController";
 import { Web } from "shark7-shared/dist/Puppeteer/Web";
+import { WeiboDBs } from "shark7-shared/dist/database"
+import { WeiboWeb } from './WeiboWeb'
 
 export class WeiboController {
     static wc: WeiboController;
 
     user: WeiboUser
-    weiboWeb: Web
+    weiboWeb: Web<WeiboDBs>
     mongo: MongoController
 
-    constructor(user: WeiboUser, weiboWeb: Web, mongo: MongoController) {
+    constructor(user: WeiboUser, weiboWeb: Web<WeiboDBs>, mongo: MongoController) {
         this.user = user;
         this.weiboWeb = weiboWeb;
         this.mongo = mongo;
@@ -23,7 +25,7 @@ export class WeiboController {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const weiboWeb = (await Puppeteer.getInstance(mongo)).web
+        const weiboWeb = (await Puppeteer.getInstance(mongo, WeiboWeb)).web
         WeiboHTTP.web = weiboWeb;
         await weiboWeb.refresh()
         this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb, mongo)
