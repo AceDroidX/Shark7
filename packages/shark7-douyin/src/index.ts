@@ -8,7 +8,6 @@ import { MongoController } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { Puppeteer } from 'shark7-shared/dist/Puppeteer'
 import { DouyinWeb } from './DouyinWeb';
-import { DouyinDBs } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -52,6 +51,6 @@ async function main() {
     logger.info('douyin模块已启动')
 }
 
-async function fetchUserInfo(puppeteerClient: Puppeteer<DouyinWeb, DouyinDBs>) {
+async function fetchUserInfo(puppeteerClient: Puppeteer<DouyinWeb>) {
     await puppeteerClient.web.refresh()
 }

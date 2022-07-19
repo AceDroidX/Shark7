@@ -4,17 +4,16 @@ import { cookieJsonToStr } from 'shark7-shared/dist/utils'
 import { Web } from 'shark7-shared/dist/Puppeteer/Web'
 import { MongoController } from "./MongoController"
 import { Browser } from "puppeteer"
-import { WeiboDBs } from "shark7-shared/dist/database"
 
 const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div:nth-child(1) > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
 
-export class WeiboWeb extends Web<WeiboDBs> {
+export class WeiboWeb extends Web {
     name: string = 'weibo'
     mongo: MongoController
 
     constructor(browser: Browser, mongo: MongoController) {
-        super(browser, mongo)
+        super(browser)
         this.mongo = mongo
     }
 

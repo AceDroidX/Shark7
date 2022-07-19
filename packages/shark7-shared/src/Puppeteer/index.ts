@@ -6,7 +6,7 @@ import logger from '../logger';
 import fs from 'fs'
 import { MongoControllerBase, EventDBs } from '../database';
 
-export class Puppeteer<T extends Web<D>, D extends EventDBs> {
+export class Puppeteer<T extends Web> {
     browser: Browser
     web: T
     constructor(browser: Browser, web: T) {
@@ -38,7 +38,7 @@ export class Puppeteer<T extends Web<D>, D extends EventDBs> {
             headless: true
         })
     }
-    static async getInstance<W extends Web<D>, D extends EventDBs, M extends MongoControllerBase<D>>(mongo: M, webfunc: { new(browser: Browser, mongo: M): W }) {
+    static async getInstance<W extends Web, D extends EventDBs, M extends MongoControllerBase<D>>(mongo: M, webfunc: { new(browser: Browser, mongo: M): W }) {
         const browser = await this.getBrowser()
         const web = new webfunc(browser, mongo)
         return new this(browser, web)

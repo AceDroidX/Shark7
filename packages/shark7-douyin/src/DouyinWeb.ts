@@ -2,14 +2,13 @@ import logger from "shark7-shared/dist/logger"
 import { Web } from 'shark7-shared/dist/Puppeteer/Web'
 import { MongoController } from "./MongoController"
 import { Browser } from "puppeteer"
-import { DouyinDBs } from "shark7-shared/dist/database"
 
-export class DouyinWeb extends Web<DouyinDBs> {
+export class DouyinWeb extends Web {
     name: string = 'douyin'
     mongo: MongoController
 
     constructor(browser: Browser, mongo: MongoController) {
-        super(browser, mongo)
+        super(browser)
         this.mongo = mongo
     }
 

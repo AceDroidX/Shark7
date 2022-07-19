@@ -6,17 +6,16 @@ import { Puppeteer } from "shark7-shared/dist/Puppeteer";
 import { ToadScheduler, SimpleIntervalJob, Task, AsyncTask } from 'toad-scheduler';
 import { MongoController } from "./MongoController";
 import { Web } from "shark7-shared/dist/Puppeteer/Web";
-import { WeiboDBs } from "shark7-shared/dist/database"
 import { WeiboWeb } from './WeiboWeb'
 
 export class WeiboController {
     static wc: WeiboController;
 
     user: WeiboUser
-    weiboWeb: Web<WeiboDBs>
+    weiboWeb: Web
     mongo: MongoController
 
-    constructor(user: WeiboUser, weiboWeb: Web<WeiboDBs>, mongo: MongoController) {
+    constructor(user: WeiboUser, weiboWeb: Web, mongo: MongoController) {
         this.user = user;
         this.weiboWeb = weiboWeb;
         this.mongo = mongo;

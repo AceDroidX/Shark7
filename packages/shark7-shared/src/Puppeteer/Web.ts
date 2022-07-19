@@ -1,5 +1,4 @@
 import { Browser, Protocol } from "puppeteer";
-import { EventDBs, MongoControllerBase } from "../database";
 import logger from "../logger";
 
 interface IWeb {
@@ -12,16 +11,14 @@ interface IWeb {
     refresh(): Promise<void>;
 }
 
-export class Web<T extends EventDBs> implements IWeb {
+export class Web implements IWeb {
     name: string = 'web'
 
     cookie: any = undefined
     cookie_str: string = ''
     browser: Browser;
-    mongo: MongoControllerBase<T>
-    constructor(browser: Browser, mongo: MongoControllerBase<T>) {
+    constructor(browser: Browser) {
         this.browser = browser
-        this.mongo = mongo
     }
     getCookieStr() {
         if (this.cookie_str == '') {
