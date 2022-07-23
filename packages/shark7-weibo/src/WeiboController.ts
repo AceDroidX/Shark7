@@ -1,40 +1,35 @@
-import { WeiboUser } from "./model/WeiboUser";
+import { WeiboUser, WeiboUserCtl } from "./model/WeiboUser";
 import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
-import { WeiboHTTP } from "./model/WeiboHTTP";
-import { Puppeteer } from "shark7-shared/dist/Puppeteer";
-import { ToadScheduler, SimpleIntervalJob, Task, AsyncTask } from 'toad-scheduler';
+import { ToadScheduler, SimpleIntervalJob, Task } from 'toad-scheduler';
 import { MongoController } from "./MongoController";
-import { Web } from "shark7-shared/dist/Puppeteer/Web";
-import { WeiboWeb } from './WeiboWeb'
+import { WeiboHTTP } from "./model/WeiboHTTP";
 
 export class WeiboController {
     static wc: WeiboController;
 
+    userCtl: WeiboUserCtl
     user: WeiboUser
-    weiboWeb: Web
     mongo: MongoController
 
-    constructor(user: WeiboUser, weiboWeb: Web, mongo: MongoController) {
+    constructor(userCtl: WeiboUserCtl, user: WeiboUser, mongo: MongoController) {
+        this.userCtl = userCtl
         this.user = user;
-        this.weiboWeb = weiboWeb;
         this.mongo = mongo;
     }
     static async init(uid: number, mongo: MongoController) {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const weiboWeb = (await Puppeteer.getInstance(mongo, WeiboWeb)).web
-        WeiboHTTP.web = weiboWeb;
-        await weiboWeb.refresh()
-        this.wc = new WeiboController(await WeiboUser.getFromID(uid), weiboWeb, mongo)
+        const wbUserCtl = new WeiboUserCtl(new WeiboHTTP(mongo))
+        this.wc = new WeiboController(wbUserCtl, await wbUserCtl.getFromID(uid), mongo)
         return this.wc;
     }
     async fetchMblog() {
         logger.debug("开始抓取微博");
         let new_mblogs
         try {
-            new_mblogs = await this.user.checkAndGetNewMblogs(this.mongo)
+            new_mblogs = await this.userCtl.checkAndGetNewMblogs(this.user.id, this.mongo)
         } catch (e: any) {
             logAxiosError(e);
             if (e.response) {
@@ -61,7 +56,7 @@ export class WeiboController {
         logger.debug("开始抓取用户信息");
         let user
         try {
-            user = await this.user.updateUserInfo()
+            user = await this.userCtl.updateUserInfo(this.user)
         } catch (e: any) {
             logAxiosError(e);
             if (e.response) {
@@ -95,22 +90,7 @@ export class WeiboController {
             () => { this.fetchUserInfo() },
             (err: Error) => { logError('fetchUserInfo错误', err) }
         )
-        const refreshCookieTask = new AsyncTask(
-            'refreshCookie',
-            async () => {
-                const r = await Promise.race([
-                    this.weiboWeb.refresh(),
-                    new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
-                ]);
-                if (r == 'timeout') {
-                    logger.error(`刷新cookie超时`);
-                    process.exit(1);
-                }
-            },
-            (err: Error) => { logError('refreshCookie错误', err) }
-        )
         scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, fetchMblogTask))
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 20, }, fetchUserInfoTask))
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ minutes: 10, }, refreshCookieTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 10, }, fetchUserInfoTask))
     }
 }

@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { toNumOrStr } from 'shark7-shared/dist/utils'
 import { WeiboController } from './WeiboController';
 import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
@@ -29,14 +28,7 @@ async function main() {
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-weibo', tryReconnect: true
     }))
-
-    const weibo_id = toNumOrStr(process.env['weibo_id'])
-    if (typeof weibo_id != "number") {
-        logger.error('请设置weibo_id')
-        process.exit(1)
-    }
-    await mongo.run()
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
-    const weibo_Controller = await WeiboController.init(weibo_id, mongo)
+    const weibo_Controller = await WeiboController.init(mongo)
     weibo_Controller.run()
 }

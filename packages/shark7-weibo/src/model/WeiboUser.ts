@@ -46,14 +46,24 @@ export class WeiboUser {
             raw.description
         );
     }
+}
 
-    static async getFromID(id: number): Promise<WeiboUser> {
+export class WeiboUserCtl {
+    wbhttp: WeiboHTTP
+    constructor(wbhttp: WeiboHTTP) {
+        this.wbhttp = wbhttp
+    }
+
+    async getFromID(id: number): Promise<WeiboUser> {
         var result = await this.getRawUserInfo(id);
         return WeiboUser.getFromRaw(result);
     }
 
-    static async getRawUserInfo(id: number): Promise<any> {
-        var result = await WeiboHTTP.getURL(profile_info_prefix + id)
+    async getRawUserInfo(id: number): Promise<any> {
+        var result = await this.wbhttp.getURL(profile_info_prefix + id)
+        if (!result) {
+            return {}
+        }
         if (result.status != 200) {
             logger.error(`getRawUserInfo status!=200:\n${JSON.stringify(result.data)}`);
             return {};
@@ -70,12 +80,11 @@ export class WeiboUser {
         return result.data['data']['user'];
     }
 
-    async getMblogs(): Promise<WeiboMsg[]> {
-        if (this.id == undefined) {
-            logger.error(`getMblogs ID not set`);
-            throw new Error("ID not set");
+    async getMblogs(id: number): Promise<WeiboMsg[]> {
+        const raw = await this.wbhttp.getURL(weibo_mblog_prefix + id)
+        if (!raw) {
+            return []
         }
-        const raw = await WeiboHTTP.getURL(weibo_mblog_prefix + this.id)
         if (raw.status != 200) {
             logger.error(`getMblogs status!=200:`);
             logger.error(JSON.stringify(raw.data));
@@ -86,13 +95,13 @@ export class WeiboUser {
             logger.error(JSON.stringify(raw.data));
             return [];
         }
-        const mblogs = raw.data.data.list.map((mblog: any) => new WeiboMsg(mblog, this.id));
+        const mblogs = raw.data.data.list.map((mblog: any) => new WeiboMsg(mblog, id));
         return mblogs;
     }
 
-    async checkAndGetNewMblogs(mongo: MongoController): Promise<WeiboMsg[]> {
+    async checkAndGetNewMblogs(id: number, mongo: MongoController): Promise<WeiboMsg[]> {
         var result = [];
-        const new_mblogs = await this.getMblogs();
+        const new_mblogs = await this.getMblogs(id);
         if (new_mblogs.length == 0) {
             return [];
         }
@@ -105,9 +114,9 @@ export class WeiboUser {
         }
         return result;
     }
-    async updateUserInfo() {
-        var raw = await WeiboUser.getRawUserInfo(this.id);
-        this.setInfoFromRaw(raw);
-        return this;
+    async updateUserInfo(user: WeiboUser) {
+        var raw = await this.getRawUserInfo(user.id);
+        user.setInfoFromRaw(raw);
+        return user;
     }
 }
