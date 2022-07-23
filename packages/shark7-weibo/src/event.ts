@@ -5,10 +5,14 @@ import { Scope } from 'shark7-shared/dist/scope'
 import { WeiboUser } from "./model/WeiboUser"
 import logger from "shark7-shared/dist/logger"
 
-export function onMblogEvent(user: WeiboUser | WithId<WeiboUser>, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event {
+export function onMblogEvent(user: WeiboUser | WithId<WeiboUser>, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event | null {
     const nmb = event.fullDocument
     let shark7event = { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Mblog, msg: '' }
     if (nmb.user.id != user.id) {
+        if (nmb.title.includes('赞过的微博')) {
+            logger.debug(`跳过赞过的微博:${nmb.mblogid}`)
+            return null
+        }
         shark7event.msg = `${nmb.title}:${nmb.user.screen_name}\n${nmb.text_raw}`
     }
     else if (nmb.visible_type == 0) {

@@ -78,7 +78,8 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
             logger.info(`mblogsDB改变: \n${JSON.stringify(event)}`)
             if (event.operationType == 'insert') {
                 const user = await this.getUserInfoByID(weibo_id)
-                this.addShark7Event(onMblogEvent(user, event as ChangeStreamInsertDocument<WeiboMsg>))
+                const result = onMblogEvent(user, event as ChangeStreamInsertDocument<WeiboMsg>)
+                if (result) this.addShark7Event(result)
             } else if (event.operationType == 'update') {
                 logger.warn(`mblogsDB更新\n${JSON.stringify(event)}`)
             } else {
