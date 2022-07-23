@@ -8,6 +8,7 @@ import winston from 'winston';
 import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
 import { getFiltedMsg } from './live';
 import { GetConfTask } from './GetConfTask';
+import { BiliLiveDBs, MongoControlClient } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {
@@ -21,10 +22,10 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-bililive', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bililive', tryReconnect: true
     }))
 
     const marked_uid_str = process.env['marked_uid']
@@ -59,7 +60,7 @@ async function main() {
     const confTask = new GetConfTask()
     roomid_Users.roomidlist().forEach((value: number, index: number) => {
         // openOneRoom(parseInt(element))
-        // getAllMsg(parseInt(element)) 
-        setTimeout(() => getFiltedMsg(mongo, confTask, value, marked_uid, marked_Users, roomid_Users), 500 * index)
+        // getAllMsg(parseInt(element))
+        setTimeout(() => getFiltedMsg(mongo.ctr, confTask, value, marked_uid, marked_Users, roomid_Users), 500 * index)
     });
 }

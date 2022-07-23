@@ -1,5 +1,7 @@
 import { Collection, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
+import logger from "./logger";
+import { logErrorDetail } from "./utils";
 
 export class EventDBs {
     event: Collection
@@ -89,12 +91,12 @@ export class DouyinDBs extends EventDBs {
     }
 }
 
-export class MongoControllerBase<T extends EventDBs> {
+export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {
     client: MongoClient
-    dbs: T
-    constructor(client: MongoClient, dbs: T) {
+    ctr: C
+    constructor(client: MongoClient, ctr: C) {
         this.client = client
-        this.dbs = dbs
+        this.ctr = ctr
     }
     static getMongoClientConfig() {
         return new MongoClient(
@@ -103,10 +105,31 @@ export class MongoControllerBase<T extends EventDBs> {
                 : 'mongodb://admin:admin@localhost:27017/'
         )
     }
-    async addShark7Event(event: Shark7Event) {
-        await this.dbs.event.insertOne(event)
+    static async getInstance<E extends EventDBs, C extends MongoControllerBase<E>>(dbfunc: {
+        getInstance(client: MongoClient): E;
+    }, ctrfunc: { new(dbs: E): C }) {
+        try {
+            const client = await this.getMongoClientConfig().connect()
+            const dbs = dbfunc.getInstance(client)
+            const ctr = new ctrfunc(dbs)
+            logger.info('数据库已连接')
+            return new this(client, ctr)
+        } catch (err) {
+            logErrorDetail('数据库连接失败', err)
+            process.exit(1)
+        }
     }
     async close() {
         await this.client.close()
+    }
+}
+
+export class MongoControllerBase<T extends EventDBs> {
+    dbs: T
+    constructor(dbs: T) {
+        this.dbs = dbs
+    }
+    async addShark7Event(event: Shark7Event) {
+        await this.dbs.event.insertOne(event)
     }
 }

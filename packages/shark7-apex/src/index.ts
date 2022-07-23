@@ -7,9 +7,10 @@ import { MongoController } from './MongoController';
 import winston from 'winston';
 import axios from 'axios';
 import { AsyncTask, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
+import { ApexDBs, MongoControlClient } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误 
+    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -27,10 +28,10 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-apex', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-apex', tryReconnect: true
     }))
 
     const apex_uid_str = process.env['apex_uid']
@@ -52,13 +53,13 @@ async function main() {
             userinfo = userinfo.replace(/"userInfo":\n/g, '')
             userinfo = JSON.parse(userinfo)
             userinfo._name = apex_uid[0]
-            await mongo.insertUserInfo(userinfo)
+            await mongo.ctr.insertUserInfo(userinfo)
         },
         (err: Error) => { logErrorDetail('refreshUserInfo错误', err) }
     )
     scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, refreshUserInfoTask))
 
-    mongo.run()
+    mongo.ctr.run()
 }
 
 async function getUserInfo(uid: number) {

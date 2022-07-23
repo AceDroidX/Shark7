@@ -5,18 +5,6 @@ import { ChangeStreamUpdateDocument, WithId } from "mongodb"
 import { onUserDBEvent } from "./event"
 
 export class MongoController extends MongoControllerBase<DouyinDBs> {
-    static async getInstance() {
-        try {
-            const client = await this.getMongoClientConfig().connect()
-            const dbs = DouyinDBs.getInstance(client)
-            logger.info('DouyinDBs数据库已连接')
-            return new MongoController(client, dbs)
-        } catch (err) {
-            console.log('ERR when connect to AMDB')
-            console.log(err)
-            process.exit(1)
-        }
-    }
     async run() {
         if (!process.env['douyin_sec_uid']) {
             logger.error('请设置douyin_sec_uid')

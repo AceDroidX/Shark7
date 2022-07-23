@@ -10,18 +10,6 @@ import { Protocol } from "puppeteer"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
-    static async getInstance() {
-        try {
-            const client = await this.getMongoClientConfig().connect()
-            const dbs = WeiboDBs.getInstance(client)
-            logger.info('WeiboDBs数据库已连接')
-            return new MongoController(client, dbs)
-        } catch (err) {
-            console.log('ERR when connect to AMDB')
-            console.log(err)
-            process.exit(1)
-        }
-    }
     async run() {
         this.cookieCache = (await this.getCookie())?.data
         this.dbs.data.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {

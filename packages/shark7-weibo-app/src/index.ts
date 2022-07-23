@@ -8,6 +8,7 @@ import { MongoController } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { fetchLike } from './fetchLike';
 import { fetchOnline } from './fetchOnline';
+import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -28,10 +29,10 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-weibo-app', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-weibo-app', tryReconnect: true
     }))
 
     if (!process.env['weibo_id']) {
@@ -40,17 +41,17 @@ async function main() {
     }
     const weibo_id = Number(process.env['weibo_id'])
 
-    await mongo.run()
-    await fetchLike(mongo, weibo_id)
+    await mongo.ctr.run()
+    await fetchLike(mongo.ctr, weibo_id)
     const scheduler = new ToadScheduler()
     const fetchLikeTask = new Task(
         'fetchLike',
-        () => { fetchLike(mongo, weibo_id) },
+        () => { fetchLike(mongo.ctr, weibo_id) },
         (err: Error) => { logErrorDetail('fetchLike错误', err) }
     )
     const fetchOnlineTask = new Task(
         'fetchOnline',
-        () => { fetchOnline(mongo, weibo_id) },
+        () => { fetchOnline(mongo.ctr, weibo_id) },
         (err: Error) => { logErrorDetail('fetchOnline错误', err) }
     )
     let interval = 10

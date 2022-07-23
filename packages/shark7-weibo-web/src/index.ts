@@ -5,6 +5,7 @@ import { WeiboController } from './WeiboController';
 import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import winston from 'winston';
+import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -23,12 +24,12 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-weibo', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-weibo', tryReconnect: true
     }))
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
-    const weibo_Controller = await WeiboController.init(mongo)
+    const weibo_Controller = await WeiboController.init(mongo.ctr)
     weibo_Controller.run()
 }

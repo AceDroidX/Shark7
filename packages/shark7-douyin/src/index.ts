@@ -8,6 +8,7 @@ import { MongoController } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { Puppeteer } from 'shark7-shared/dist/Puppeteer'
 import { DouyinWeb } from './DouyinWeb';
+import { DouyinDBs, MongoControlClient } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -28,14 +29,14 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-douyin', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-douyin', tryReconnect: true
     }))
 
-    await mongo.run()
-    const puppeteerClient = await Puppeteer.getInstance(mongo, DouyinWeb)
+    await mongo.ctr.run()
+    const puppeteerClient = await Puppeteer.getInstance(mongo.ctr, DouyinWeb)
     await fetchUserInfo(puppeteerClient)
     const scheduler = new ToadScheduler()
     const fetchUserInfoTask = new Task(

@@ -7,6 +7,7 @@ import { MongoController } from './MongoController';
 import winston from 'winston';
 import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
 import { guardMain } from './guard';
+import { BiliLiveDBs, MongoControlClient } from 'shark7-shared/dist/database';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {
@@ -20,10 +21,10 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoController.getInstance()
+    const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoController.getMongoClientConfig().connect(), collection: 'log-bililive', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bililive', tryReconnect: true
     }))
 
     const marked_uid_str = process.env['marked_uid']
@@ -56,6 +57,6 @@ async function main() {
         await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    guardMain(mongo, roomid_Users, marked_Users)
+    guardMain(mongo.ctr, roomid_Users, marked_Users)
 }
 

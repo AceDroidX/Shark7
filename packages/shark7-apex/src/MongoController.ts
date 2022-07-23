@@ -8,19 +8,6 @@ export {
 }
 
 class MongoController extends MongoControllerBase<ApexDBs> {
-    static async getInstance() {
-        try {
-            const client = this.getMongoClientConfig()
-            await client.connect()
-            let dbs = ApexDBs.getInstance(client)
-            logger.info('ApexDBs数据库已连接')
-            return new MongoController(client, dbs)
-        } catch (err) {
-            console.log(`ERR when connect to DBS`)
-            console.log(err)
-            process.exit(1)
-        }
-    }
     async insertUserInfo(user: any) {
         await this.dbs.userinfoDB.updateOne({ uid: user.uid }, {
             $set: user
