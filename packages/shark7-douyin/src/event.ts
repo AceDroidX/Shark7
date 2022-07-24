@@ -22,5 +22,6 @@ export function onUserDBEvent(origin: any, event: ChangeStreamUpdateDocument): S
             result.push(`${key}更改\n原：${JSON.stringify(origin[key])}\n现：${JSON.stringify(user[key])}`);
         }
     })
-    return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Douyin.User, msg: result.join('\n') }
+    if (result.length == 0) return
+    return { ts: Number(new Date()), name: String(origin.nickname), scope: Scope.Douyin.User, msg: result.join('\n') }
 }
