@@ -18,7 +18,7 @@ export function onUserDBEvent(origin: any, event: ChangeStreamUpdateDocument): S
                 return
         }
         if (user[key] != undefined) {
-            logger.debug(`${key}发生变化`)
+            logger.debug(`${key}发生变化:${user[key]}`)
             result.push(`${key}更改\n原：${JSON.stringify(origin[key])}\n现：${JSON.stringify(user[key])}`);
         }
     })

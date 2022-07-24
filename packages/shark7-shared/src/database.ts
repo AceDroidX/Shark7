@@ -16,16 +16,18 @@ export class MongoDBs extends EventDBs {
     weibo: WeiboDBs
     apex: ApexDBs
     bililive: BiliLiveDBs
-    constructor(event: Collection<Shark7Event>, data: Collection, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs) {
+    douyin: DouyinDBs
+    constructor(event: Collection<Shark7Event>, data: Collection, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, douyin: DouyinDBs) {
         super(event, data)
         this.weibo = weibo
         this.apex = apex
         this.bililive = bililive
+        this.douyin = douyin
     }
     static getInstance(client: MongoClient) {
         const event = client.db('main').collection<Shark7Event>('event')
         const data = client.db('main').collection('data')
-        return new this(event, data, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client))
+        return new this(event, data, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client), DouyinDBs.getInstance(client))
     }
 }
 
@@ -133,7 +135,7 @@ export class MongoControllerBase<T extends EventDBs> {
     async addShark7Event(event: Shark7Event) {
         await this.dbs.event.insertOne(event)
     }
-    addInsertChangeEvent<T>(db:Collection<T>){
+    addInsertChangeEvent<T>(db: Collection<T>) {
 
     }
 }
