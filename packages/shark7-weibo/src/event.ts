@@ -1,8 +1,7 @@
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
-import { WeiboMsg } from "./model/model"
+import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
 import { Shark7Event } from "shark7-shared"
 import { Scope } from 'shark7-shared/dist/scope'
-import { WeiboUser } from "./model/WeiboUser"
 import logger from "shark7-shared/dist/logger"
 
 export function onMblogEvent(user: WeiboUser | WithId<WeiboUser>, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event | null {

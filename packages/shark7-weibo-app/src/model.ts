@@ -1,5 +1,4 @@
-import { WeiboMsg } from 'shark7-weibo/dist/model/model';
-import { WeiboUser } from 'shark7-weibo/dist/model/WeiboUser';
+import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo';
 
 
 export type WeiboCard = {
@@ -9,11 +8,3 @@ export type WeiboCard = {
     user?: WeiboUser;
     desc1?: string;
 };
-
-
-export type OnlineData = {
-    id: number
-    screen_name: string
-    desc1: string
-    online: boolean
-}

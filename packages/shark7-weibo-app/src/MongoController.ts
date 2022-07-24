@@ -3,12 +3,10 @@ import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
 import { WeiboDataName, DataDBDoc } from "shark7-shared/dist/datadb"
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
 import { Protocol } from "puppeteer"
-import { WeiboMsg } from "shark7-weibo/dist/model/model"
+import { WeiboUser, WeiboMsg, OnlineData } from 'shark7-shared/dist/weibo';
 import { Shark7Event } from "shark7-shared"
-import { WeiboUser } from "shark7-weibo/dist/model/WeiboUser"
 import { Scope } from 'shark7-shared/dist/scope'
 import { getTime, logErrorDetail } from "shark7-shared/dist/utils"
-import { OnlineData } from "./model"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
@@ -59,7 +57,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         const weibo_id = Number(process.env['weibo_id'])
         let tempOnlineData: OnlineData = await this.getOnlineDataByID(weibo_id)
         this.dbs.onlineDB.watch([], { fullDocument: 'updateLookup' }).on("change", async raw => {
-            logger.info(`onlineDB改变: \n${JSON.stringify(raw)}`)
             if (raw.operationType == 'insert') {
                 logger.info(`onlineDB添加: \n${JSON.stringify(raw)}`)
                 const event = raw as ChangeStreamInsertDocument<OnlineData>
@@ -87,10 +84,10 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         return await this.dbs.data.findOne({ name: WeiboDataName.Cookie }) as WithId<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]>>
     }
     async insertLike(mblog: WeiboMsg) {
-        await this.dbs.likeDB.updateOne({ id: mblog.id }, { $set: mblog }, { upsert: true })
+        await this.dbs.likeDB.updateOne({ id: mblog.id }, [{ $replaceWith: mblog }], { upsert: true })
     }
     async insertOnline(data: OnlineData) {
-        await this.dbs.onlineDB.updateOne({ id: data.id }, { $set: data }, { upsert: true })
+        await this.dbs.onlineDB.updateOne({ id: data.id }, [{ $replaceWith: data }], { upsert: true })
     }
     async getUserInfoByID(id: number) {
         return await this.dbs.userDB.findOne({ id }) as WithId<WeiboUser>
@@ -110,6 +107,9 @@ function onNewOnlineData(origin: OnlineData, event: ChangeStreamUpdateDocument<O
     const data = event.updateDescription.updatedFields
     if (!data) {
         logger.warn(`event.updateDescription.updatedFields为${data}`)
+        return
+    }
+    if (Object.keys(data).length == 0) {
         return
     }
     if (data.desc1 == undefined) {

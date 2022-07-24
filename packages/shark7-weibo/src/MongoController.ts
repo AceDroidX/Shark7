@@ -1,6 +1,5 @@
 import logger from "shark7-shared/dist/logger"
-import { WeiboMsg } from "./model/model"
-import { WeiboUser } from "./model/WeiboUser"
+import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
 import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
 import { onMblogEvent, onUserDBEvent } from "./event"
 import { logErrorDetail, toNumOrStr } from "shark7-shared/dist/utils"
@@ -66,7 +65,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
             logger.info(`mblogsDB改变: \n${JSON.stringify(event)}`)
             if (event.operationType == 'insert') {
                 const user = await this.getUserInfoByID(weibo_id)
-                const result = onMblogEvent(user, event as ChangeStreamInsertDocument<WeiboMsg>)
+                const result = onMblogEvent(user, event)
                 if (result) this.addShark7Event(result)
             } else if (event.operationType == 'update') {
                 logger.warn(`mblogsDB更新\n${JSON.stringify(event)}`)
@@ -82,9 +81,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
     async insertMblog(mblog: WeiboMsg) {
         logger.info('数据库添加新微博', mblog.mblogid)
-        await this.dbs.mblogsDB.updateOne({ id: mblog.id }, {
-            $set: mblog
-        }, { upsert: true })
+        await this.dbs.mblogsDB.updateOne({ id: mblog.id }, mblog, { upsert: true })
     }
     async isMblogIDExist(id: number): Promise<boolean> {
         const res = await this.dbs.mblogsDB.findOne({ id: id })

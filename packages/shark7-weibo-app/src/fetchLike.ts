@@ -1,6 +1,6 @@
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import logger from 'shark7-shared/dist/logger';
-import { WeiboMsg } from 'shark7-weibo/dist/model/model';
+import { WeiboMsg } from 'shark7-shared/dist/weibo';
 import { MongoController } from './MongoController';
 import { getReqConfig, fetchURL } from './utils';
 import { WeiboCard } from "./model";

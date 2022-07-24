@@ -1,4 +1,5 @@
-import { WeiboUser, WeiboUserCtl } from "./model/WeiboUser";
+import { WeiboUserCtl } from "./model/WeiboUserCtl";
+import { WeiboUser } from 'shark7-shared/dist/weibo'
 import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
 import { ToadScheduler, SimpleIntervalJob, Task } from 'toad-scheduler';

@@ -2,7 +2,8 @@ import { logErrorDetail } from 'shark7-shared/dist/utils';
 import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import { getReqConfig, fetchURL } from './utils';
-import { OnlineData, WeiboCard } from "./model";
+import { WeiboCard } from "./model";
+import { OnlineData } from 'shark7-shared/dist/weibo';
 
 export async function fetchOnline(mongo: MongoController, weibo_id: number) {
     logger.debug('开始抓取在线状态');
