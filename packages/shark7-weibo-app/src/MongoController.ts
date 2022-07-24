@@ -22,8 +22,8 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
             } else if (event.operationType == 'update') {
                 const updateEvent = event as ChangeStreamUpdateDocument<DataDBDoc<WeiboDataName, any>>
                 logger.info(`data更新: \n${JSON.stringify(updateEvent)}`)
-                if (updateEvent.updateDescription.updatedFields?.name == WeiboDataName.Cookie) {
-                    this.cookieCache = updateEvent.updateDescription.updatedFields.data
+                if (event.fullDocument?.name == WeiboDataName.Cookie) {
+                    this.cookieCache = updateEvent.fullDocument?.data
                 }
             } else {
                 logger.warn(`data未知operationType:${event.operationType}`)

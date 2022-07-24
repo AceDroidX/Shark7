@@ -24,7 +24,7 @@ async function main() {
     const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
 
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bililive', tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bililive-guard', tryReconnect: true
     }))
 
     const marked_uid_str = process.env['marked_uid']
