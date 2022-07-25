@@ -30,26 +30,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
                 return
             }
         })
-        this.dbs.likeDB.watch([], {}).on("change", async event => {
-            if (event.operationType == 'insert') {
-                const insertEvent = event as ChangeStreamInsertDocument<WeiboMsg>
-                logger.info(`likeDB添加: \n${JSON.stringify(insertEvent)}`)
-                const user = await this.getUserInfoByID(event.fullDocument._userid)
-                this.addShark7Event(onNewLike(user, insertEvent))
-            } else if (event.operationType == 'update') {
-                const updateEvent = event as ChangeStreamUpdateDocument<WeiboMsg>
-                if (!updateEvent.updateDescription.updatedFields) {
-                    logger.info(`likeDB更新: \n${JSON.stringify(updateEvent)}`)
-                    return
-                }
-                if (Object.keys(updateEvent.updateDescription.updatedFields).length == 1 && updateEvent.updateDescription.updatedFields.hasOwnProperty('_raw')) {
-                    return
-                }
-            } else {
-                logger.warn(`likeDB未知operationType:${event.operationType}`)
-                return
-            }
-        })
         if (!process.env['weibo_id']) {
             logger.error('请设置weibo_id')
             process.exit(1)
@@ -97,8 +77,9 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
 }
 
-function onNewLike(user: WeiboUser, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event {
+export async function onNewLike(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const mblog = event.fullDocument
+    const user = await ctr.getUserInfoByID(mblog._userid)
     const msg = `${mblog.user.screen_name} 发布于${getTime(mblog._timestamp, false)}\n${mblog.text_raw ? mblog.text_raw : mblog.text}`
     return { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Like, msg }
 }

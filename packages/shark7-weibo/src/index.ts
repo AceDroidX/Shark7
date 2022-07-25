@@ -7,6 +7,7 @@ import logger from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import winston from 'winston';
 import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
+import { onMblogEvent } from './event';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -36,6 +37,7 @@ async function main() {
         logger.error('请设置weibo_id')
         process.exit(1)
     }
+    mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent)
     await mongo.ctr.run()
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr)

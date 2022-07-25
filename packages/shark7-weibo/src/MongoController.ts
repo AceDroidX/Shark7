@@ -1,7 +1,7 @@
 import logger from "shark7-shared/dist/logger"
 import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
 import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
-import { onMblogEvent, onUserDBEvent } from "./event"
+import { onUserDBEvent } from "./event"
 import { logErrorDetail, toNumOrStr } from "shark7-shared/dist/utils"
 import { DataDBDoc, WeiboDataName } from 'shark7-shared/dist/datadb'
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
@@ -55,20 +55,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
                 if (userevent.fullDocument) tempWeiboUser = userevent.fullDocument
                 if (!shark7event) return
                 this.addShark7Event(shark7event)
-            } else {
-                logger.warn(`mblogsDB未知operationType:${event.operationType}`)
-                return
-            }
-        })
-        const mblogsDBChangeStream = this.dbs.mblogsDB.watch()
-        mblogsDBChangeStream.on("change", async event => {
-            logger.info(`mblogsDB改变: \n${JSON.stringify(event)}`)
-            if (event.operationType == 'insert') {
-                const user = await this.getUserInfoByID(weibo_id)
-                const result = onMblogEvent(user, event)
-                if (result) this.addShark7Event(result)
-            } else if (event.operationType == 'update') {
-                logger.warn(`mblogsDB更新\n${JSON.stringify(event)}`)
             } else {
                 logger.warn(`mblogsDB未知operationType:${event.operationType}`)
                 return

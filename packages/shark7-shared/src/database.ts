@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { ChangeStreamInsertDocument, Collection, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
 import logger from "./logger";
 import { logErrorDetail } from "./utils";
@@ -125,6 +125,23 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     async close() {
         await this.client.close()
     }
+    async addShark7Event(event: Shark7Event) {
+        await this.ctr.addShark7Event(event)
+    }
+    addInsertChangeWatcher<T>(db: Collection<T>, onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null> }) {
+        db.watch().on("change", async event => {
+            logger.info(`insert数据改变: \n${JSON.stringify(event)}`)
+            if (event.operationType == 'insert') {
+                const result = await onInsert(this.ctr, event)
+                if (result) await this.addShark7Event(result)
+            } else if (event.operationType == 'update') {
+                logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
+            } else {
+                logger.warn(`insert数据未知operationType:${event.operationType}`)
+                return
+            }
+        })
+    }
 }
 
 export class MongoControllerBase<T extends EventDBs> {
@@ -134,8 +151,5 @@ export class MongoControllerBase<T extends EventDBs> {
     }
     async addShark7Event(event: Shark7Event) {
         await this.dbs.event.insertOne(event)
-    }
-    addInsertChangeEvent<T>(db: Collection<T>) {
-
     }
 }

@@ -1,11 +1,13 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
+import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
 import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
 import { Shark7Event } from "shark7-shared"
 import { Scope } from 'shark7-shared/dist/scope'
 import logger from "shark7-shared/dist/logger"
+import { MongoController } from "./MongoController"
 
-export function onMblogEvent(user: WeiboUser | WithId<WeiboUser>, event: ChangeStreamInsertDocument<WeiboMsg>): Shark7Event | null {
+export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const nmb = event.fullDocument
+    const user = await ctr.getUserInfoByID(nmb._userid)
     let shark7event = { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Mblog, msg: '' }
     if (nmb.user.id != user.id) {
         if (nmb.title.includes('赞过的微博')) {
