@@ -1,4 +1,5 @@
 import url from 'url'
+import { UpdateTypeDoc } from '..';
 
 export class WeiboUser {
     id: number;
@@ -87,7 +88,7 @@ export class WeiboMsg {
     }
 }
 
-export type OnlineData = {
+export type OnlineData = UpdateTypeDoc & {
     id: number
     screen_name: string
     desc1: string

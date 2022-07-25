@@ -7,5 +7,5 @@ export type Shark7Event = {
 
 export type UpdateTypeDoc = {
     shark7_id: string
-    shark7_name: string
+    shark7_name?: string
 }

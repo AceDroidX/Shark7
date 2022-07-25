@@ -4,7 +4,7 @@ if (process.env.NODE_ENV != 'production') {
 import { logErrorDetail } from 'shark7-shared/dist/utils'
 import logger from 'shark7-shared/dist/logger';
 import winston from 'winston';
-import { MongoController, onNewLike } from './MongoController';
+import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { fetchLike } from './fetchLike';
 import { fetchOnline } from './fetchOnline';
@@ -41,7 +41,9 @@ async function main() {
     }
     const weibo_id = Number(process.env['weibo_id'])
 
+    const origin = [{ id: String(weibo_id), data: await mongo.ctr.getOnlineDataByID(weibo_id) }]
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, origin, onNewOnlineData)
     await mongo.ctr.run()
     await fetchLike(mongo.ctr, weibo_id)
     const scheduler = new ToadScheduler()

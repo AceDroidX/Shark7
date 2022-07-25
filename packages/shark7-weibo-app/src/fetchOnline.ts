@@ -36,6 +36,7 @@ export async function fetchOnline(mongo: MongoController, weibo_id: number) {
                         }
                         let online = inner_card.desc1 == '微博在线了'
                         const data: OnlineData = {
+                            shark7_id: String(weibo_id),
                             id: weibo_id,
                             screen_name: inner_card.user.screen_name,
                             desc1: inner_card.desc1,

@@ -6,7 +6,7 @@ import { Protocol } from "puppeteer"
 import { WeiboUser, WeiboMsg, OnlineData } from 'shark7-shared/dist/weibo';
 import { Shark7Event } from "shark7-shared"
 import { Scope } from 'shark7-shared/dist/scope'
-import { getTime, logErrorDetail } from "shark7-shared/dist/utils"
+import { getTime } from "shark7-shared/dist/utils"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
@@ -27,35 +27,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
                 }
             } else {
                 logger.warn(`data未知operationType:${event.operationType}`)
-                return
-            }
-        })
-        if (!process.env['weibo_id']) {
-            logger.error('请设置weibo_id')
-            process.exit(1)
-        }
-        const weibo_id = Number(process.env['weibo_id'])
-        let tempOnlineData: OnlineData = await this.getOnlineDataByID(weibo_id)
-        this.dbs.onlineDB.watch([], { fullDocument: 'updateLookup' }).on("change", async raw => {
-            if (raw.operationType == 'insert') {
-                logger.info(`onlineDB添加: \n${JSON.stringify(raw)}`)
-                const event = raw as ChangeStreamInsertDocument<OnlineData>
-                tempOnlineData = event.fullDocument
-            } else if (raw.operationType == 'update') {
-                const event = raw as ChangeStreamUpdateDocument<OnlineData>
-                let shark7event
-                try {
-                    shark7event = onNewOnlineData(tempOnlineData, event)
-                } catch (err) {
-                    logErrorDetail('onNewOnlineData出错', err)
-                    logger.error(JSON.stringify(tempOnlineData))
-                    return
-                }
-                if (event.fullDocument) tempOnlineData = event.fullDocument
-                if (!shark7event) return
-                this.addShark7Event(shark7event)
-            } else {
-                logger.warn(`onlineDB未知operationType:${raw.operationType}`)
                 return
             }
         })
@@ -84,22 +55,23 @@ export async function onNewLike(ctr: MongoController, event: ChangeStreamInsertD
     return { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Like, msg }
 }
 
-function onNewOnlineData(origin: OnlineData, event: ChangeStreamUpdateDocument<OnlineData>): Shark7Event | undefined {
+export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin: OnlineData): Promise<Shark7Event | null> {
     const data = event.updateDescription.updatedFields
     if (!data) {
         logger.warn(`event.updateDescription.updatedFields为${data}`)
-        return
+        return null
     }
     if (Object.keys(data).length == 0) {
-        return
+        return null
     }
     if (data.desc1 == undefined) {
         logger.warn(`data.desc1不存在${data}`)
-        return
+        return null
     }
     if (data.online != undefined) {
         const msg = data.online ? '在线' : '离线'
         logger.info(`<${origin.screen_name}>微博在线状态改变:${msg}`)
         return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Weibo.Online, msg }
     }
+    return null
 }
