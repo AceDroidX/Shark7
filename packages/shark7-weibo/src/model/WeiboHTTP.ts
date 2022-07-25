@@ -14,7 +14,7 @@ export class WeiboHTTP {
     async getURL(url: string) {
         if (this.mongo.cookieCache == undefined) {
             logger.error("WeiboHTTP.getURL: cookieCache is undefined")
-            return
+            process.exit(1)
         }
         return await axios.get(url, { headers: { 'User-Agent': UA, 'cookie': cookieJsonToStr(this.mongo.cookieCache) } })
     }

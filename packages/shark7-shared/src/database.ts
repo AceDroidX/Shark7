@@ -131,11 +131,13 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     }
     addInsertChangeWatcher<T>(db: Collection<T>, onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null> }) {
         db.watch().on("change", async event => {
-            logger.info(`insert数据改变: \n${JSON.stringify(event)}`)
             if (event.operationType == 'insert') {
                 const result = await onInsert(this.ctr, event)
                 if (result) await this.addShark7Event(result)
             } else if (event.operationType == 'update') {
+                for (const field in event.updateDescription.updatedFields) {
+                    if (field.startsWith('shark7_')) return
+                }
                 logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
             } else {
                 logger.warn(`insert数据未知operationType:${event.operationType}`)

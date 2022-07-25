@@ -1,5 +1,5 @@
 import url from 'url'
-import { UpdateTypeDoc } from '..';
+import { InsertTypeDoc, UpdateTypeDoc } from '..';
 
 export class WeiboUser implements UpdateTypeDoc {
     shark7_id: string
@@ -48,7 +48,7 @@ export class WeiboUser implements UpdateTypeDoc {
     }
 }
 
-export class WeiboMsg {
+export class WeiboMsg implements InsertTypeDoc {
     id: number;
     mblogid: string;
     text: string;
@@ -66,7 +66,7 @@ export class WeiboMsg {
 
     _timestamp: number;
     _userid: number;
-    _raw: any
+    shark7_raw: any
 
     constructor(data: any, userid: number) {
         this.id = data.id;
@@ -87,7 +87,7 @@ export class WeiboMsg {
         this.repost_type = data.repost_type;
         this.user = WeiboUser.getFromRaw(data.user);
         this._userid = userid;
-        this._raw = data
+        this.shark7_raw = data
         this._timestamp = new Date(data.created_at).getTime()
     }
 }
