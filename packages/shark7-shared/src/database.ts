@@ -1,5 +1,6 @@
-import { ChangeStreamInsertDocument, Collection, MongoClient } from "mongodb";
-import { Shark7Event } from ".";
+import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, MongoClient } from "mongodb";
+import { Shark7Event, UpdateTypeDoc } from ".";
+import { ApexUserInfo } from "./apex";
 import logger from "./logger";
 import { logErrorDetail } from "./utils";
 import { OnlineData, WeiboMsg, WeiboUser } from "./weibo";
@@ -55,15 +56,15 @@ export class WeiboDBs extends EventDBs {
 }
 
 export class ApexDBs extends EventDBs {
-    userinfoDB: Collection
-    constructor(event: Collection<Shark7Event>, data: Collection, userinfoDB: Collection) {
+    userinfoDB: Collection<ApexUserInfo>
+    constructor(event: Collection<Shark7Event>, data: Collection, userinfoDB: Collection<ApexUserInfo>) {
         super(event, data)
         this.userinfoDB = userinfoDB
     }
     static getInstance(client: MongoClient) {
         const event = client.db('apex').collection<Shark7Event>('event')
         const data = client.db('apex').collection('data')
-        const userinfoDB = client.db('apex').collection('userinfo')
+        const userinfoDB = client.db('apex').collection<ApexUserInfo>('userinfo')
         event.createIndex({ ts: -1 })
         userinfoDB.createIndex({ uid: 1, })
         return new this(event, data, userinfoDB)
@@ -138,6 +139,33 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
                 logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
             } else {
                 logger.warn(`insert数据未知operationType:${event.operationType}`)
+                return
+            }
+        })
+    }
+    addUpdateChangeWatcher<T extends UpdateTypeDoc>(db: Collection<T>, origin: { id: string, data: T }[], onUpdate: { (ctr: C, event: ChangeStreamUpdateDocument<T>, origin: T): Promise<Shark7Event | null> }) {
+        db.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {
+            if (event.operationType == 'insert') {
+                logger.info(`update数据添加: \n${JSON.stringify(event)}`)
+                for (const [index, item] of origin.entries()) {
+                    if (item.id == event.fullDocument.shark7_id) {
+                        origin[index].data = event.fullDocument
+                    }
+                }
+            } else if (event.operationType == 'update') {
+                if (!event.fullDocument) {
+                    logger.error(`update数据无fullDocument: \n${JSON.stringify(event)}`)
+                    return
+                }
+                for (const [index, item] of origin.entries()) {
+                    if (item.id == event.fullDocument.shark7_id) {
+                        const result = await onUpdate(this.ctr, event, origin[index].data)
+                        if (result) await this.addShark7Event(result)
+                        origin[index].data = event.fullDocument
+                    }
+                }
+            } else {
+                logger.warn(`update数据未知operationType:${event.operationType}`)
                 return
             }
         })

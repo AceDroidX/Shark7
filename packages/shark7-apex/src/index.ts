@@ -8,6 +8,8 @@ import winston from 'winston';
 import axios from 'axios';
 import { AsyncTask, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
 import { ApexDBs, MongoControlClient } from 'shark7-shared/dist/database';
+import { ApexUserInfo } from "shark7-shared/dist/apex"
+import { onUserInfoEvent } from './onUserInfoEvent';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -46,23 +48,26 @@ async function main() {
     const refreshUserInfoTask = new AsyncTask(
         'refreshUserInfo',
         async () => {
-            let userinfo = await getUserInfo(apex_uid[1])
-            if (userinfo == null) {
-                return
-            }
-            userinfo = userinfo.replace(/"userInfo":\n/g, '')
-            userinfo = JSON.parse(userinfo)
-            userinfo._name = apex_uid[0]
-            await mongo.ctr.insertUserInfo(userinfo)
+            const userInfo = await getUserInfo(apex_uid[0], apex_uid[1])
+            if (!userInfo) return
+            await mongo.ctr.insertUserInfo(userInfo)
         },
         (err: Error) => { logErrorDetail('refreshUserInfo错误', err) }
     )
     scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, refreshUserInfoTask))
 
+
+    const userinfo = await getUserInfo(apex_uid[0], apex_uid[1])
+    if (!userinfo) {
+        logger.error('userinfo获取失败')
+        process.exit(1)
+    }
+    const origin = [{ id: String(apex_uid[1]), data: userinfo }]
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, origin, onUserInfoEvent)
     mongo.ctr.run()
 }
 
-async function getUserInfo(uid: number) {
+async function fetchUserInfo(uid: number) {
     try {
         let resp = await axios.get(`https://r5-crossplay.r5prod.stryder.respawn.com/user.php?qt=user-getinfo&getinfo=1&hardware=PC&uid=${uid}&language=english&timezoneOffset=8&ugc=1&rep=1&searching=0&change=7&loadidx=1`, { headers: { 'User-Agent': 'Respawn HTTPS/1.0' } })
         return resp.data
@@ -70,4 +75,16 @@ async function getUserInfo(uid: number) {
         logAxiosError(err)
         return null
     }
+}
+
+async function getUserInfo(name: string, uid: number): Promise<ApexUserInfo | null> {
+    let raw = await fetchUserInfo(uid)
+    if (raw == null) {
+        return null
+    }
+    raw = raw.replace(/"userInfo":\n/g, '')
+    const userInfo: ApexUserInfo = JSON.parse(raw)
+    userInfo.shark7_name = name
+    userInfo.shark7_id = String(uid)
+    return userInfo
 }

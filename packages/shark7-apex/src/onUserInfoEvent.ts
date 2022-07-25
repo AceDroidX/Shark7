@@ -1,28 +1,21 @@
-import { ChangeStreamDocument, ChangeStreamUpdateDocument } from 'mongodb';
+import { ChangeStreamUpdateDocument } from 'mongodb';
 import { Shark7Event } from 'shark7-shared'
 import { Scope } from 'shark7-shared/dist/scope'
 import logger from 'shark7-shared/dist/logger';
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
+import { ApexUserInfo } from 'shark7-shared/dist/apex';
+import { MongoController } from './MongoController';
 
-export function onUserInfoEvent(event: ChangeStreamDocument): Shark7Event | undefined {
-    if (event.operationType === "insert") {
-        logger.warn(`Apex用户信息数据库改变: 新增用户 ${event.fullDocument.uid}`)
-        return
-    }
-    if (event.operationType !== "update") {
-        logger.warn(`Apex用户信息数据库改变: 未知操作类型 ${event.operationType}`)
-        return
-    }
-    event = event as ChangeStreamUpdateDocument
+export async function onUserInfoEvent(ctr: MongoController, event: ChangeStreamUpdateDocument, origin: ApexUserInfo): Promise<Shark7Event | null> {
     if (!event.fullDocument) {
         logger.error('event.fullDocument为空')
         process.exit(1)
     }
-    const displayName = event.fullDocument._name
+    const displayName = event.fullDocument.shark7_name
     const updated = event.updateDescription.updatedFields
     let msg = ''
     for (const field in updated) {
-        if (field.startsWith('_')) {
+        if (field.startsWith('shark7_')) {
             continue
         }
         switch (field) {
@@ -123,6 +116,6 @@ export function onUserInfoEvent(event: ChangeStreamDocument): Shark7Event | unde
         msg = msg.trimStart()
         return { ts: time, name: displayName, scope: Scope.Apex, msg }
     } else {
-        return undefined
+        return null
     }
 }
