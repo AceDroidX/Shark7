@@ -37,7 +37,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         let tempWeiboUser: WeiboUser = await this.getUserInfoByID(weibo_id)
         const userDBChangeStream = this.dbs.userDB.watch([], { fullDocument: 'updateLookup' })
         userDBChangeStream.on("change", async event => {
-            logger.info(`userDB改变: \n${JSON.stringify(event)}`)
+            // logger.info(`userDB改变: \n${JSON.stringify(event)}`)
             if (event.operationType == 'insert') {
                 logger.info(`userDB添加: \n${JSON.stringify(event)}`)
                 const userevent = event as ChangeStreamInsertDocument<WeiboUser>
@@ -81,16 +81,14 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
     async insertMblog(mblog: WeiboMsg) {
         logger.info('数据库添加新微博', mblog.mblogid)
-        await this.dbs.mblogsDB.updateOne({ id: mblog.id }, mblog, { upsert: true })
+        await this.dbs.mblogsDB.updateOne({ id: mblog.id }, [{ $replaceWith: mblog }], { upsert: true })
     }
     async isMblogIDExist(id: number): Promise<boolean> {
         const res = await this.dbs.mblogsDB.findOne({ id: id })
         return res != null
     }
     async insertUserInfo(user: WeiboUser) {
-        await this.dbs.userDB.updateOne({ id: user.id }, {
-            $set: user
-        }, { upsert: true })
+        await this.dbs.userDB.updateOne({ id: user.id }, [{ $replaceWith: user }], { upsert: true })
     }
     async getUserInfoByID(id: number) {
         return await this.dbs.userDB.findOne({ id }) as WithId<WeiboUser>

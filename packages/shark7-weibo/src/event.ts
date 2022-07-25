@@ -38,6 +38,9 @@ export function onUserDBEvent(origin: WeiboUser, event: ChangeStreamUpdateDocume
         logger.warn(`event.updateDescription.updatedFields为${user}`)
         return
     }
+    if (Object.keys(user).length == 0) {
+        return
+    }
     var result = [];
     if (user.screen_name != undefined) {
         result.push(`微博昵称更改\n原：${origin.screen_name}\n现：${user.screen_name}`);
