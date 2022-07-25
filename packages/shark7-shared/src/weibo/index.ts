@@ -1,7 +1,9 @@
 import url from 'url'
 import { UpdateTypeDoc } from '..';
 
-export class WeiboUser {
+export class WeiboUser implements UpdateTypeDoc {
+    shark7_id: string
+
     id: number;
     screen_name: string;
     profile_image_url: string;
@@ -11,7 +13,8 @@ export class WeiboUser {
     verified_reason: string | undefined;
     description: string | undefined;
 
-    constructor(id: number, screen_name: string, profile_image_url: string, avatar_hd: string, friends_count: number, verified_reason: string | undefined, description: string | undefined) {
+    constructor(shark7_id: string, id: number, screen_name: string, profile_image_url: string, avatar_hd: string, friends_count: number, verified_reason: string | undefined, description: string | undefined) {
+        this.shark7_id = shark7_id
         this.id = id;
         this.screen_name = screen_name;
         this.profile_image_url = profile_image_url != '' ? url.format(new url.URL(profile_image_url), { search: false }) : '';
@@ -33,6 +36,7 @@ export class WeiboUser {
     static getFromRaw(raw: any): WeiboUser {
         // logger.debug('getFromRaw\n'+JSON.stringify(raw));
         return new WeiboUser(
+            String(raw.id),
             raw.id,
             raw.screen_name,
             raw.profile_image_url,

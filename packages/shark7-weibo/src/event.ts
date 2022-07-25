@@ -34,14 +34,14 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     return shark7event
 }
 
-export function onUserDBEvent(origin: WeiboUser, event: ChangeStreamUpdateDocument<WeiboUser>): Shark7Event | undefined {
+export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin: WeiboUser): Promise<Shark7Event | null> {
     const user = event.updateDescription.updatedFields
     if (!user) {
         logger.warn(`event.updateDescription.updatedFields为${user}`)
-        return
+        return null
     }
     if (Object.keys(user).length == 0) {
-        return
+        return null
     }
     var result = [];
     if (user.screen_name != undefined) {

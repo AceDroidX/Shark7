@@ -1,8 +1,6 @@
 import logger from "shark7-shared/dist/logger"
 import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
 import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
-import { onUserDBEvent } from "./event"
-import { logErrorDetail, toNumOrStr } from "shark7-shared/dist/utils"
 import { DataDBDoc, WeiboDataName } from 'shark7-shared/dist/datadb'
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
 import { Protocol } from "puppeteer"
@@ -26,37 +24,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
                 }
             } else {
                 logger.warn(`data未知operationType:${event.operationType}`)
-                return
-            }
-        })
-        const weibo_id = toNumOrStr(process.env['weibo_id'])
-        if (typeof weibo_id != "number") {
-            logger.error('请设置weibo_id')
-            process.exit(1)
-        }
-        let tempWeiboUser: WeiboUser = await this.getUserInfoByID(weibo_id)
-        const userDBChangeStream = this.dbs.userDB.watch([], { fullDocument: 'updateLookup' })
-        userDBChangeStream.on("change", async event => {
-            // logger.info(`userDB改变: \n${JSON.stringify(event)}`)
-            if (event.operationType == 'insert') {
-                logger.info(`userDB添加: \n${JSON.stringify(event)}`)
-                const userevent = event as ChangeStreamInsertDocument<WeiboUser>
-                tempWeiboUser = userevent.fullDocument
-            } else if (event.operationType == 'update') {
-                const userevent = event as ChangeStreamUpdateDocument<WeiboUser>
-                let shark7event
-                try {
-                    shark7event = onUserDBEvent(tempWeiboUser, userevent)
-                } catch (err) {
-                    logErrorDetail('onUserDBEvent出错', err)
-                    logger.error(JSON.stringify(tempWeiboUser))
-                    return
-                }
-                if (userevent.fullDocument) tempWeiboUser = userevent.fullDocument
-                if (!shark7event) return
-                this.addShark7Event(shark7event)
-            } else {
-                logger.warn(`mblogsDB未知operationType:${event.operationType}`)
                 return
             }
         })
