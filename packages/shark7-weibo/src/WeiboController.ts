@@ -37,7 +37,7 @@ export class WeiboController {
                 if (e.response.status >= 500) {
                     logWarn('抓取微博出错', e)
                 } else {
-                    logError('抓取微博出错', e)
+                    logWarn('抓取微博出错', e)
                 }
             } else {
                 logErrorDetail('抓取微博出错', e)
@@ -53,7 +53,7 @@ export class WeiboController {
             logErrorDetail('抓取微博出错', e)
         }
     }
-    async fetchUserInfo() {
+    async fetchUserInfo(): Promise<boolean> {
         logger.debug("开始抓取用户信息");
         let user
         try {
@@ -64,7 +64,7 @@ export class WeiboController {
                 if (e.response.status >= 500) {
                     logWarn('抓取用户信息出错', e)
                 } else {
-                    logError('抓取用户信息出错', e)
+                    logWarn('抓取用户信息出错', e)
                 }
             } else {
                 logErrorDetail('抓取用户信息出错', e)
@@ -76,10 +76,14 @@ export class WeiboController {
             await new Promise(resolve => setTimeout(resolve, 100));
         } catch (e: any) {
             logErrorDetail('抓取用户信息出错', e)
+            return false
         }
+        return true
     }
     public async run() {
-        await this.fetchUserInfo()
+        if (!await this.fetchUserInfo()) {
+            process.exit(1)
+        }
         const scheduler = new ToadScheduler()
         const fetchMblogTask = new Task(
             'fetchMblog',
