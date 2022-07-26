@@ -68,7 +68,11 @@ async function fetchUserInfo(uid: number) {
         let resp = await axios.get(`https://r5-crossplay.r5prod.stryder.respawn.com/user.php?qt=user-getinfo&getinfo=1&hardware=PC&uid=${uid}&language=english&timezoneOffset=8&ugc=1&rep=1&searching=0&change=7&loadidx=1`, { headers: { 'User-Agent': 'Respawn HTTPS/1.0' } })
         return resp.data
     } catch (err) {
-        logAxiosError(err)
+        if (axios.isAxiosError(err)) {
+            logger.warn('抓取数据失败:请求错误\n' + JSON.stringify(err.toJSON()))
+        } else {
+            logErrorDetail('抓取数据失败', err)
+        }
         return null
     }
 }

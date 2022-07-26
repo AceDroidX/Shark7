@@ -5,18 +5,19 @@ import { getReqConfig, fetchURL } from './utils';
 import { WeiboCard } from "./model";
 import { OnlineData } from 'shark7-shared/dist/weibo';
 
-export async function fetchOnline(mongo: MongoController, weibo_id: number) {
+export async function fetchOnline(mongo: MongoController, weibo_id: number): Promise<boolean> {
     logger.debug('开始抓取在线状态');
     if (!mongo.cookieCache) {
         logger.error('cookieCache为空');
-        return;
+        return false
     }
     if (!process.env['weibo_online_cid']) {
         logger.error('env:weibo_online_cid为空');
-        return;
+        return false
     }
     const reqConfig = getReqConfig(mongo, process.env['weibo_online_cid']);
     const data = await fetchURL('https://api.weibo.cn/2/page', reqConfig);
+    if (!data) return false
     let cards: WeiboCard[] = data.cards;
     cards.forEach(async (card: WeiboCard) => {
         try {
@@ -54,4 +55,5 @@ export async function fetchOnline(mongo: MongoController, weibo_id: number) {
             logger.error(`${JSON.stringify(card)}`);
         }
     });
+    return true
 }

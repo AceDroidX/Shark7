@@ -45,7 +45,9 @@ async function main() {
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, origin, onNewOnlineData)
     await mongo.ctr.run()
-    await fetchLike(mongo.ctr, weibo_id)
+    if (!await fetchLike(mongo.ctr, weibo_id) || !await fetchOnline(mongo.ctr, weibo_id)) {
+        process.exit(1)
+    }
     const scheduler = new ToadScheduler()
     const fetchLikeTask = new Task(
         'fetchLike',

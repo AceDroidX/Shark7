@@ -5,18 +5,19 @@ import { MongoController } from './MongoController';
 import { getReqConfig, fetchURL } from './utils';
 import { WeiboCard } from "./model";
 
-export async function fetchLike(mongo: MongoController, weibo_id: number) {
+export async function fetchLike(mongo: MongoController, weibo_id: number): Promise<boolean> {
     logger.debug('开始抓取点赞');
     if (!mongo.cookieCache) {
         logger.error('cookieCache为空');
-        return;
+        return false
     }
     if (!process.env['weibo_like_cid']) {
         logger.error('env:weibo_like_cid为空');
-        return;
+        return false
     }
     const reqConfig = getReqConfig(mongo, process.env['weibo_like_cid']);
     const data = await fetchURL('https://api.weibo.cn/2/cardlist', reqConfig);
+    if (!data) return false
     let cards: WeiboCard[] = data.cards;
     cards.reverse();
     cards.forEach(async (card: WeiboCard) => {
@@ -47,4 +48,5 @@ export async function fetchLike(mongo: MongoController, weibo_id: number) {
             logger.error(`${JSON.stringify(card)}`);
         }
     });
+    return true
 }

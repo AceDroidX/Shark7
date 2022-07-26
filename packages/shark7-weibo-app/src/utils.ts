@@ -34,8 +34,7 @@ export async function fetchURL(url: string, reqConfig: AxiosRequestConfig | unde
         return data
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            logger.error('抓取数据失败:请求错误')
-            logAxiosError(error, 'error')
+            logger.warn('抓取数据失败:请求错误\n' + JSON.stringify(error.toJSON()))
         } else {
             logErrorDetail('抓取数据失败', error)
         }

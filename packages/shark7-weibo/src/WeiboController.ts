@@ -26,21 +26,15 @@ export class WeiboController {
         this.wc = new WeiboController(wbUserCtl, await wbUserCtl.getFromID(uid), mongo)
         return this.wc;
     }
-    async fetchMblog() {
+    async fetchMblog(): Promise<boolean> {
         logger.debug("开始抓取微博");
         let new_mblogs
         try {
             new_mblogs = await this.userCtl.checkAndGetNewMblogs(this.user.id, this.mongo)
         } catch (e: any) {
-            logAxiosError(e);
+            logWarn('抓取微博出错', e)
             if (e.response) {
-                if (e.response.status >= 500) {
-                    logWarn('抓取微博出错', e)
-                } else {
-                    logWarn('抓取微博出错', e)
-                }
-            } else {
-                logErrorDetail('抓取微博出错', e)
+                logger.warn(JSON.stringify(e.response))
             }
             return false
         }
@@ -51,7 +45,9 @@ export class WeiboController {
             }
         } catch (e) {
             logErrorDetail('抓取微博出错', e)
+            return false
         }
+        return true
     }
     async fetchUserInfo(): Promise<boolean> {
         logger.debug("开始抓取用户信息");
@@ -59,15 +55,9 @@ export class WeiboController {
         try {
             user = await this.userCtl.updateUserInfo(this.user)
         } catch (e: any) {
-            logAxiosError(e);
+            logWarn('抓取微博出错', e)
             if (e.response) {
-                if (e.response.status >= 500) {
-                    logWarn('抓取用户信息出错', e)
-                } else {
-                    logWarn('抓取用户信息出错', e)
-                }
-            } else {
-                logErrorDetail('抓取用户信息出错', e)
+                logger.warn(JSON.stringify(e.response))
             }
             return false
         }
