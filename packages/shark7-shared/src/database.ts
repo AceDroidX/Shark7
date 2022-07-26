@@ -135,10 +135,11 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
                 const result = await onInsert(this.ctr, event)
                 if (result) await this.addShark7Event(result)
             } else if (event.operationType == 'update') {
+                let isrealchange = false
                 for (const field in event.updateDescription.updatedFields) {
-                    if (field.startsWith('shark7_')) return
+                    if (!field.startsWith('shark7_')) { isrealchange = true; break }
                 }
-                logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
+                if (isrealchange) logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
             } else {
                 logger.warn(`insert数据未知operationType:${event.operationType}`)
                 return
