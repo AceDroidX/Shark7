@@ -44,6 +44,15 @@ async function main() {
     // const apex_uid = apex_uid_str.split(',').map(player => { return player.split(':').map(e => { return toNumOrStr(e) }) })
     const apex_uid = apex_uid_str.split(':').map(e => { return toNumOrStr(e) })
     console.log(apex_uid)
+    if (!await getUserInfo(apex_uid[0], apex_uid[1])) {
+        logger.error('数据获取测试失败')
+        process.exit(1)
+    }
+    const userinfo = await mongo.ctr.getUserInfo(apex_uid[1])
+    const origin = [{ id: String(apex_uid[1]), data: userinfo }]
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, origin, onUserInfoEvent)
+    mongo.ctr.run()
+
     const scheduler = new ToadScheduler()
     const refreshUserInfoTask = new AsyncTask(
         'refreshUserInfo',
@@ -55,12 +64,6 @@ async function main() {
         (err: Error) => { logErrorDetail('refreshUserInfo错误', err) }
     )
     scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, refreshUserInfoTask))
-
-
-    const userinfo = await getUserInfo(apex_uid[0], apex_uid[1])
-    const origin = [{ id: String(apex_uid[1]), data: userinfo }]
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, origin, onUserInfoEvent)
-    mongo.ctr.run()
 }
 
 async function fetchUserInfo(uid: number) {

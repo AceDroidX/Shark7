@@ -72,6 +72,7 @@ export class WeiboController {
     }
     public async run() {
         if (!await this.fetchUserInfo()) {
+            logger.error('数据获取测试失败')
             process.exit(1)
         }
         const scheduler = new ToadScheduler()

@@ -46,6 +46,7 @@ async function main() {
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, origin, onNewOnlineData)
     await mongo.ctr.run()
     if (!await fetchLike(mongo.ctr, weibo_id) || !await fetchOnline(mongo.ctr, weibo_id)) {
+        logger.error('数据获取测试失败')
         process.exit(1)
     }
     const scheduler = new ToadScheduler()

@@ -11,6 +11,9 @@ class MongoController extends MongoControllerBase<ApexDBs> {
             $set: user
         }, { upsert: true })
     }
+    async getUserInfo(uid: number) {
+        return await this.dbs.userinfoDB.findOne({ uid })
+    }
     run() {
     }
 }
