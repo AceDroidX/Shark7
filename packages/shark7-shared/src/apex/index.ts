@@ -2,12 +2,12 @@ import { UpdateTypeDoc } from ".."
 
 export type ApexUserInfo = UpdateTypeDoc & typeof UserInfoDemo
 
-//curl.exe -A "Respawn HTTPS/1.0" "https://r5-crossplay.r5prod.stryder.respawn.com/user.php?qt=user-getinfo&getinfo=1&hardware=PC&uid=1009854701540&language=english&timezoneOffset=8&ugc=1&rep=1&searching=0&change=7&loadidx=1"
+//curl.exe -A "Respawn HTTPS/1.0" "https://r5-crossplay.r5prod.stryder.respawn.com/user.php?qt=user-getinfo&getinfo=1&hardware=PC&uid=1111111111111&language=english&timezoneOffset=8&ugc=1&rep=1&searching=0&change=7&loadidx=1"
 //"userInfo":
 const UserInfoDemo = {
-    "uid": 1009854701540,
+    "uid": 1111111111111,
     "hardware": "PC",
-    "name": "(#^.^#)",    //用户名
+    "name": "aaaaaaaaaa",    //用户名
     "kills": 0,
     "wins": 0,
     "matches": 0,

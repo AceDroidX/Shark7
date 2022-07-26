@@ -41,21 +41,29 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         await this.dbs.onlineDB.updateOne({ id: data.id }, [{ $replaceWith: data }], { upsert: true })
     }
     async getUserInfoByID(id: number) {
-        return await this.dbs.userDB.findOne({ id }) as WithId<WeiboUser>
+        return await this.dbs.userDB.findOne({ id })
     }
     async getOnlineDataByID(id: number) {
-        return await this.dbs.onlineDB.findOne({ id }) as WithId<OnlineData>
+        return await this.dbs.onlineDB.findOne({ id })
     }
 }
 
 export async function onNewLike(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const mblog = event.fullDocument
     const user = await ctr.getUserInfoByID(mblog._userid)
+    if (!user) {
+        logger.error(`user为null,event:\n${JSON.stringify(event)}`)
+        return null
+    }
     const msg = `${mblog.user.screen_name} 发布于${getTime(mblog._timestamp, false)}\n${mblog.text_raw ? mblog.text_raw : mblog.text}`
     return { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Like, msg }
 }
 
-export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin: OnlineData): Promise<Shark7Event | null> {
+export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin: OnlineData | null): Promise<Shark7Event | null> {
+    if (!origin) {
+        logger.error(`origin为null,event:\n${JSON.stringify(event)}`)
+        return null
+    }
     const data = event.updateDescription.updatedFields
     if (!data) {
         logger.warn(`event.updateDescription.updatedFields为${data}`)

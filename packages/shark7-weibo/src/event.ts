@@ -8,6 +8,10 @@ import { MongoController } from "./MongoController"
 export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const nmb = event.fullDocument
     const user = await ctr.getUserInfoByID(nmb._userid)
+    if (!user) {
+        logger.error(`user为null,event:\n${JSON.stringify(event)}`)
+        return null
+    }
     let shark7event = { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Mblog, msg: '' }
     if (nmb.user.id != user.id) {
         if (nmb.title.includes('赞过的微博')) {
@@ -34,7 +38,11 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     return shark7event
 }
 
-export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin: WeiboUser): Promise<Shark7Event | null> {
+export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin: WeiboUser | null): Promise<Shark7Event | null> {
+    if (!origin) {
+        logger.error(`origin为null,event:\n${JSON.stringify(event)}`)
+        return null
+    }
     const user = event.updateDescription.updatedFields
     if (!user) {
         logger.warn(`event.updateDescription.updatedFields为${user}`)

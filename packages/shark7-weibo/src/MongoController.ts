@@ -44,6 +44,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         await this.dbs.userDB.updateOne({ id: user.id }, [{ $replaceWith: user }], { upsert: true })
     }
     async getUserInfoByID(id: number) {
-        return await this.dbs.userDB.findOne({ id }) as WithId<WeiboUser>
+        return await this.dbs.userDB.findOne({ id })
     }
 }

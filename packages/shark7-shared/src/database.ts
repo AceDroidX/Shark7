@@ -1,6 +1,7 @@
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, MongoClient } from "mongodb";
 import { Shark7Event, UpdateTypeDoc } from ".";
 import { ApexUserInfo } from "./apex";
+import { DouyinUser } from "./douyin";
 import logger from "./logger";
 import { logErrorDetail } from "./utils";
 import { OnlineData, WeiboMsg, WeiboUser } from "./weibo";
@@ -81,15 +82,15 @@ export class BiliLiveDBs extends EventDBs {
 }
 
 export class DouyinDBs extends EventDBs {
-    userDB: Collection
-    constructor(event: Collection<Shark7Event>, data: Collection, userDB: Collection) {
+    userDB: Collection<DouyinUser>
+    constructor(event: Collection<Shark7Event>, data: Collection, userDB: Collection<DouyinUser>) {
         super(event, data)
         this.userDB = userDB
     }
     static getInstance(client: MongoClient) {
         const event = client.db('douyin').collection<Shark7Event>('event')
         const data = client.db('douyin').collection('data')
-        const userDB = client.db('douyin').collection('users')
+        const userDB = client.db('douyin').collection<DouyinUser>('users')
         event.createIndex({ ts: -1 })
         return new this(event, data, userDB)
     }
@@ -146,7 +147,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
             }
         })
     }
-    addUpdateChangeWatcher<T extends UpdateTypeDoc>(db: Collection<T>, origin: { id: string, data: T }[], onUpdate: { (ctr: C, event: ChangeStreamUpdateDocument<T>, origin: T): Promise<Shark7Event | null> }) {
+    addUpdateChangeWatcher<T extends UpdateTypeDoc>(db: Collection<T>, origin: { id: string, data: T | null }[], onUpdate: { (ctr: C, event: ChangeStreamUpdateDocument<T>, origin: T | null): Promise<Shark7Event | null> }) {
         db.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {
             if (event.operationType == 'insert') {
                 logger.info(`update数据添加: \n${JSON.stringify(event)}`)
@@ -162,7 +163,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
                 }
                 for (const [index, item] of origin.entries()) {
                     if (item.id == event.fullDocument.shark7_id) {
-                        const result = await onUpdate(this.ctr, event, origin[index].data)
+                        const result = await onUpdate(this.ctr, event, origin ? origin[index].data : null)
                         if (result) await this.addShark7Event(result)
                         origin[index].data = event.fullDocument
                     }

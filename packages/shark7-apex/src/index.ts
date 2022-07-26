@@ -58,10 +58,6 @@ async function main() {
 
 
     const userinfo = await getUserInfo(apex_uid[0], apex_uid[1])
-    if (!userinfo) {
-        logger.error('userinfo获取失败')
-        process.exit(1)
-    }
     const origin = [{ id: String(apex_uid[1]), data: userinfo }]
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, origin, onUserInfoEvent)
     mongo.ctr.run()

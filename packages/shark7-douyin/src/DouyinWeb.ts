@@ -42,7 +42,7 @@ export class DouyinWeb extends Web {
             }
             const data = await response.json()
             if (data.status_code != 0) {
-                logger.error(`puppeteer:response:${response.url()} status_code:${data.status_code}`)
+                logger.error(`puppeteer:response:${response.url()} status_code:${data.status_code} status_msg:${data.status_msg}`)
                 return
             }
             // logger.debug('puppeteer:response\n' + JSON.stringify(data))
