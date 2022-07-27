@@ -71,7 +71,7 @@ export class WeiboController {
         return true
     }
     public async run() {
-        if (!await this.fetchUserInfo()) {
+        if (await this.userCtl.getRawUserInfo(this.user.id) == {}) {
             logger.error('数据获取测试失败')
             process.exit(1)
         }
