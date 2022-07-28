@@ -3,6 +3,7 @@ import { Shark7Event, UpdateTypeDoc } from ".";
 import { ApexUserInfo } from "./apex";
 import { DouyinUser } from "./douyin";
 import logger from "./logger";
+import { NeteaseMusicUser } from "./netease-music";
 import { logErrorDetail } from "./utils";
 import { OnlineData, WeiboMsg, WeiboUser } from "./weibo";
 
@@ -19,17 +20,19 @@ export class MongoDBs extends EventDBs {
     apex: ApexDBs
     bililive: BiliLiveDBs
     douyin: DouyinDBs
-    constructor(event: Collection<Shark7Event>, data: Collection, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, douyin: DouyinDBs) {
+    netease_music: NeteaseMusicDBs
+    constructor(event: Collection<Shark7Event>, data: Collection, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs) {
         super(event, data)
         this.weibo = weibo
         this.apex = apex
         this.bililive = bililive
         this.douyin = douyin
+        this.netease_music = netease_music
     }
     static getInstance(client: MongoClient) {
         const event = client.db('main').collection<Shark7Event>('event')
         const data = client.db('main').collection('data')
-        return new this(event, data, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client), DouyinDBs.getInstance(client))
+        return new this(event, data, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client), DouyinDBs.getInstance(client), NeteaseMusicDBs.getInstance(client))
     }
 }
 
@@ -91,6 +94,21 @@ export class DouyinDBs extends EventDBs {
         const event = client.db('douyin').collection<Shark7Event>('event')
         const data = client.db('douyin').collection('data')
         const userDB = client.db('douyin').collection<DouyinUser>('users')
+        event.createIndex({ ts: -1 })
+        return new this(event, data, userDB)
+    }
+}
+
+export class NeteaseMusicDBs extends EventDBs {
+    userDB: Collection<NeteaseMusicUser>
+    constructor(event: Collection<Shark7Event>, data: Collection, userDB: Collection<NeteaseMusicUser>) {
+        super(event, data)
+        this.userDB = userDB
+    }
+    static getInstance(client: MongoClient) {
+        const event = client.db('netease-music').collection<Shark7Event>('event')
+        const data = client.db('netease-music').collection('data')
+        const userDB = client.db('netease-music').collection<NeteaseMusicUser>('users')
         event.createIndex({ ts: -1 })
         return new this(event, data, userDB)
     }

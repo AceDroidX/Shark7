@@ -18,7 +18,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 function timePrefix() {
     return `[${getTime()}]`
 }
-//get time 
+
 function getTime(timestamp?: number, withMiliSecond?: boolean) {
     let hasMilliSeconds = true
     let now
@@ -109,3 +109,32 @@ function toNumOrStr(source: any) {
         return n
     }
 }
+
+// https://juejin.cn/post/7030605232132325412
+export const flattenObj = (data: any) => {
+    const result: any = {};
+    const isEmpty = (x: any) => Object.keys(x).length === 0;
+    const recurse = (cur: any, prop: string) => {
+        if (Object(cur) !== cur) {
+            result[prop] = cur;
+        } else if (Array.isArray(cur)) {
+            const length = cur.length;
+            for (let i = 0; i < length; i++) {
+                recurse(cur[i], `${prop}[${i}]`);
+            }
+            if (length === 0) {
+                result[prop] = [];
+            }
+        } else {
+            if (!isEmpty(cur)) {
+                Object.keys(cur).forEach((key) =>
+                    recurse(cur[key], prop ? `${prop}.${key}` : key)
+                );
+            } else {
+                result[prop] = {};
+            }
+        }
+    };
+    recurse(data, "");
+    return result;
+};

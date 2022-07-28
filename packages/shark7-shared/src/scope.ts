@@ -18,11 +18,16 @@ enum DouyinScope {
     User = 'Douyin.User',
 }
 
+enum NeteaseMusicScope {
+    User = 'NeteaseMusic.User',
+}
+
 export const Scope = {
     Apex: 'Apex',
     Weibo: WeiboScope,
     BiliLive: BiliLiveScope,
-    Douyin: DouyinScope
+    Douyin: DouyinScope,
+    NeteaseMusic: NeteaseMusicScope,
 };
 
 export enum ScopeName {
@@ -38,6 +43,7 @@ export enum ScopeName {
     'BiliLive.Gift' = '赠送礼物',
     'BiliLive.Live' = '直播间状态',
     'Douyin.User' = '抖音用户信息',
+    'NeteaseMusic.User' = '网易云音乐用户信息',
 }
 
 export function getScopeName(id: string): string | undefined {
