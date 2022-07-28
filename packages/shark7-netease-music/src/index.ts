@@ -10,7 +10,6 @@ import { MongoController } from './MongoController';
 import { fetchUser, insertUser, onUserEvent } from './user';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -23,7 +22,6 @@ process.on('uncaughtException', function (err) {
 //     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
 //     process.exit(1);
 // });
-// init
 if (require.main === module) {
     main()
 }

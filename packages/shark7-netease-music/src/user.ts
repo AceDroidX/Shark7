@@ -46,7 +46,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         process.exit(1)
     }
     const flattenOrigin = flattenObj(origin)
-    var result: any[] = [];
+    var result: string[] = [];
     Object.entries(updated).forEach(item => {
         const key = item[0]
         const value = item[1]

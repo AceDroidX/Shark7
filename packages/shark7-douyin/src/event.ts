@@ -1,28 +1,44 @@
 import { ChangeStreamUpdateDocument } from "mongodb";
 import { Shark7Event } from "shark7-shared";
-import { Scope } from 'shark7-shared/dist/scope'
 import logger from "shark7-shared/dist/logger";
+import { Scope } from 'shark7-shared/dist/scope';
+import { flattenObj } from "shark7-shared/dist/utils";
 import { MongoController } from "./MongoController";
 
-export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument, origin: any): Promise<Shark7Event | null> {
-    const user = event.updateDescription.updatedFields
+export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<DouyinUser>, origin: DouyinUser | null): Promise<Shark7Event | null> {
+    const user = event.fullDocument
+    const updated = event.updateDescription.updatedFields
     if (!user) {
-        logger.warn(`event.fullDocument为${user}`)
-        return null
+        logger.error(`fullDocument为${user}`)
+        process.exit(1)
     }
-    var result: any[] = [];
-    Object.keys(user).forEach(key => {
+    if (!updated) {
+        logger.error(`updatedFields为${user}`)
+        process.exit(1)
+    }
+    const flattenOrigin = flattenObj(origin)
+    var result: string[] = [];
+    Object.entries(updated).forEach(item => {
+        const key = item[0]
+        const value = item[1]
+        if (key.startsWith('shark7_')) {
+            return
+        }
         switch (key) {
             case 'cover_url':
             case 'white_cover_url':
             case 'share_info':
                 return
         }
-        if (user[key] != undefined) {
-            logger.debug(`${key}发生变化:${user[key]}`)
-            result.push(`${key}更改\n原：${JSON.stringify(origin[key])}\n现：${JSON.stringify(user[key])}`);
+        if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
+            return
         }
+        if (flattenOrigin[key] == value) {
+            return
+        }
+        logger.info(`${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
+        result.push(`${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
     })
     if (result.length == 0) return null
-    return { ts: Number(new Date()), name: String(origin.nickname), scope: Scope.Douyin.User, msg: result.join('\n') }
+    return { ts: Number(new Date()), name: String(user.nickname), scope: Scope.Douyin.User, msg: result.join('\n') }
 }
