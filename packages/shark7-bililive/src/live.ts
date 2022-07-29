@@ -44,12 +44,12 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['info'][2][0]
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
-            if (data['info'][0][12] == 0) {
+            if (data['info'][0][9] == 2) {
+                return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送抽奖弹幕：${data['info'][1]}` }
+            } else if (data['info'][0][12] == 0) {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送弹幕：${data['info'][1]}` }
             } else if (data['info'][0][12] == 1) {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送表情弹幕：[${data['info'][1]}](${data['info'][0][13]['url']})` }
-            } else if (data['info'][0][9] == 2) {
-                return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送抽奖弹幕：${data['info'][1]}` }
             } else {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送特殊弹幕(${data['info'][0][12]})：${data['info'][1]}` }
             }
