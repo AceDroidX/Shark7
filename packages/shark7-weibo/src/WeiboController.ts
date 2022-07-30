@@ -89,7 +89,15 @@ export class WeiboController {
             () => { this.fetchUserInfo() },
             (err: Error) => { logError('fetchUserInfo错误', err) }
         )
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, fetchMblogTask))
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 10, }, fetchUserInfoTask))
+        let mblogInterval = 4
+        if (process.env['mblog_interval']) {
+            mblogInterval = Number(process.env['mblog_interval'])
+        }
+        let userInterval = 10
+        if (process.env['user_interval']) {
+            userInterval = Number(process.env['user_interval'])
+        }
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: mblogInterval, }, fetchMblogTask))
+        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: userInterval, }, fetchUserInfoTask))
     }
 }
