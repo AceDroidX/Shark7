@@ -49,7 +49,7 @@ async function main() {
         logger.error('请设置room_id')
         process.exit(1)
     }
-    const roomid = roomid_str.split(',').map(x => parseInt(x))
+    const roomid = roomid_str.split(',').map(x => parseInt(x.split(':')[0]))
     logger.info(`设置${roomid.length}个房间:`)
     const roomid_Users = new BiliUsers()
     for (const id of roomid) {
