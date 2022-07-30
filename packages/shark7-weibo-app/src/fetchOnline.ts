@@ -1,24 +1,27 @@
-import { logErrorDetail } from 'shark7-shared/dist/utils';
 import logger from 'shark7-shared/dist/logger';
-import { MongoController } from './MongoController';
-import { getReqConfig, fetchURL } from './utils';
-import { WeiboCard } from "./model";
+import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { OnlineData } from 'shark7-shared/dist/weibo';
+import { WeiboCard, WeiboOnlineIdConfig } from "./model";
+import { MongoController } from './MongoController';
+import { fetchURL, getReqConfig } from './utils';
 
-export async function fetchOnline(mongo: MongoController, weibo_id: number): Promise<boolean> {
-    logger.debug('开始抓取在线状态');
+export async function getOnline(mongo: MongoController, config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
     if (!mongo.cookieCache) {
         logger.error('cookieCache为空');
-        return false
+        return null
     }
-    if (!process.env['weibo_online_cid']) {
-        logger.error('env:weibo_online_cid为空');
-        return false
-    }
-    const reqConfig = getReqConfig(mongo, process.env['weibo_online_cid']);
+    const cid = config.online_cid
+    const reqConfig = getReqConfig(mongo, cid);
     const data = await fetchURL('https://api.weibo.cn/2/page', reqConfig);
-    if (!data) return false
-    let cards: WeiboCard[] = data.cards;
+    if (!data) return null
+    return data.cards
+}
+
+export async function fetchOnline(mongo: MongoController, config: WeiboOnlineIdConfig): Promise<boolean> {
+    logger.debug('开始抓取在线状态');
+    const weibo_id = config.id
+    const cards = await getOnline(mongo, config)
+    if (!cards) return false
     cards.forEach(async (card: WeiboCard) => {
         try {
             if (card.card_type == 11) {

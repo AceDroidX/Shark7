@@ -1,36 +1,39 @@
-import { WeiboUserCtl } from "./model/WeiboUserCtl";
-import { WeiboUser } from 'shark7-shared/dist/weibo'
-import { logAxiosError, logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import logger from "shark7-shared/dist/logger";
-import { ToadScheduler, SimpleIntervalJob, Task } from 'toad-scheduler';
-import { MongoController } from "./MongoController";
+import { logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
+import { WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
+import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { WeiboHTTP } from "./model/WeiboHTTP";
+import { WeiboUserCtl } from "./model/WeiboUserCtl";
+import { MongoController } from "./MongoController";
 
 export class WeiboController {
     static wc: WeiboController;
 
     userCtl: WeiboUserCtl
-    user: WeiboUser
+    user: WeiboUser[]
     mongo: MongoController
 
-    constructor(userCtl: WeiboUserCtl, user: WeiboUser, mongo: MongoController) {
+    constructor(userCtl: WeiboUserCtl, user: WeiboUser[], mongo: MongoController) {
         this.userCtl = userCtl
         this.user = user;
         this.mongo = mongo;
     }
-    static async init(uid: number, mongo: MongoController) {
+    static async init(uid: number[], mongo: MongoController) {
         if (this.wc != undefined) {
             return this.wc;
         }
         const wbUserCtl = new WeiboUserCtl(new WeiboHTTP(mongo))
-        this.wc = new WeiboController(wbUserCtl, await wbUserCtl.getFromID(uid), mongo)
+        const weiboUser = await Promise.all(uid.map(id => wbUserCtl.getFromID(id)))
+        this.wc = new WeiboController(wbUserCtl, weiboUser, mongo)
         return this.wc;
     }
     async fetchMblog(): Promise<boolean> {
         logger.debug("开始抓取微博");
-        let new_mblogs
+        let new_mblogs: WeiboMsg[] = []
         try {
-            new_mblogs = await this.userCtl.checkAndGetNewMblogs(this.user.id, this.mongo)
+            for (const user of this.user) {
+                new_mblogs = new_mblogs.concat(await this.userCtl.checkAndGetNewMblogs(user.id, this.mongo))
+            }
         } catch (e: any) {
             logWarn('抓取微博出错', e)
             if (e.response) {
@@ -41,7 +44,6 @@ export class WeiboController {
         try {
             for (const nmb of new_mblogs) {
                 await this.mongo.insertMblog(nmb)
-                await new Promise(resolve => setTimeout(resolve, 100));
             }
         } catch (e) {
             logErrorDetail('抓取微博出错', e)
@@ -51,9 +53,11 @@ export class WeiboController {
     }
     async fetchUserInfo(): Promise<boolean> {
         logger.debug("开始抓取用户信息");
-        let user
+        let new_user: WeiboUser[] = []
         try {
-            user = await this.userCtl.updateUserInfo(this.user)
+            for (const user of this.user) {
+                new_user = new_user.concat(await this.userCtl.updateUserInfo(user))
+            }
         } catch (e: any) {
             logWarn('抓取微博出错', e)
             if (e.response) {
@@ -62,8 +66,7 @@ export class WeiboController {
             return false
         }
         try {
-            await this.mongo.insertUserInfo(user)
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await Promise.all(new_user.map(user => this.mongo.insertUserInfo(user)))
         } catch (e: any) {
             logErrorDetail('抓取用户信息出错', e)
             return false
@@ -71,7 +74,7 @@ export class WeiboController {
         return true
     }
     public async run() {
-        if (await this.userCtl.getRawUserInfo(this.user.id) == {}) {
+        if (await this.userCtl.getRawUserInfo(this.user[0].id) == {}) {
             logger.error('数据获取测试失败')
             process.exit(1)
         }

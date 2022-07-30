@@ -1,25 +1,29 @@
-import { logErrorDetail } from 'shark7-shared/dist/utils';
 import logger from 'shark7-shared/dist/logger';
+import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { WeiboMsg } from 'shark7-shared/dist/weibo';
+import { WeiboCard, WeiboLikeIdConfig } from "./model";
 import { MongoController } from './MongoController';
-import { getReqConfig, fetchURL } from './utils';
-import { WeiboCard } from "./model";
+import { fetchURL, getReqConfig } from './utils';
 
-export async function fetchLike(mongo: MongoController, weibo_id: number): Promise<boolean> {
-    logger.debug('开始抓取点赞');
+export async function getLike(mongo: MongoController, config: WeiboLikeIdConfig): Promise<WeiboCard[] | null> {
     if (!mongo.cookieCache) {
         logger.error('cookieCache为空');
-        return false
+        return null
     }
-    if (!process.env['weibo_like_cid']) {
-        logger.error('env:weibo_like_cid为空');
-        return false
-    }
-    const reqConfig = getReqConfig(mongo, process.env['weibo_like_cid']);
+    const cid = config.like_cid
+    const reqConfig = getReqConfig(mongo, cid);
     const data = await fetchURL('https://api.weibo.cn/2/cardlist', reqConfig);
-    if (!data) return false
+    if (!data) return null
     let cards: WeiboCard[] = data.cards;
     cards.reverse();
+    return cards
+}
+
+export async function fetchLike(mongo: MongoController, config: WeiboLikeIdConfig): Promise<boolean> {
+    logger.debug('开始抓取点赞');
+    const weibo_id = config.id
+    const cards = await getLike(mongo, config)
+    if (!cards) return false
     cards.forEach(async (card: WeiboCard) => {
         try {
             if (card.card_type == 11) {

@@ -1,13 +1,12 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { toNumOrStr } from 'shark7-shared/dist/utils'
-import { WeiboController } from './WeiboController';
-import logger from 'shark7-shared/dist/logger';
-import { MongoController } from './MongoController';
-import winston from 'winston';
 import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
-import { onUserDBEvent, onMblogEvent } from './event';
+import logger from 'shark7-shared/dist/logger';
+import winston from 'winston';
+import { onMblogEvent, onUserDBEvent } from './event';
+import { MongoController } from './MongoController';
+import { WeiboController } from './WeiboController';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -32,13 +31,15 @@ async function main() {
         level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-weibo', tryReconnect: true
     }))
 
-    const weibo_id = toNumOrStr(process.env['weibo_id'])
-    if (typeof weibo_id != "number") {
+    if (!process.env['weibo_id']) {
         logger.error('请设置weibo_id')
         process.exit(1)
     }
+    const weibo_id = process.env['weibo_id'].split(',').map(x => parseInt(x))
 
-    const origin = [{ id: String(weibo_id), data: await mongo.ctr.getUserInfoByID(weibo_id) }]
+    const origin = await Promise.all(weibo_id.map(async id => {
+        return { id: String(id), data: await mongo.ctr.getUserInfoByID(id) }
+    }))
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, origin, onUserDBEvent)
     await mongo.ctr.run()

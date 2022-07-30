@@ -1,14 +1,15 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { logErrorDetail } from 'shark7-shared/dist/utils'
-import logger from 'shark7-shared/dist/logger';
-import winston from 'winston';
-import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
-import { fetchLike } from './fetchLike';
-import { fetchOnline } from './fetchOnline';
 import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
+import logger from 'shark7-shared/dist/logger';
+import { logErrorDetail } from 'shark7-shared/dist/utils';
+import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
+import winston from 'winston';
+import { fetchLike, getLike } from './fetchLike';
+import { fetchOnline, getOnline } from './fetchOnline';
+import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
+import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -39,25 +40,32 @@ async function main() {
         logger.error('请设置weibo_id')
         process.exit(1)
     }
-    const weibo_id = Number(process.env['weibo_id'])
-
-    const origin = [{ id: String(weibo_id), data: await mongo.ctr.getOnlineDataByID(weibo_id) }]
+    const weibo_id_config = JSON.parse(process.env['weibo_id']) as WeiboIdConfig[]
+    let like_id_config: WeiboLikeIdConfig[] = []
+    let online_id_config: WeiboOnlineIdConfig[] = []
+    for (const config of weibo_id_config) {
+        if (config.like_cid) like_id_config.push({ id: config.id, like_cid: config.like_cid })
+        if (config.online_cid) online_id_config.push({ id: config.id, online_cid: config.online_cid })
+    }
+    const originOnlineData = await Promise.all(online_id_config.map(async config => {
+        return { id: String(config.id), data: await mongo.ctr.getOnlineDataByID(config.id) }
+    }))
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, origin, onNewOnlineData)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, originOnlineData, onNewOnlineData)
     await mongo.ctr.run()
-    if (!await fetchLike(mongo.ctr, weibo_id) || !await fetchOnline(mongo.ctr, weibo_id)) {
+    if (!await getLike(mongo.ctr, like_id_config[0]) || !await getOnline(mongo.ctr, online_id_config[0])) {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
     const scheduler = new ToadScheduler()
     const fetchLikeTask = new Task(
         'fetchLike',
-        () => { fetchLike(mongo.ctr, weibo_id) },
+        () => { like_id_config.forEach(config => fetchLike(mongo.ctr, config)) },
         (err: Error) => { logErrorDetail('fetchLike错误', err) }
     )
     const fetchOnlineTask = new Task(
         'fetchOnline',
-        () => { fetchOnline(mongo.ctr, weibo_id) },
+        () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, config)) },
         (err: Error) => { logErrorDetail('fetchOnline错误', err) }
     )
     let interval = 10
