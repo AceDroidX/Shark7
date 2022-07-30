@@ -78,6 +78,7 @@ export class WeiboController {
             logger.error('数据获取测试失败')
             process.exit(1)
         }
+        await this.fetchUserInfo() // 先获取用户信息，是fetchMblog的前置
         const scheduler = new ToadScheduler()
         const fetchMblogTask = new Task(
             'fetchMblog',
