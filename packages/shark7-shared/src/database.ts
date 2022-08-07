@@ -55,6 +55,7 @@ export class WeiboDBs extends EventDBs {
         this.likeDB = db.collection<WeiboMsg>('likes')
         this.onlineDB = db.collection<OnlineData>('online')
         this.mblogsDB.createIndex({ id: -1 })
+        this.commentsDB.createIndex({ id: -1 })
         this.likeDB.createIndex({ id: -1 })
     }
 }

@@ -43,7 +43,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null>; },
         onUpdate?: { (ctr: C, event: ChangeStreamUpdateDocument<T>): Promise<Shark7Event | null>; }
     ) {
-        db.watch().on("change", async (event) => {
+        db.watch([], { fullDocument: 'updateLookup' }).on("change", async (event) => {
             if (event.operationType == 'insert') {
                 const result = await onInsert(this.ctr, event);
                 if (result)

@@ -11,11 +11,11 @@ export class WeiboHTTP {
         this.mongo = mongo
     }
 
-    async getURL(url: string) {
+    async getURL<T = any>(url: string) {
         if (this.mongo.cookieCache == undefined) {
             logger.error("WeiboHTTP.getURL: cookieCache is undefined")
             process.exit(1)
         }
-        return await axios.get(url, { headers: { 'User-Agent': UA, 'cookie': cookieJsonToStr(this.mongo.cookieCache) } })
+        return await axios.get<T>(url, { headers: { 'User-Agent': UA, 'cookie': cookieJsonToStr(this.mongo.cookieCache) } })
     }
 }

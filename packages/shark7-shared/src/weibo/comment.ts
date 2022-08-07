@@ -13,13 +13,11 @@ const WeiboCommentDemo = {
     "source_allowclick": 0,
     "source_type": 4,
     "source": "来自美国",
-    "user": WeiboUser,
     "mid": "4799762106156993",
     "idstr": "4799762106156993",
     "url_objects": [],
     "liked": false,
     "readtimetype": "comment",
-    "comments": [],
     "max_id": 0,
     "total_number": 0,
     "isLikedByMblogAuthor": false,
@@ -28,7 +26,17 @@ const WeiboCommentDemo = {
 }
 
 export type WeiboComment = typeof WeiboCommentDemo & InsertTypeDoc & {
-    "comments": WeiboComment[]
+    user: WeiboUser
+    reply_comment?: WeiboComment
+}
+
+export type WeiboReplyComment = WeiboComment & {
+    reply_comment: WeiboComment
+}
+
+export type WeiboRootComment = WeiboComment & {
+    comments: WeiboReplyComment[]
+    more_info?: object
 }
 
 const WeiboCommentApiDemo = {
@@ -38,6 +46,6 @@ const WeiboCommentApiDemo = {
     "trendsText": "已加载全部评论"
 }
 
-export type WeiboCommentApi = typeof WeiboCommentApiDemo & {
-    data: WeiboComment[]
+export type WeiboCommentApi<T extends WeiboComment> = typeof WeiboCommentApiDemo & {
+    data: T[]
 }

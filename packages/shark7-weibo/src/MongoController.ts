@@ -4,7 +4,7 @@ import { WeiboDBs } from 'shark7-shared/dist/database';
 import { DataDBDoc, WeiboDataName } from 'shark7-shared/dist/datadb';
 import { MongoControllerBase } from 'shark7-shared/dist/db';
 import logger from "shark7-shared/dist/logger";
-import { WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
+import { WeiboComment, WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
@@ -45,5 +45,8 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
     async getUserInfoByID(id: number) {
         return await this.dbs.userDB.findOne({ id })
+    }
+    async insertComment(comment: WeiboComment) {
+        return await this.dbs.commentsDB.updateOne({ id: comment.id }, [{ $replaceWith: comment }], { upsert: true })
     }
 }

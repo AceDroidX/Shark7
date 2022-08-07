@@ -5,7 +5,7 @@ import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
 import winston from 'winston';
-import { onMblogEvent, onUserDBEvent } from './event';
+import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { MongoController } from './MongoController';
 import { WeiboController } from './WeiboController';
 
@@ -38,7 +38,8 @@ async function main() {
     }
     const weibo_id = process.env['weibo_id'].split(',').map(x => parseInt(x))
 
-    mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent)
+    mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent, onMblogUpdate)
+    mongo.addInsertChangeWatcher(mongo.ctr.dbs.commentsDB, onCommentInsert, onCommentUpdate)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))

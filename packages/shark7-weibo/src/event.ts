@@ -1,9 +1,10 @@
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
-import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
+import { WeiboUser, WeiboMsg, WeiboComment } from 'shark7-shared/dist/weibo'
 import { Shark7Event } from "shark7-shared"
 import { Scope } from 'shark7-shared/dist/scope'
 import logger from "shark7-shared/dist/logger"
 import { MongoController } from "./MongoController"
+import { fetchComments } from './comment'
 
 export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const nmb = event.fullDocument
@@ -39,8 +40,13 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     return shark7event
 }
 
-export async function onMblogUpdate(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>) {
-
+export async function onMblogUpdate(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboMsg>): Promise<Shark7Event | null> {
+    if (!event.fullDocument) {
+        logger.error('onMblogUpdate !event.fullDocument')
+        return null
+    }
+    await fetchComments(ctr, event.fullDocument.id, event.fullDocument._userid)
+    return null
 }
 
 export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin?: WeiboUser): Promise<Shark7Event | null> {
@@ -73,4 +79,19 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
         result.push(`微博认证更改\n原：${origin.verified_reason}\n现：${user.verified_reason}`);
     }
     return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Weibo.User, msg: result.join('\n') }
+}
+
+export async function onCommentInsert(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboComment>): Promise<Shark7Event | null> {
+    const comment = event.fullDocument
+    let msg = comment.text_raw
+    if (comment.reply_comment) {
+        msg = `原评论<${comment.reply_comment.user.screen_name}>:\n${comment.reply_comment.text}\n回复:\n` + msg
+    }
+    logger.info('添加评论:' + msg)
+    return { ts: Number(new Date()), name: String(comment.user.screen_name), scope: Scope.Weibo.Comment, msg }
+}
+
+export async function onCommentUpdate(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboComment>): Promise<Shark7Event | null> {
+    logger.debug('忽略CommentUpdate')
+    return null
 }
