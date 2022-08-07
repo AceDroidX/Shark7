@@ -1,11 +1,11 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, MongoClient } from "mongodb";
-import { Shark7Event, UpdateTypeDoc } from ".";
+import { Collection, Db, MongoClient } from "mongodb";
+import { Shark7Event } from ".";
 import { ApexUserInfo } from "./apex";
 import { DouyinUser } from "./douyin";
-import logger from "./logger";
 import { NeteaseMusicUser } from "./netease-music";
-import { logErrorDetail } from "./utils";
 import { OnlineData, WeiboMsg, WeiboUser } from "./weibo";
+
+const PostChangeStream = { changeStreamPreAndPostImages: { enabled: true } }
 
 export class EventDBs {
     event: Collection<Shark7Event>
@@ -13,6 +13,21 @@ export class EventDBs {
     constructor(event: Collection<Shark7Event>, data: Collection) {
         this.event = event
         this.data = data
+    }
+    static async initPostChangeColl(db: Db, collList: string[]) {
+        for (const item of await db.listCollections({}, { nameOnly: false }).toArray()) {
+            if (collList.includes(item.name)) {
+                if (item.options?.changeStreamPreAndPostImages?.enabled) {
+                    const index = collList.indexOf(item.name);
+                    if (index > -1) {
+                        collList.splice(index, 1)
+                    }
+                } else {
+                    db.command({ collMod: item.name, changeStreamPreAndPostImages: { enabled: true } })
+                }
+            }
+        }
+        await Promise.all(collList.map(name => db.createCollection(name, PostChangeStream)))
     }
 }
 export class MongoDBs extends EventDBs {
@@ -29,10 +44,16 @@ export class MongoDBs extends EventDBs {
         this.douyin = douyin
         this.netease_music = netease_music
     }
-    static getInstance(client: MongoClient) {
+    static async getInstance(client: MongoClient) {
         const event = client.db('main').collection<Shark7Event>('event')
         const data = client.db('main').collection('data')
-        return new this(event, data, WeiboDBs.getInstance(client), ApexDBs.getInstance(client), BiliLiveDBs.getInstance(client), DouyinDBs.getInstance(client), NeteaseMusicDBs.getInstance(client))
+        return new this(event, data,
+            await WeiboDBs.getInstance(client),
+            await ApexDBs.getInstance(client),
+            BiliLiveDBs.getInstance(client),
+            await DouyinDBs.getInstance(client),
+            await NeteaseMusicDBs.getInstance(client)
+        )
     }
 }
 
@@ -48,13 +69,17 @@ export class WeiboDBs extends EventDBs {
         this.likeDB = likeDB
         this.onlineDB = onlineDB
     }
-    static getInstance(client: MongoClient) {
-        const event = client.db('weibo').collection<Shark7Event>('event')
-        const data = client.db('weibo').collection('data')
-        const mblogsDB = client.db('weibo').collection<WeiboMsg>('mblogs')
-        const userDB = client.db('weibo').collection<WeiboUser>('users')
-        const likeDB = client.db('weibo').collection<WeiboMsg>('likes')
-        const onlineDB = client.db('weibo').collection<OnlineData>('online')
+    static async getInstance(client: MongoClient) {
+        const db = client.db('weibo')
+        await this.initPostChangeColl(db, ['mblogs', 'users', 'online'])
+        const event = db.collection<Shark7Event>('event')
+        const data = db.collection('data')
+        const mblogsDB = db.collection<WeiboMsg>('mblogs')
+        const userDB = db.collection<WeiboUser>('users')
+        const likeDB = db.collection<WeiboMsg>('likes')
+        const onlineDB = db.collection<OnlineData>('online')
+        mblogsDB.createIndex({ id: -1 })
+        likeDB.createIndex({ id: -1 })
         return new this(event, data, mblogsDB, userDB, likeDB, onlineDB)
     }
 }
@@ -65,10 +90,12 @@ export class ApexDBs extends EventDBs {
         super(event, data)
         this.userinfoDB = userinfoDB
     }
-    static getInstance(client: MongoClient) {
-        const event = client.db('apex').collection<Shark7Event>('event')
-        const data = client.db('apex').collection('data')
-        const userinfoDB = client.db('apex').collection<ApexUserInfo>('userinfo')
+    static async getInstance(client: MongoClient) {
+        const db = client.db('apex')
+        await this.initPostChangeColl(db, ['userinfo'])
+        const event = db.collection<Shark7Event>('event')
+        const data = db.collection('data')
+        const userinfoDB = db.collection<ApexUserInfo>('userinfo')
         event.createIndex({ ts: -1 })
         userinfoDB.createIndex({ uid: 1, })
         return new this(event, data, userinfoDB)
@@ -90,10 +117,12 @@ export class DouyinDBs extends EventDBs {
         super(event, data)
         this.userDB = userDB
     }
-    static getInstance(client: MongoClient) {
-        const event = client.db('douyin').collection<Shark7Event>('event')
-        const data = client.db('douyin').collection('data')
-        const userDB = client.db('douyin').collection<DouyinUser>('users')
+    static async getInstance(client: MongoClient) {
+        const db = client.db('douyin')
+        await this.initPostChangeColl(db, ['users'])
+        const event = db.collection<Shark7Event>('event')
+        const data = db.collection('data')
+        const userDB = db.collection<DouyinUser>('users')
         event.createIndex({ ts: -1 })
         return new this(event, data, userDB)
     }
@@ -105,101 +134,13 @@ export class NeteaseMusicDBs extends EventDBs {
         super(event, data)
         this.userDB = userDB
     }
-    static getInstance(client: MongoClient) {
-        const event = client.db('netease-music').collection<Shark7Event>('event')
-        const data = client.db('netease-music').collection('data')
-        const userDB = client.db('netease-music').collection<NeteaseMusicUser>('users')
+    static async getInstance(client: MongoClient) {
+        const db = client.db('netease-music')
+        await this.initPostChangeColl(db, ['users'])
+        const event = db.collection<Shark7Event>('event')
+        const data = db.collection('data')
+        const userDB = db.collection<NeteaseMusicUser>('users')
         event.createIndex({ ts: -1 })
         return new this(event, data, userDB)
-    }
-}
-
-export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {
-    client: MongoClient
-    ctr: C
-    constructor(client: MongoClient, ctr: C) {
-        this.client = client
-        this.ctr = ctr
-    }
-    static getMongoClientConfig() {
-        return new MongoClient(
-            process.env.NODE_ENV == 'production'
-                ? `mongodb://admin:${process.env.MONGODB_PASS}@${process.env.MONGODB_IP}:27017/?authMechanism=DEFAULT`
-                : 'mongodb://admin:admin@localhost:27017/'
-        )
-    }
-    static async getInstance<E extends EventDBs, C extends MongoControllerBase<E>>(dbfunc: {
-        getInstance(client: MongoClient): E;
-    }, ctrfunc: { new(dbs: E): C }) {
-        try {
-            const client = await this.getMongoClientConfig().connect()
-            const dbs = dbfunc.getInstance(client)
-            const ctr = new ctrfunc(dbs)
-            logger.info('数据库已连接')
-            return new this(client, ctr)
-        } catch (err) {
-            logErrorDetail('数据库连接失败', err)
-            process.exit(1)
-        }
-    }
-    async close() {
-        await this.client.close()
-    }
-    async addShark7Event(event: Shark7Event) {
-        await this.ctr.addShark7Event(event)
-    }
-    addInsertChangeWatcher<T>(db: Collection<T>, onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null> }) {
-        db.watch().on("change", async event => {
-            if (event.operationType == 'insert') {
-                const result = await onInsert(this.ctr, event)
-                if (result) await this.addShark7Event(result)
-            } else if (event.operationType == 'update') {
-                let isrealchange = false
-                for (const field in event.updateDescription.updatedFields) {
-                    if (!field.startsWith('shark7_')) { isrealchange = true; break }
-                }
-                if (isrealchange) logger.warn(`insert数据更新\n${JSON.stringify(event)}`)
-            } else {
-                logger.warn(`insert数据未知operationType:${event.operationType}`)
-                return
-            }
-        })
-    }
-    addUpdateChangeWatcher<T extends UpdateTypeDoc>(db: Collection<T>, origin: { id: string, data: T | null }[], onUpdate: { (ctr: C, event: ChangeStreamUpdateDocument<T>, origin: T | null): Promise<Shark7Event | null> }) {
-        db.watch([], { fullDocument: 'updateLookup' }).on("change", async event => {
-            if (event.operationType == 'insert') {
-                logger.info(`update数据添加: \n${JSON.stringify(event)}`)
-                for (const [index, item] of origin.entries()) {
-                    if (item.id == event.fullDocument.shark7_id) {
-                        origin[index].data = event.fullDocument
-                    }
-                }
-            } else if (event.operationType == 'update') {
-                if (!event.fullDocument) {
-                    logger.error(`update数据无fullDocument: \n${JSON.stringify(event)}`)
-                    return
-                }
-                for (const [index, item] of origin.entries()) {
-                    if (item.id == event.fullDocument.shark7_id) {
-                        const result = await onUpdate(this.ctr, event, origin ? origin[index].data : null)
-                        if (result) await this.addShark7Event(result)
-                        origin[index].data = event.fullDocument
-                    }
-                }
-            } else {
-                logger.warn(`update数据未知operationType:${event.operationType}`)
-                return
-            }
-        })
-    }
-}
-
-export class MongoControllerBase<T extends EventDBs> {
-    dbs: T
-    constructor(dbs: T) {
-        this.dbs = dbs
-    }
-    async addShark7Event(event: Shark7Event) {
-        await this.dbs.event.insertOne(event)
     }
 }

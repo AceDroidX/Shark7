@@ -1,14 +1,15 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { logErrorDetail } from 'shark7-shared/dist/utils'
-import logger from 'shark7-shared/dist/logger';
-import { MongoController } from './MongoController';
-import winston from 'winston';
 import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
-import { getFiltedMsg } from './live';
+import { BiliLiveDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
+import logger from 'shark7-shared/dist/logger';
+import { logErrorDetail } from 'shark7-shared/dist/utils';
+import winston from 'winston';
 import { GetConfTask } from './GetConfTask';
-import { BiliLiveDBs, MongoControlClient } from 'shark7-shared/dist/database';
+import { getFiltedMsg } from './live';
+import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {

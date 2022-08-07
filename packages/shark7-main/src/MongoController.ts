@@ -1,9 +1,10 @@
-import { MongoControllerBase, MongoDBs } from "shark7-shared/dist/database"
-import { onEventChange } from "./event"
+import { MongoDBs } from "shark7-shared/dist/database";
+import { MongoControllerBase } from 'shark7-shared/dist/db';
+import { onEventChange } from "./event";
 
 export {
     MongoController
-}
+};
 
 class MongoController extends MongoControllerBase<MongoDBs> {
     run() {

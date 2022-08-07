@@ -1,12 +1,13 @@
-import logger from "shark7-shared/dist/logger"
-import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
-import { WeiboDataName, DataDBDoc } from "shark7-shared/dist/datadb"
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
 import { Protocol } from "puppeteer"
-import { WeiboUser, WeiboMsg, OnlineData } from 'shark7-shared/dist/weibo';
 import { Shark7Event } from "shark7-shared"
+import { WeiboDBs } from 'shark7-shared/dist/database'
+import { DataDBDoc, WeiboDataName } from "shark7-shared/dist/datadb"
+import { MongoControllerBase } from 'shark7-shared/dist/db'
+import logger from "shark7-shared/dist/logger"
 import { Scope } from 'shark7-shared/dist/scope'
 import { getTime } from "shark7-shared/dist/utils"
+import { OnlineData, WeiboMsg } from 'shark7-shared/dist/weibo'
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
@@ -59,7 +60,7 @@ export async function onNewLike(ctr: MongoController, event: ChangeStreamInsertD
     return { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Like, msg }
 }
 
-export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin: OnlineData | null): Promise<Shark7Event | null> {
+export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin?: OnlineData): Promise<Shark7Event | null> {
     if (!origin) {
         logger.error(`origin为null,event:\n${JSON.stringify(event)}`)
         return null

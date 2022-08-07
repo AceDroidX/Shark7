@@ -1,14 +1,15 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { logAxiosError, logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils'
-import logger from 'shark7-shared/dist/logger';
-import { MongoController } from './MongoController';
-import winston from 'winston';
 import axios from 'axios';
+import { ApexUserInfo } from "shark7-shared/dist/apex";
+import { ApexDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
+import logger from 'shark7-shared/dist/logger';
+import { logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils';
 import { AsyncTask, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
-import { ApexDBs, MongoControlClient } from 'shark7-shared/dist/database';
-import { ApexUserInfo } from "shark7-shared/dist/apex"
+import winston from 'winston';
+import { MongoController } from './MongoController';
 import { onUserInfoEvent } from './onUserInfoEvent';
 
 process.on('uncaughtException', function (err) {
@@ -48,9 +49,7 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    const userinfo = await mongo.ctr.getUserInfo(apex_uid[1])
-    const origin = [{ id: String(apex_uid[1]), data: userinfo }]
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, origin, onUserInfoEvent)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, onUserInfoEvent)
     mongo.ctr.run()
 
     const scheduler = new ToadScheduler()

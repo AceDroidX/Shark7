@@ -1,5 +1,6 @@
-import { MongoControllerBase, NeteaseMusicDBs } from 'shark7-shared/dist/database'
-import { NeteaseMusicUser } from 'shark7-shared/dist/netease-music'
+import { NeteaseMusicDBs } from 'shark7-shared/dist/database';
+import { MongoControllerBase } from 'shark7-shared/dist/db';
+import { NeteaseMusicUser } from 'shark7-shared/dist/netease-music';
 
 export class MongoController extends MongoControllerBase<NeteaseMusicDBs> {
     async insertUser(user: NeteaseMusicUser) {

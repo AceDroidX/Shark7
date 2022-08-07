@@ -34,7 +34,7 @@ export async function insertUser(ctr: MongoController, user_id: number) {
     await ctr.insertUser(data)
 }
 
-export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<NeteaseMusicUser>, origin: NeteaseMusicUser | null): Promise<Shark7Event | null> {
+export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<NeteaseMusicUser>, origin?: NeteaseMusicUser): Promise<Shark7Event | null> {
     const user = event.fullDocument
     const updated = event.updateDescription.updatedFields
     if (!user) {

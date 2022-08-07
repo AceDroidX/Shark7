@@ -3,10 +3,9 @@ import { Shark7Event } from 'shark7-shared'
 import { Scope } from 'shark7-shared/dist/scope'
 import logger from 'shark7-shared/dist/logger';
 import { getBadgeName, getFrameName, getIntroVoice, getPosName, getSkinName, getTracerName } from "./cdataType";
-import { ApexUserInfo } from 'shark7-shared/dist/apex';
 import { MongoController } from './MongoController';
 
-export async function onUserInfoEvent(ctr: MongoController, event: ChangeStreamUpdateDocument, origin: ApexUserInfo | null): Promise<Shark7Event | null> {
+export async function onUserInfoEvent(ctr: MongoController, event: ChangeStreamUpdateDocument): Promise<Shark7Event | null> {
     if (!event.fullDocument) {
         logger.error('event.fullDocument为空')
         process.exit(1)

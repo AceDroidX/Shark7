@@ -1,15 +1,16 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { logErrorDetail } from 'shark7-shared/dist/utils'
+import { DouyinDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
-import winston from 'winston';
-import { MongoController } from './MongoController';
+import { Puppeteer } from 'shark7-shared/dist/Puppeteer';
+import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
-import { Puppeteer } from 'shark7-shared/dist/Puppeteer'
+import winston from 'winston';
 import { DouyinWeb } from './DouyinWeb';
-import { DouyinDBs, MongoControlClient } from 'shark7-shared/dist/database';
-import { onUserDBEvent } from "./event"
+import { onUserDBEvent } from "./event";
+import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -41,8 +42,7 @@ async function main() {
         process.exit(1)
     }
     const user = await mongo.ctr.getUserInfoBySecUID(process.env['douyin_sec_uid'])
-    const origin = [{ id: process.env['douyin_sec_uid'], data: user }]
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, origin, onUserDBEvent)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
     const puppeteerClient = await Puppeteer.getInstance(mongo.ctr, DouyinWeb)
     await fetchUserInfo(puppeteerClient)

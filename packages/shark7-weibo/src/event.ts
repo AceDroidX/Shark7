@@ -14,7 +14,7 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     }
     let shark7event = { ts: Number(new Date()), name: user.screen_name, scope: Scope.Weibo.Mblog, msg: '' }
     if (nmb.user.id != user.id) {
-        if (nmb.title.includes('赞过的微博')) {
+        if (nmb.title?.includes('赞过的微博')) {
             logger.debug(`跳过赞过的微博:${nmb.mblogid}`)
             return null
         }
@@ -35,10 +35,15 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     } else {
         shark7event.msg = `微博动态(visible_type=${nmb.visible_type})\n${nmb.text_raw}`
     }
+    logger.info(`新微博:${nmb.mblogid}`)
     return shark7event
 }
 
-export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin: WeiboUser | null): Promise<Shark7Event | null> {
+export async function onMblogUpdate(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>) {
+
+}
+
+export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboUser>, origin?: WeiboUser): Promise<Shark7Event | null> {
     if (!origin) {
         logger.error(`origin为null,event:\n${JSON.stringify(event)}`)
         return null

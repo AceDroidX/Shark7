@@ -32,7 +32,7 @@ export class WeiboController {
         let new_mblogs: WeiboMsg[] = []
         try {
             for (const user of this.user) {
-                new_mblogs = new_mblogs.concat(await this.userCtl.checkAndGetNewMblogs(user.id, this.mongo))
+                new_mblogs = new_mblogs.concat(await this.userCtl.getMblogs(user.id))
             }
         } catch (e: any) {
             logWarn('抓取微博出错', e)

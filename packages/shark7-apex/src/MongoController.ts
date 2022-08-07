@@ -1,9 +1,10 @@
-import { ApexDBs, MongoControllerBase } from "shark7-shared/dist/database"
-import { ApexUserInfo } from "shark7-shared/dist/apex"
+import { ApexUserInfo } from "shark7-shared/dist/apex";
+import { ApexDBs } from "shark7-shared/dist/database";
+import { MongoControllerBase } from 'shark7-shared/dist/db';
 
 export {
     MongoController
-}
+};
 
 class MongoController extends MongoControllerBase<ApexDBs> {
     async insertUserInfo(user: ApexUserInfo) {

@@ -1,7 +1,8 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
+import { WeiboDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
 import winston from 'winston';
 import { onMblogEvent, onUserDBEvent } from './event';
@@ -37,11 +38,8 @@ async function main() {
     }
     const weibo_id = process.env['weibo_id'].split(',').map(x => parseInt(x))
 
-    const origin = await Promise.all(weibo_id.map(async id => {
-        return { id: String(id), data: await mongo.ctr.getUserInfoByID(id) }
-    }))
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent)
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, origin, onUserDBEvent)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr)

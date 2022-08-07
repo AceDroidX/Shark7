@@ -58,9 +58,10 @@ export class WeiboMsg implements InsertTypeDoc {
     pic_num: number;
     pic_ids: string[];
     pic_infos: any[];
-    isTop: boolean;
-    title: string;
-    repost_type: number;
+    comments_count: number
+    isTop?: boolean;
+    title?: string;
+    repost_type?: number;
 
     user: WeiboUser;
 
@@ -78,12 +79,9 @@ export class WeiboMsg implements InsertTypeDoc {
         this.pic_num = data.pic_num;
         this.pic_ids = data.pic_ids;
         this.pic_infos = data.pic_infos;
+        this.comments_count = data.comments_count
         this.isTop = data.isTop;
-        if (data.title == undefined) {
-            this.title = "";
-        } else {
-            this.title = data.title.text;
-        }
+        this.title = data.title?.text
         this.repost_type = data.repost_type;
         this.user = WeiboUser.getFromRaw(data.user);
         this._userid = userid;
@@ -98,3 +96,6 @@ export type OnlineData = UpdateTypeDoc & {
     desc1: string
     online: boolean
 }
+
+import { WeiboComment, WeiboCommentApi } from './comment'
+export { WeiboComment, WeiboCommentApi }

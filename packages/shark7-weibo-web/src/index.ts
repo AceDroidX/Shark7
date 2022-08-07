@@ -1,11 +1,12 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { WeiboController } from './WeiboController';
+import { WeiboDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
-import { MongoController } from './MongoController';
 import winston from 'winston';
-import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
+import { MongoController } from './MongoController';
+import { WeiboController } from './WeiboController';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

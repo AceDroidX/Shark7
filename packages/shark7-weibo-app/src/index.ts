@@ -1,7 +1,8 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { MongoControlClient, WeiboDBs } from 'shark7-shared/dist/database';
+import { WeiboDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
@@ -47,11 +48,8 @@ async function main() {
         if (config.like_cid) like_id_config.push({ id: config.id, like_cid: config.like_cid })
         if (config.online_cid) online_id_config.push({ id: config.id, online_cid: config.online_cid })
     }
-    const originOnlineData = await Promise.all(online_id_config.map(async config => {
-        return { id: String(config.id), data: await mongo.ctr.getOnlineDataByID(config.id) }
-    }))
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, originOnlineData, onNewOnlineData)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, onNewOnlineData)
     await mongo.ctr.run()
     if (!await getLike(mongo.ctr, like_id_config[0]) || !await getOnline(mongo.ctr, online_id_config[0])) {
         logger.error('数据获取测试失败')

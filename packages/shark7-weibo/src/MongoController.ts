@@ -1,9 +1,10 @@
-import logger from "shark7-shared/dist/logger"
-import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
-import { MongoControllerBase, WeiboDBs } from 'shark7-shared/dist/database'
-import { DataDBDoc, WeiboDataName } from 'shark7-shared/dist/datadb'
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
-import { Protocol } from "puppeteer"
+import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb";
+import { Protocol } from "puppeteer";
+import { WeiboDBs } from 'shark7-shared/dist/database';
+import { DataDBDoc, WeiboDataName } from 'shark7-shared/dist/datadb';
+import { MongoControllerBase } from 'shark7-shared/dist/db';
+import logger from "shark7-shared/dist/logger";
+import { WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined
@@ -33,7 +34,6 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         return await this.dbs.data.findOne({ name: WeiboDataName.Cookie }) as WithId<DataDBDoc<WeiboDataName, Protocol.Network.Cookie[]>>
     }
     async insertMblog(mblog: WeiboMsg) {
-        logger.info('数据库添加新微博', mblog.mblogid)
         await this.dbs.mblogsDB.updateOne({ id: mblog.id }, [{ $replaceWith: mblog }], { upsert: true })
     }
     async isMblogIDExist(id: number): Promise<boolean> {

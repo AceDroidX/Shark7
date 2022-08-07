@@ -5,7 +5,7 @@ import { Scope } from 'shark7-shared/dist/scope';
 import { flattenObj } from "shark7-shared/dist/utils";
 import { MongoController } from "./MongoController";
 
-export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<DouyinUser>, origin: DouyinUser | null): Promise<Shark7Event | null> {
+export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<DouyinUser>, origin?: DouyinUser): Promise<Shark7Event | null> {
     const user = event.fullDocument
     const updated = event.updateDescription.updatedFields
     if (!user) {

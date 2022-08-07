@@ -1,7 +1,8 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { MongoControlClient, NeteaseMusicDBs } from 'shark7-shared/dist/database';
+import { NeteaseMusicDBs } from 'shark7-shared/dist/database';
+import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
@@ -38,8 +39,7 @@ async function main() {
     }
     const user_id = Number(process.env['user_id'])
 
-    const origin = [{ id: String(user_id), data: await mongo.ctr.getUser(user_id) }]
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, origin, onUserEvent)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserEvent)
     if (!await fetchUser(user_id)) {
         logger.error('数据获取测试失败')
         process.exit(1)
