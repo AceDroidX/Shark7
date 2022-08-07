@@ -1,9 +1,9 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, MongoClient } from "mongodb";
+import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, Db, MongoClient } from "mongodb";
+import { getDBInstance } from ".";
 import { Shark7Event, UpdateTypeDoc } from "..";
+import { EventDBs } from "../database";
 import logger from "../logger";
 import { logErrorDetail } from "../utils";
-import { EventDBs } from "../database";
-
 
 export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {
     client: MongoClient;
@@ -20,11 +20,11 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         );
     }
     static async getInstance<E extends EventDBs, C extends MongoControllerBase<E>>(dbfunc: {
-        getInstance(client: MongoClient): Promise<E> | E;
+        dbname: string, postCollList: string[], new(db: Db): E
     }, ctrfunc: { new(dbs: E): C; }) {
         try {
             const client = await this.getMongoClientConfig().connect();
-            const dbs = await dbfunc.getInstance(client);
+            const dbs = await getDBInstance(client, dbfunc)
             const ctr = new ctrfunc(dbs);
             logger.info('数据库已连接');
             return new this(client, ctr);

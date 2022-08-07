@@ -30,11 +30,24 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(MongoDBs, MongoController)
+    const mongo = await getAllEventDBs()
 
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-main', tryReconnect: true
     }))
 
     mongo.ctr.run()
+}
+
+async function getAllEventDBs() {
+    try {
+        const client = await MongoControlClient.getMongoClientConfig().connect();
+        const dbs = await MongoDBs.getInstance(client)
+        const ctr = new MongoController(dbs);
+        logger.info('数据库已连接');
+        return new MongoControlClient(client, ctr);
+    } catch (err) {
+        logErrorDetail('数据库连接失败', err);
+        process.exit(1);
+    }
 }
