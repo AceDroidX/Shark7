@@ -24,12 +24,8 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
         if (key.startsWith('shark7_')) {
             return
         }
-        switch (key) {
-            case 'cover_url':
-            case 'white_cover_url':
-            case 'share_info':
-                return
-        }
+        const isSkip = ['cover_url', 'white_cover_url', 'share_info'].some(value => key.startsWith(value))
+        if (isSkip) return
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
         }

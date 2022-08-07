@@ -61,26 +61,27 @@ export async function onNewLike(ctr: MongoController, event: ChangeStreamInsertD
 }
 
 export async function onNewOnlineData(ctr: MongoController, event: ChangeStreamUpdateDocument<OnlineData>, origin?: OnlineData): Promise<Shark7Event | null> {
-    if (!origin) {
-        logger.error(`origin为null,event:\n${JSON.stringify(event)}`)
-        return null
-    }
-    const data = event.updateDescription.updatedFields
+    const data = event.fullDocument
     if (!data) {
-        logger.warn(`event.updateDescription.updatedFields为${data}`)
+        logger.warn(`event.fullDocument为${data}`)
         return null
     }
-    if (Object.keys(data).length == 0) {
+    const updated = event.updateDescription.updatedFields
+    if (!updated) {
+        logger.warn(`event.updateDescription.updatedFields为${updated}`)
         return null
     }
-    if (data.desc1 == undefined) {
-        logger.warn(`data.desc1不存在${data}`)
+    if (Object.keys(updated).length == 0) {
         return null
     }
-    if (data.online != undefined) {
-        const msg = data.online ? '在线' : '离线'
-        logger.info(`<${origin.screen_name}>微博在线状态改变:${msg}`)
-        return { ts: Number(new Date()), name: String(origin.screen_name), scope: Scope.Weibo.Online, msg }
+    if (updated.desc1 == undefined) {
+        logger.warn(`data.desc1不存在${updated}`)
+        return null
+    }
+    if (updated.online != undefined) {
+        const msg = updated.online ? '在线' : '离线'
+        logger.info(`<${data.screen_name}>微博在线状态改变:${msg}`)
+        return { ts: Number(new Date()), name: String(data.screen_name), scope: Scope.Weibo.Online, msg }
     }
     return null
 }
