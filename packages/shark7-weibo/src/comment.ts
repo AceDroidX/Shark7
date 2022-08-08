@@ -66,7 +66,11 @@ export async function fetchComments(mongo: MongoController, id: number, uid: num
         logger.error('获取评论出错')
         return false
     }
-    commentsFilter(hotComments, uid).forEach(async data => await mongo.insertComment(data))
-    commentsFilter(timeComments, uid).forEach(async data => await mongo.insertComment(data))
+    for (const data of commentsFilter(hotComments, uid)) {
+        await mongo.insertComment(data)
+    }
+    for (const data of commentsFilter(timeComments, uid)) {
+        await mongo.insertComment(data)
+    }
     return true
 }
