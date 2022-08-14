@@ -11,12 +11,8 @@ import { MongoController } from './MongoController';
 import { getUser, insertUser, onUserEvent } from './user';
 
 process.on('uncaughtException', function (err) {
-    if (err.name == 'WeiboError') {
-        logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
-    } else {
-        logErrorDetail('未捕获的错误', err)
-        process.exit(1);
-    }
+    logErrorDetail('未捕获的错误', err)
+    process.exit(1);
 });
 // process.on('unhandledRejection', (reason, promise) => {
 //     promise.catch((err) => {logger.error(err)});
