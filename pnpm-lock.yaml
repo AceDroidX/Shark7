@@ -33,6 +33,25 @@ importers:
     devDependencies:
       typescript: 4.7.4
 
+  packages/shark7-bilibili:
+    specifiers:
+      axios: latest
+      mongodb: latest
+      shark7-shared: 'workspace:'
+      toad-scheduler: latest
+      typescript: latest
+      winston: latest
+      winston-mongodb: latest
+    dependencies:
+      axios: 0.27.2
+      mongodb: 4.8.1
+      shark7-shared: link:../shark7-shared
+      toad-scheduler: 1.6.1
+      winston: 3.8.1
+      winston-mongodb: 5.0.7_winston@3.8.1
+    devDependencies:
+      typescript: 4.7.4
+
   packages/shark7-bililive:
     specifiers:
       axios: latest
@@ -121,18 +140,18 @@ importers:
 
   packages/shark7-netease-music:
     specifiers:
+      NeteaseCloudMusicApi: latest
       axios: latest
       mongodb: latest
-      NeteaseCloudMusicApi: latest
       shark7-shared: 'workspace:'
       toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
     dependencies:
+      NeteaseCloudMusicApi: 4.6.7
       axios: 0.27.2
       mongodb: 4.8.1
-      NeteaseCloudMusicApi: 4.6.7
       shark7-shared: link:../shark7-shared
       toad-scheduler: 1.6.1
       winston: 3.8.1

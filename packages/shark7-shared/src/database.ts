@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
 import { ApexUserInfo } from "./apex";
+import { BiliUser } from "./bilibili";
 import { getDBInstance } from "./db";
 import { DouyinUser } from "./douyin";
 import { NeteaseMusicUser } from "./netease-music";
@@ -16,13 +17,15 @@ export class MongoDBs extends EventDBs {
     weibo: WeiboDBs
     apex: ApexDBs
     bililive: BiliLiveDBs
+    bilibili: BilibiliDBs
     douyin: DouyinDBs
     netease_music: NeteaseMusicDBs
-    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs) {
+    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, bilibili: BilibiliDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs) {
         super(db)
         this.weibo = weibo
         this.apex = apex
         this.bililive = bililive
+        this.bilibili = bilibili
         this.douyin = douyin
         this.netease_music = netease_music
     }
@@ -31,6 +34,7 @@ export class MongoDBs extends EventDBs {
             await getDBInstance(client, WeiboDBs),
             await getDBInstance(client, ApexDBs),
             await getDBInstance(client, BiliLiveDBs),
+            await getDBInstance(client, BilibiliDBs),
             await getDBInstance(client, DouyinDBs),
             await getDBInstance(client, NeteaseMusicDBs),
         )
@@ -92,5 +96,15 @@ export class NeteaseMusicDBs extends EventDBs {
     constructor(db: Db) {
         super(db)
         this.userDB = db.collection<NeteaseMusicUser>('users')
+    }
+}
+
+export class BilibiliDBs extends EventDBs {
+    static dbname = 'bilibili'
+    static postCollList = ['users']
+    userDB: Collection<BiliUser>
+    constructor(db: Db) {
+        super(db)
+        this.userDB = db.collection<BiliUser>('users')
     }
 }

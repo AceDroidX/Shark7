@@ -15,6 +15,13 @@ enum BiliLiveScope {
     Live = 'BiliLive.Live'
 }
 
+enum BilibiliScope {
+    User = 'Bilibili.User',
+    Coin = 'Bilibili.Coin',
+    Like = 'Bilibili.Like',
+    Dynamic = 'Bilibili.Dynamic',
+}
+
 enum DouyinScope {
     User = 'Douyin.User',
 }
@@ -27,6 +34,7 @@ export const Scope = {
     Apex: 'Apex',
     Weibo: WeiboScope,
     BiliLive: BiliLiveScope,
+    Bilibili: BilibiliScope,
     Douyin: DouyinScope,
     NeteaseMusic: NeteaseMusicScope,
 };
@@ -44,6 +52,10 @@ export enum ScopeName {
     'BiliLive.Danmaku' = '发送弹幕',
     'BiliLive.Gift' = '赠送礼物',
     'BiliLive.Live' = '直播间状态',
+    'Bilibili.User' = 'B站用户信息',
+    'Bilibili.Coin' = 'B站投币视频',
+    'Bilibili.Like' = 'B站点赞视频',
+    'Bilibili.Dynamic' = 'B站动态',
     'Douyin.User' = '抖音用户信息',
     'NeteaseMusic.User' = '网易云音乐用户信息',
 }
