@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
 import { ApexUserInfo } from "./apex";
-import { BiliUser, BiliVideo } from "./bilibili";
+import { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
 import { getDBInstance } from "./db";
 import { DouyinUser } from "./douyin";
 import { NeteaseMusicUser } from "./netease-music";
@@ -105,12 +105,12 @@ export class BilibiliDBs extends EventDBs {
     userDB: Collection<BiliUser>
     coinDB: Collection<BiliVideo>
     likeDB: Collection<BiliVideo>
-    dynamicDB: Collection
+    dynamicDB: Collection<BiliDynamic>
     constructor(db: Db) {
         super(db)
         this.userDB = db.collection<BiliUser>('users')
         this.coinDB = db.collection<BiliVideo>('coin')
         this.likeDB = db.collection<BiliVideo>('like')
-        this.dynamicDB = db.collection('dynamic')
+        this.dynamicDB = db.collection<BiliDynamic>('dynamic')
     }
 }

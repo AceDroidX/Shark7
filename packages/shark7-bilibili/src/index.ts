@@ -7,6 +7,7 @@ import logger from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import winston from 'winston';
+import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
 import { MongoController } from './MongoController';
 import { insertUser, onUserEvent } from './user';
 import { insertVideo, onCoinEvent, onLikeEvent, onVideoUpdate } from './video';
@@ -39,6 +40,7 @@ async function main() {
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserEvent)
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.coinDB, onCoinEvent, onVideoUpdate)
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onLikeEvent, onVideoUpdate)
+    mongo.addInsertChangeWatcher(mongo.ctr.dbs.dynamicDB, onDynamicEvent, onDynamicUpdate)
     if (!insertUser(mongo.ctr, user_id)) {
         logger.error('数据获取测试失败')
         process.exit(1)
@@ -48,6 +50,7 @@ async function main() {
     scheduler.addJob('fetchUser', interval, () => { insertUser(mongo.ctr, user_id) })
     scheduler.addJob('fetchCoin', interval, () => { insertVideo(mongo.ctr, user_id, 'coin') })
     scheduler.addJob('fetchLike', interval, () => { insertVideo(mongo.ctr, user_id, 'like') })
+    scheduler.addJob('fetchDynamic', interval, () => { insertDynamic(mongo.ctr, user_id) })
     logger.info('模块已启动')
 }
 
