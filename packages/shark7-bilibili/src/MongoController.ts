@@ -1,4 +1,4 @@
-import { BiliUser } from 'shark7-shared/dist/bilibili';
+import { BiliUser, BiliVideo } from 'shark7-shared/dist/bilibili';
 import { BilibiliDBs } from 'shark7-shared/dist/database';
 import { MongoControllerBase } from 'shark7-shared/dist/db';
 
@@ -8,5 +8,11 @@ export class MongoController extends MongoControllerBase<BilibiliDBs> {
     }
     async getUser(id: number) {
         return await this.dbs.userDB.findOne({ shark7_id: String(id) })
+    }
+    async insertCoin(video: BiliVideo) {
+        return await this.dbs.coinDB.updateOne({ shark7_id: video.shark7_id, aid: video.aid }, [{ $replaceWith: video }], { upsert: true })
+    }
+    async insertLike(video: BiliVideo) {
+        return await this.dbs.likeDB.updateOne({ shark7_id: video.shark7_id, aid: video.aid }, [{ $replaceWith: video }], { upsert: true })
     }
 }

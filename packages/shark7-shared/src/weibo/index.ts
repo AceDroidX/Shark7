@@ -67,6 +67,7 @@ export class WeiboMsg implements InsertTypeDoc {
 
     _timestamp: number;
     _userid: number;
+    shark7_id: string
     shark7_raw: any
 
     constructor(data: any, userid: number) {
@@ -85,6 +86,7 @@ export class WeiboMsg implements InsertTypeDoc {
         this.repost_type = data.repost_type;
         this.user = WeiboUser.getFromRaw(data.user);
         this._userid = userid;
+        this.shark7_id = String(userid)
         this.shark7_raw = data
         this._timestamp = new Date(data.created_at).getTime()
     }
