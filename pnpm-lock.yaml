@@ -19,7 +19,6 @@ importers:
       axios: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -27,7 +26,6 @@ importers:
       axios: 0.27.2
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -38,7 +36,6 @@ importers:
       axios: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -46,7 +43,6 @@ importers:
       axios: 0.27.2
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -58,7 +54,6 @@ importers:
       bilibili-live-ws: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -67,7 +62,6 @@ importers:
       bilibili-live-ws: 6.2.1_s6dgubocm6srlbjottxvb2ofwu
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -78,7 +72,6 @@ importers:
       axios: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -86,7 +79,6 @@ importers:
       axios: 0.27.2
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -101,7 +93,6 @@ importers:
       puppeteer-extra: ^3.2.3
       puppeteer-extra-plugin-stealth: ^2.9.0
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -113,7 +104,6 @@ importers:
       puppeteer-extra: 3.3.4_puppeteer@14.1.1
       puppeteer-extra-plugin-stealth: 2.11.0_puppeteer-extra@3.3.4
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -124,7 +114,6 @@ importers:
       axios: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -132,7 +121,6 @@ importers:
       axios: 0.27.2
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -144,7 +132,6 @@ importers:
       axios: latest
       mongodb: latest
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -153,7 +140,6 @@ importers:
       axios: 0.27.2
       mongodb: 4.8.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -167,6 +153,7 @@ importers:
       puppeteer: 14.1.1
       puppeteer-extra: ^3.2.3
       puppeteer-extra-plugin-stealth: ^2.9.0
+      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -177,6 +164,7 @@ importers:
       puppeteer: 14.1.1
       puppeteer-extra: 3.3.4_puppeteer@14.1.1
       puppeteer-extra-plugin-stealth: 2.11.0_puppeteer-extra@3.3.4
+      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -189,7 +177,6 @@ importers:
       mongodb: latest
       puppeteer: 14.1.1
       shark7-shared: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -199,7 +186,6 @@ importers:
       mongodb: 4.8.1
       puppeteer: 14.1.1
       shark7-shared: link:../shark7-shared
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -212,7 +198,6 @@ importers:
       puppeteer: 14.1.1
       shark7-shared: 'workspace:'
       shark7-weibo: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -222,7 +207,6 @@ importers:
       puppeteer: 14.1.1
       shark7-shared: link:../shark7-shared
       shark7-weibo: link:../shark7-weibo
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:
@@ -238,7 +222,6 @@ importers:
       puppeteer-extra-plugin-stealth: ^2.9.0
       shark7-shared: 'workspace:'
       shark7-weibo: 'workspace:'
-      toad-scheduler: latest
       typescript: latest
       winston: latest
       winston-mongodb: latest
@@ -251,7 +234,6 @@ importers:
       puppeteer-extra-plugin-stealth: 2.11.0_puppeteer-extra@3.3.4
       shark7-shared: link:../shark7-shared
       shark7-weibo: link:../shark7-weibo
-      toad-scheduler: 1.6.1
       winston: 3.8.1
       winston-mongodb: 5.0.7_winston@3.8.1
     devDependencies:

@@ -4,8 +4,8 @@ if (process.env.NODE_ENV != 'production') {
 import { BilibiliDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import winston from 'winston';
 import { MongoController } from './MongoController';
 import { insertUser, onUserEvent } from './user';
@@ -43,29 +43,11 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    const scheduler = new ToadScheduler()
-    const fetchUserTask = new Task(
-        'fetchUser',
-        () => { insertUser(mongo.ctr, user_id) },
-        (err: Error) => { logErrorDetail('fetchUser错误', err) }
-    )
-    const fetchCoinTask = new Task(
-        'fetchCoin',
-        () => { insertVideo(mongo.ctr, user_id, 'coin') },
-        (err: Error) => { logErrorDetail('fetchCoin错误', err) }
-    )
-    const fetchLikeTask = new Task(
-        'fetchLike',
-        () => { insertVideo(mongo.ctr, user_id, 'like') },
-        (err: Error) => { logErrorDetail('fetchLike错误', err) }
-    )
-    let interval = 10
-    if (process.env['interval']) {
-        interval = Number(process.env['interval'])
-    }
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchUserTask))
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchCoinTask))
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchLikeTask))
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 10
+    const scheduler = new Scheduler()
+    scheduler.addJob('fetchUser', interval, () => { insertUser(mongo.ctr, user_id) })
+    scheduler.addJob('fetchCoin', interval, () => { insertVideo(mongo.ctr, user_id, 'coin') })
+    scheduler.addJob('fetchLike', interval, () => { insertVideo(mongo.ctr, user_id, 'like') })
     logger.info('模块已启动')
 }
 

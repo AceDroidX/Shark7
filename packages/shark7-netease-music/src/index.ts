@@ -4,8 +4,8 @@ if (process.env.NODE_ENV != 'production') {
 import { NeteaseMusicDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import winston from 'winston';
 import { MongoController } from './MongoController';
 import { fetchUser, insertUser, onUserEvent } from './user';
@@ -44,17 +44,9 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    const scheduler = new ToadScheduler()
-    const fetchUserTask = new Task(
-        'fetchUser',
-        () => { insertUser(mongo.ctr, user_id) },
-        (err: Error) => { logErrorDetail('fetchUser错误', err) }
-    )
-    let interval = 30
-    if (process.env['interval']) {
-        interval = Number(process.env['interval'])
-    }
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchUserTask))
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 30
+    const scheduler = new Scheduler()
+    scheduler.addJob('fetchUser', interval, () => { insertUser(mongo.ctr, user_id) })
     logger.info('模块已启动')
 }
 

@@ -6,8 +6,8 @@ import { ApexUserInfo } from "shark7-shared/dist/apex";
 import { ApexDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils';
-import { AsyncTask, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
 import winston from 'winston';
 import { MongoController } from './MongoController';
 import { onUserInfoEvent } from './onUserInfoEvent';
@@ -52,17 +52,13 @@ async function main() {
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, onUserInfoEvent)
     mongo.ctr.run()
 
-    const scheduler = new ToadScheduler()
-    const refreshUserInfoTask = new AsyncTask(
-        'refreshUserInfo',
-        async () => {
-            const userInfo = await getUserInfo(apex_uid[0], apex_uid[1])
-            if (!userInfo) return
-            await mongo.ctr.insertUserInfo(userInfo)
-        },
-        (err: Error) => { logErrorDetail('refreshUserInfo错误', err) }
-    )
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 3, }, refreshUserInfoTask))
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 3
+    const scheduler = new Scheduler()
+    scheduler.addJob('refreshUserInfo', interval, async () => {
+        const userInfo = await getUserInfo(apex_uid[0], apex_uid[1])
+        if (!userInfo) return
+        await mongo.ctr.insertUserInfo(userInfo)
+    })
 }
 
 async function fetchUserInfo(uid: number) {

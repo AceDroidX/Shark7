@@ -20,7 +20,6 @@
     "mongodb": "latest",
     "puppeteer": "14.1.1",
     "shark7-shared": "workspace:",
-    "toad-scheduler": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"
   },

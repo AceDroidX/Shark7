@@ -4,8 +4,8 @@ if (process.env.NODE_ENV != 'production') {
 import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import winston from 'winston';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
@@ -55,23 +55,10 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    const scheduler = new ToadScheduler()
-    const fetchLikeTask = new Task(
-        'fetchLike',
-        () => { like_id_config.forEach(config => fetchLike(mongo.ctr, config)) },
-        (err: Error) => { logErrorDetail('fetchLike错误', err) }
-    )
-    const fetchOnlineTask = new Task(
-        'fetchOnline',
-        () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, config)) },
-        (err: Error) => { logErrorDetail('fetchOnline错误', err) }
-    )
-    let interval = 10
-    if (process.env['interval']) {
-        interval = Number(process.env['interval'])
-    }
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchLikeTask))
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchOnlineTask))
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 10
+    const scheduler = new Scheduler()
+    scheduler.addJob('fetchLike', interval, () => { like_id_config.forEach(config => fetchLike(mongo.ctr, config)) })
+    scheduler.addJob('fetchOnline', interval, () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, config)) })
     logger.info('weibo-app模块已启动')
 }
 

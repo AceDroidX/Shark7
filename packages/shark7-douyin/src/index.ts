@@ -5,8 +5,8 @@ import { DouyinDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
 import { Puppeteer } from 'shark7-shared/dist/Puppeteer';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import winston from 'winston';
 import { DouyinWeb } from './DouyinWeb';
 import { onUserDBEvent } from "./event";
@@ -41,22 +41,14 @@ async function main() {
         logger.error('请设置douyin_sec_uid')
         process.exit(1)
     }
-    const user = await mongo.ctr.getUserInfoBySecUID(process.env['douyin_sec_uid'])
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
     const puppeteerClient = await Puppeteer.getInstance(mongo.ctr, DouyinWeb)
     await fetchUserInfo(puppeteerClient)
-    const scheduler = new ToadScheduler()
-    const fetchUserInfoTask = new Task(
-        'fetchUserInfo',
-        () => { fetchUserInfo(puppeteerClient) },
-        (err: Error) => { logErrorDetail('fetchUserInfo错误', err) }
-    )
-    let interval = 60
-    if (process.env['interval']) {
-        interval = Number(process.env['interval'])
-    }
-    scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: interval, }, fetchUserInfoTask))
+
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 60
+    const scheduler = new Scheduler()
+    scheduler.addJob('fetchUserInfo', interval, () => { fetchUserInfo(puppeteerClient) })
     logger.info('douyin模块已启动')
 }
 

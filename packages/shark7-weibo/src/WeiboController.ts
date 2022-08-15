@@ -1,7 +1,7 @@
 import logger from "shark7-shared/dist/logger";
-import { logError, logErrorDetail, logWarn } from "shark7-shared/dist/utils";
+import { Scheduler } from 'shark7-shared/dist/scheduler';
+import { logErrorDetail, logWarn } from "shark7-shared/dist/utils";
 import { WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
-import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { WeiboUserCtl } from "./model/WeiboUserCtl";
 import { MongoController } from "./MongoController";
@@ -79,26 +79,10 @@ export class WeiboController {
             process.exit(1)
         }
         await this.fetchUserInfo() // 先获取用户信息，是fetchMblog的前置
-        const scheduler = new ToadScheduler()
-        const fetchMblogTask = new Task(
-            'fetchMblog',
-            () => { this.fetchMblog() },
-            (err: Error) => { logError('fetchMblog错误', err) }
-        )
-        const fetchUserInfoTask = new Task(
-            'fetchUserInfo',
-            () => { this.fetchUserInfo() },
-            (err: Error) => { logError('fetchUserInfo错误', err) }
-        )
-        let mblogInterval = 4
-        if (process.env['mblog_interval']) {
-            mblogInterval = Number(process.env['mblog_interval'])
-        }
-        let userInterval = 10
-        if (process.env['user_interval']) {
-            userInterval = Number(process.env['user_interval'])
-        }
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: mblogInterval, }, fetchMblogTask))
-        scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: userInterval, }, fetchUserInfoTask))
+        let mblogInterval = process.env['mblog_interval'] ? Number(process.env['mblog_interval']) : 4
+        let userInterval = process.env['user_interval'] ? Number(process.env['user_interval']) : 10
+        const scheduler = new Scheduler()
+        scheduler.addJob('fetchMblog', mblogInterval, () => { this.fetchMblog() })
+        scheduler.addJob('fetchUserInfo', userInterval, () => { this.fetchUserInfo() })
     }
 }

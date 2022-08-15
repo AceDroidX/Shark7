@@ -18,7 +18,6 @@
         "axios": "latest",
         "mongodb": "latest",
         "shark7-shared": "workspace:",
-        "toad-scheduler": "latest",
         "winston": "latest",
         "winston-mongodb": "latest"
     },

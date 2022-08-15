@@ -21,7 +21,6 @@
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "shark7-shared": "workspace:",
-    "toad-scheduler": "latest",
     "winston": "latest",
     "winston-mongodb": "latest"
   },
