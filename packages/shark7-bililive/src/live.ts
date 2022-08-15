@@ -112,6 +112,32 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
             const user = marked_Users.getUserByUID(uid)
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}连续送出礼物：${data['data']['gift_name']}x${data['data']['combo_num']}` }
         }
+    } else if (data['cmd'] == 'POPULARITY_RED_POCKET_NEW') {
+        const uid = data['data']['uid']
+        if (marked_uid.includes(uid)) {
+            const msg = `${data['data']['uname']}${data['data']['action']}${data['data']['gift_name']}(${data['data']['price'] / 10}CNY)x${data['data']['num']}`
+            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg }
+        }
+    } else if (data['cmd'] == 'POPULARITY_RED_POCKET_START') {
+        const uid = data['data']['sender_uid']
+        if (marked_uid.includes(uid)) {
+            const giftList = data['data']['awards'].map((item: any) => { return `${item['gift_name']}x${item['num']}` })
+            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${data['data']['sender_name']}的红包开始抽奖：\n${giftList.join('\n')}` }
+        }
+    } else if (data['cmd'] == 'POPULARITY_RED_POCKET_WINNER_LIST') {
+        for (const item of data['data']['winner_info']) {
+            if (marked_uid.includes(item[0])) {
+                const msg = `${data['data']['sender_name']}红包中奖：${data['data']['awards'][item[3]]['award_name']}(${data['data']['awards'][item[3]]['award_price']}CNY)`
+                return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg }
+            }
+        }
+    } else if (data['cmd'] == 'USER_TOAST_MSG') {
+        const uid = data['data']['uid']
+        if (marked_uid.includes(uid)) {
+            return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${data['data']['toast_msg']}` }
+        }
+    } else if (data['cmd'] == 'ANCHOR_LOT_START') {
+        // TODO
     } else {
         // if(JSON.stringify(data).includes(`uid:${marked_uid}`)){
         //     return new FiltedMsg(0, `${marked_uid}未知操作：${JSON.stringify(data)}`, data)
