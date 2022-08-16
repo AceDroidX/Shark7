@@ -1,7 +1,7 @@
-import { BiliUser } from "./BiliUser";
+import { BiliSimpleUser } from ".";
 
 export class BiliUsers {
-    users: BiliUser[];
+    users: BiliSimpleUser[];
     uidlist(): number[] {
         return this.users.map(user => user.uid);
     }
@@ -12,30 +12,22 @@ export class BiliUsers {
         this.users = [];
     }
     async addByUID(uid: number) {
-        const user = await new BiliUser().initByUID(uid)
+        const user = await BiliSimpleUser.initByUID(uid)
+        if (!user) return user
         this.users.push(user);
         return user
     }
     async addByRoomid(roomid: number) {
-        const user = await new BiliUser().initByRoomid(roomid);
+        const user = await BiliSimpleUser.initByRoomid(roomid)
+        if (!user) return user
         this.users.push(user);
         return user
     }
-    getUserByUID(uid: number): BiliUser {
-        const result = this.users.find(user => user.uid === uid);
-        if (result != undefined) {
-            return result
-        } else {
-            return new BiliUser().init(0, '未找到用户', 0)
-        }
+    getUserByUID(uid: number): BiliSimpleUser | undefined {
+        return this.users.find(user => user.uid === uid)
     }
-    getUserByRoomid(roomid: number): BiliUser {
-        const result = this.users.find(user => user.roomid === roomid);
-        if (result != undefined) {
-            return result
-        } else {
-            return new BiliUser().init(0, '未找到用户', 0)
-        }
+    getUserByRoomid(roomid: number): BiliSimpleUser | undefined {
+        return this.users.find(user => user.roomid === roomid)
     }
     toString() {
         return this.users.map(user => user.toString()).join("\n");

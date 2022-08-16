@@ -1,12 +1,12 @@
-import { KeepLiveTCPWithConf } from './KeepLiveTCPWithConf'
-import logger from "shark7-shared/dist/logger"
-import { BiliUser } from "shark7-shared/dist/bililive/BiliUser"
-import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
-import { Shark7Event } from "shark7-shared"
-import { Scope } from "shark7-shared/dist/scope"
-import { MongoController } from "./MongoController"
-import { GetConfTask } from "./GetConfTask"
 import { TCPOptions } from 'bilibili-live-ws'
+import { Shark7Event } from "shark7-shared"
+import { BiliSimpleUser } from 'shark7-shared/dist/bililive'
+import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
+import logger from "shark7-shared/dist/logger"
+import { Scope } from "shark7-shared/dist/scope"
+import { GetConfTask } from "./GetConfTask"
+import { KeepLiveTCPWithConf } from './KeepLiveTCPWithConf'
+import { MongoController } from "./MongoController"
 
 const BILILIVEPREFIX = 'https://live.bilibili.com'
 
@@ -24,6 +24,7 @@ export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask
             const filter = await msgFilter(data, marked_uid, marked_Users, roomid)
             if (filter) {
                 const targetuser = roomid_Users.getUserByRoomid(roomid)
+                if (!targetuser) { return logger.error(`roomid:${roomid}用户未找到`) }
                 logger.info(`<${targetuser.name}/${roomid}>${filter.msg}`)
                 filter.name = `${targetuser.name}/${roomid}`
                 mongo.addShark7Event(filter)
@@ -44,6 +45,7 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['info'][2][0]
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             if (data['info'][0][9] == 2) {
                 return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Danmaku, msg: `${user.name}发送抽奖弹幕：${data['info'][1]}` }
             } else if (data['info'][0][12] == 0) {
@@ -64,21 +66,25 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.EntryWord, msg: `${user.name}进入直播间` }
         }
     } else if (data['cmd'] == 'SEND_GIFT') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}送出礼物：${data['data']['giftName']}x${data['data']['num']}` }
         }
     } else if (data['cmd'] == 'LIVE') {
-        const user = await new BiliUser().initByRoomid(data['roomid'])
+        const user = await BiliSimpleUser.initByRoomid(data['roomid'])
+        if (!user) { logger.error(`roomid:${data['roomid']}用户未找到`); return }
         if (marked_uid.includes(user.uid)) {
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Live, msg: `${user.name}开始直播：\n${BILILIVEPREFIX}/${user.roomid}` }
         }
     } else if (data['cmd'] == 'PREPARING') {
-        const user = await new BiliUser().initByRoomid(parseInt(data['roomid']))
+        const user = await BiliSimpleUser.initByRoomid(data['roomid'])
+        if (!user) { logger.error(`roomid:${data['roomid']}用户未找到`); return }
         if (marked_uid.includes(user.uid)) {
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Live, msg: `${user.name}停止直播：\n${BILILIVEPREFIX}/${user.roomid}` }
         }
@@ -86,30 +92,34 @@ async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUser
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}动画礼物：${data['data']['gift_name']}x${data['data']['gift_num']}` }
         }
     } else if (data['cmd'] == 'SUPER_CHAT_MESSAGE') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}发送SC：[${data['data']['price']}CNY]${data['data']['message']}` }
         }
     } else if (data['cmd'] == 'ROOM_CHANGE') {
-        const user = await new BiliUser().initByRoomid(msgRoomid)
+        const user = await BiliSimpleUser.initByRoomid(msgRoomid)
+        if (!user) { logger.error(`roomid:${msgRoomid}用户未找到`); return }
         if (marked_uid.includes(user.uid)) {
-            const user = await new BiliUser().initByRoomid(msgRoomid)
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Live, msg: `${user.name}更改直播间标题：${data['data']['title']}` }
         }
     } else if (data['cmd'] == 'GUARD_BUY') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}上舰：${data['data']['gift_name']}` }
         }
     } else if (data['cmd'] == 'COMBO_SEND') {
         const uid = data['data']['uid']
         if (marked_uid.includes(uid)) {
             const user = marked_Users.getUserByUID(uid)
+            if (!user) { logger.error(`uid:${uid}用户未找到`); return undefined }
             return { ts: Number(new Date()), name: 'null', scope: Scope.BiliLive.Gift, msg: `${user.name}连续送出礼物：${data['data']['gift_name']}x${data['data']['combo_num']}` }
         }
     } else if (data['cmd'] == 'POPULARITY_RED_POCKET_NEW') {

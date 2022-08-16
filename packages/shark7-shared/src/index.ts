@@ -16,3 +16,7 @@ export type UpdateTypeDoc = {
     shark7_name?: string
     shark7_raw?: any
 }
+
+export type UpdateTypeDocWithName = UpdateTypeDoc & {
+    shark7_name: string
+}

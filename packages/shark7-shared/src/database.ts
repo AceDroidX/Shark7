@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient } from "mongodb";
 import { Shark7Event } from ".";
 import { ApexUserInfo } from "./apex";
 import { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
+import { BiliGuardState } from "./bililive";
 import { getDBInstance } from "./db";
 import { DouyinUser } from "./douyin";
 import { NeteaseMusicUser } from "./netease-music";
@@ -77,6 +78,11 @@ export class ApexDBs extends EventDBs {
 export class BiliLiveDBs extends EventDBs {
     static dbname = 'bililive'
     static postCollList = []
+    guardDB: Collection<BiliGuardState>
+    constructor(db: Db) {
+        super(db)
+        this.guardDB = db.collection<BiliGuardState>('guard')
+    }
 }
 
 export class DouyinDBs extends EventDBs {

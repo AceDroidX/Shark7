@@ -5,9 +5,10 @@ import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
 import { BiliLiveDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger from 'shark7-shared/dist/logger';
+import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import winston from 'winston';
-import { guardMain } from './guard';
+import { fetchExistGuardState, fetchNewGuardState, fetchNotExistGuardState, onGuardEvent } from './guard';
 import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
@@ -34,12 +35,12 @@ async function main() {
         process.exit(1)
     }
     const marked_uid = marked_uid_str.split(',').map(x => parseInt(x))
-    logger.debug(marked_uid)
 
     logger.info(`设置${marked_uid.length}个用户:`)
     const marked_Users = new BiliUsers()
     for (const uid of marked_uid) {
         const user = await marked_Users.addByUID(uid);
+        if (!user) process.exit(1)
         logger.info(user.toString())
         await new Promise(resolve => setTimeout(resolve, 200));
     }
@@ -54,10 +55,20 @@ async function main() {
     const roomid_Users = new BiliUsers()
     for (const id of roomid) {
         const user = await roomid_Users.addByRoomid(id);
+        if (!user) process.exit(1)
         logger.info(user.toString())
         await new Promise(resolve => setTimeout(resolve, 200));
     }
-
-    guardMain(mongo.ctr, roomid_Users, marked_Users)
+    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.guardDB, onGuardEvent)
+    if (!await fetchNewGuardState(mongo.ctr, roomid_Users, marked_Users) || !await fetchNotExistGuardState(mongo.ctr)) {
+        logger.error('数据初始化失败')
+        process.exit(1)
+    }
+    let exist_interval = process.env['exist_interval'] ? Number(process.env['exist_interval']) : 10
+    let notexist_interval = process.env['notexist_interval'] ? Number(process.env['notexist_interval']) : 10 * 60
+    const scheduler = new Scheduler()
+    scheduler.addJob('fetchExistGuardState', exist_interval, () => { fetchExistGuardState(mongo.ctr) })
+    scheduler.addJob('fetchNotExistGuardState', notexist_interval, () => { fetchNotExistGuardState(mongo.ctr) })
+    logger.info('模块已启动')
 }
 

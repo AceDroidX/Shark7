@@ -35,12 +35,12 @@ async function main() {
         process.exit(1)
     }
     const marked_uid = marked_uid_str.split(',').map(x => parseInt(x))
-    logger.debug(marked_uid)
 
     logger.info(`设置${marked_uid.length}个用户:`)
     const marked_Users = new BiliUsers()
     for (const uid of marked_uid) {
         const user = await marked_Users.addByUID(uid);
+        if (!user) process.exit(1)
         logger.info(user.toString())
         await new Promise(resolve => setTimeout(resolve, 200));
     }
@@ -55,6 +55,7 @@ async function main() {
     const roomid_Users = new BiliUsers()
     for (const id of roomid) {
         const user = await roomid_Users.addByRoomid(id);
+        if (!user) process.exit(1)
         logger.info(user.toString())
         await new Promise(resolve => setTimeout(resolve, 200));
     }
