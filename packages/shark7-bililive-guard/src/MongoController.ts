@@ -16,4 +16,7 @@ class MongoController extends MongoControllerBase<BiliLiveDBs> {
     async getGuardState(uid: number, shark7_id: string) {
         return this.dbs.guardDB.findOne({ uid, shark7_id })
     }
+    async delGuardState(uid: number, shark7_id: string) {
+        return this.dbs.guardDB.deleteOne({ uid, shark7_id })
+    }
 }

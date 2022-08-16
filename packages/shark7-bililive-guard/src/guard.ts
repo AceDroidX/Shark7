@@ -42,6 +42,17 @@ export async function fetchNotExistGuardState(ctr: MongoController): Promise<boo
     return true
 }
 
+export async function delNotExistGuardState(ctr: MongoController): Promise<boolean> {
+    logger.debug('开始删除未找到的舰长数据')
+    const guardStates = await ctr.getAllGuardState()
+    for (const item of guardStates) {
+        if (item.isOnline == BiliGuardOnline.NONE) {
+            await ctr.delGuardState(item.uid, item.shark7_id)
+        }
+    }
+    return true
+}
+
 export async function fetchNewGuardState(ctr: MongoController, roomid_Users: BiliUsers, marked_Users: BiliUsers): Promise<boolean> {
     logger.info('开始获取新的舰长数据')
     for (const roomid_user of roomid_Users.users) {

@@ -8,7 +8,7 @@ import logger from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import winston from 'winston';
-import { fetchExistGuardState, fetchNewGuardState, fetchNotExistGuardState, onGuardEvent } from './guard';
+import { delNotExistGuardState, fetchExistGuardState, fetchNewGuardState, fetchNotExistGuardState, onGuardEvent } from './guard';
 import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
@@ -60,7 +60,8 @@ async function main() {
         await new Promise(resolve => setTimeout(resolve, 200));
     }
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.guardDB, onGuardEvent)
-    if (!await fetchNewGuardState(mongo.ctr, roomid_Users, marked_Users) || !await fetchNotExistGuardState(mongo.ctr)) {
+    await delNotExistGuardState(mongo.ctr)
+    if (!await fetchNewGuardState(mongo.ctr, roomid_Users, marked_Users)) {
         logger.error('数据初始化失败')
         process.exit(1)
     }
