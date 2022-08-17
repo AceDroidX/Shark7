@@ -23,7 +23,8 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         dbname: string, postCollList: string[], new(db: Db): E
     }, ctrfunc: { new(dbs: E): C; }) {
         try {
-            const client = await this.getMongoClientConfig().connect();
+            const client = this.getMongoClientConfig();
+            client.on('serverHeartbeatFailed', event => { logger.warn(`serverHeartbeatFailed: ${JSON.stringify(event)}`); });
             const dbs = await getDBInstance(client, dbfunc)
             const ctr = new ctrfunc(dbs);
             logger.info('数据库已连接');
@@ -43,7 +44,15 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null>; },
         onUpdate?: { (ctr: C, event: ChangeStreamUpdateDocument<T>): Promise<Shark7Event | null>; }
     ) {
-        db.watch([], { fullDocument: 'updateLookup' }).on("change", async (event) => {
+        logger.info(`添加InsertChangeWatcher db:${db.dbName}.${db.collectionName} onInsert:${onInsert.name} onUpdate:${onUpdate?.name}`)
+        const changeStream = db.watch([], { fullDocument: 'updateLookup' })
+        changeStream.on('close', (event: any) => {
+            logger.warn(`changeStream.close: ${JSON.stringify(event)}`)
+            // this.addInsertChangeWatcher(db, onInsert, onUpdate)
+        })
+        changeStream.on('end', (event: any) => { logger.warn(`changeStream.end: ${JSON.stringify(event)}`) })
+        changeStream.on('error', (event: any) => { logger.warn(`changeStream.error: ${JSON.stringify(event)}`) })
+        changeStream.on('change', async (event) => {
             if (event.operationType == 'insert') {
                 const result = await onInsert(this.ctr, event);
                 if (result)
@@ -71,7 +80,15 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     addUpdateChangeWatcher<T extends UpdateTypeDoc>(db: Collection<T>,
         onUpdate: { (ctr: C, event: ChangeStreamUpdateDocument<T>, origin?: T): Promise<Shark7Event | null>; }
     ) {
-        db.watch([], { fullDocument: 'updateLookup', fullDocumentBeforeChange: 'whenAvailable' }).on("change", async (event) => {
+        logger.info(`添加UpdateChangeWatcher db:${db.dbName}.${db.collectionName} onUpdate:${onUpdate.name}`)
+        const changeStream = db.watch([], { fullDocument: 'updateLookup', fullDocumentBeforeChange: 'whenAvailable' })
+        changeStream.on('close', (event: any) => {
+            logger.warn(`changeStream.close: ${JSON.stringify(event)}`)
+            // this.addUpdateChangeWatcher(db, onUpdate)
+        })
+        changeStream.on('end', (event: any) => { logger.warn(`changeStream.end: ${JSON.stringify(event)}`) })
+        changeStream.on('error', (event: any) => { logger.warn(`changeStream.error: ${JSON.stringify(event)}`) })
+        changeStream.on('change', async (event) => {
             if (event.operationType == 'insert') {
                 logger.info(`update数据添加: \n${JSON.stringify(event)}`);
             } else if (event.operationType == 'update') {
