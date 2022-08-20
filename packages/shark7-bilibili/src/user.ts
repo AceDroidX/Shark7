@@ -66,6 +66,12 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
             case 'live_room.watched_show.text_large':
                 return
         }
+        if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
+            switch (key) {
+                case 'live_room':
+                    return
+            }
+        }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
         }
