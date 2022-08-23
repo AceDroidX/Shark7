@@ -1,0 +1,36 @@
+shared: &shared
+    - "packages/shark7-shared/**"
+    - "package.json"
+    - "pnpm-lock.yaml"
+    - "pnpm-workspace.yaml"
+    - "tsconfig.json"
+apex:
+    - *shared
+    - "packages/shark7-apex/**"
+bilibili:
+    - *shared
+    - "packages/shark7-bilibili/**"
+bililive-guard:
+    - *shared
+    - "packages/shark7-bililive-guard/**"
+bililive:
+    - *shared
+    - "packages/shark7-bililive/**"
+douyin:
+    - *shared
+    - "packages/shark7-douyin/**"
+main:
+    - *shared
+    - "packages/shark7-main/**"
+netease-music:
+    - *shared
+    - "packages/shark7-netease-music/**"
+weibo-app:
+    - *shared
+    - "packages/shark7-weibo-app/**"
+weibo-web:
+    - *shared
+    - "packages/shark7-weibo-web/**"
+weibo:
+    - *shared
+    - "packages/shark7-weibo/**"
