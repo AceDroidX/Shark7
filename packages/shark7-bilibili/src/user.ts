@@ -22,6 +22,7 @@ export async function getUser(user_id: number): Promise<BiliUser | null> {
         }
         // logger.debug(JSON.stringify(resp))
         let data = resp.data.data
+        data.face = 'https://i0.' + data.face.match('hdslb.com.*$')?.[0]
         data.nameplate.image = 'https://i0.' + data.nameplate.image.match('hdslb.com.*$')?.[0]
         data.nameplate.image_small = 'https://i0.' + data.nameplate.image_small.match('hdslb.com.*$')?.[0]
         data.top_photo = 'https://i0.' + data.top_photo.match('hdslb.com.*$')?.[0]
