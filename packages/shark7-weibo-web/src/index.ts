@@ -3,8 +3,7 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
-import winston from 'winston';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
 import { WeiboController } from './WeiboController';
 
@@ -27,9 +26,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-weibo-web', tryReconnect: true
-    }))
+    addMongoTrans('log-weibo-web')
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_Controller = await WeiboController.init(mongo.ctr)
     weibo_Controller.run()

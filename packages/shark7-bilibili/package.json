@@ -16,9 +16,7 @@
     "dependencies": {
         "axios": "latest",
         "mongodb": "latest",
-        "shark7-shared": "workspace:",
-        "winston": "latest",
-        "winston-mongodb": "latest"
+        "shark7-shared": "workspace:"
     },
     "devDependencies": {
         "typescript": "latest"

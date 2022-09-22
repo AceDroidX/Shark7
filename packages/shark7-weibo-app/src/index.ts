@@ -3,10 +3,9 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import winston from 'winston';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
 import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
@@ -33,9 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-weibo-app', tryReconnect: true
-    }))
+    addMongoTrans('log-weibo-app')
 
     if (!process.env['weibo_id']) {
         logger.error('请设置weibo_id')

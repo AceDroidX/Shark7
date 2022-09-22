@@ -5,10 +5,9 @@ import axios from 'axios';
 import { ApexUserInfo } from "shark7-shared/dist/apex";
 import { ApexDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils';
-import winston from 'winston';
 import { MongoController } from './MongoController';
 import { onUserInfoEvent } from './onUserInfoEvent';
 
@@ -33,9 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-apex', tryReconnect: true
-    }))
+    addMongoTrans('log-apex')
 
     const apex_uid_str = process.env['apex_uid']
     if (!apex_uid_str) {

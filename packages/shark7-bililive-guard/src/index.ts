@@ -4,10 +4,9 @@ if (process.env.NODE_ENV != 'production') {
 import { BiliUsers } from 'shark7-shared/dist/bililive/BiliUsers';
 import { BiliLiveDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import winston from 'winston';
 import { delNotExistGuardState, fetchExistGuardState, fetchNewGuardState, fetchNotExistGuardState, onGuardEvent } from './guard';
 import { MongoController } from './MongoController';
 
@@ -25,9 +24,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bililive-guard', tryReconnect: true
-    }))
+    addMongoTrans('log-bililive-guard')
 
     const marked_uid_str = process.env['marked_uid']
     if (!marked_uid_str) {

@@ -17,8 +17,6 @@
     "axios": "latest",
     "mongodb": "latest",
     "shark7-shared": "workspace:",
-    "winston": "latest",
-    "winston-mongodb": "latest",
     "bilibili-live-ws": "latest"
   },
   "devDependencies": {

@@ -3,10 +3,9 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { BilibiliDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import winston from 'winston';
 import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
 import { MongoController } from './MongoController';
 import { insertUser, onUserEvent } from './user';
@@ -27,9 +26,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(BilibiliDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-bilibili', tryReconnect: true
-    }))
+    addMongoTrans('log-bilibili')
 
     if (!process.env['user_id']) {
         logger.error('请设置user_id')

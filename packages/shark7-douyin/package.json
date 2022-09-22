@@ -20,9 +20,7 @@
     "puppeteer": "14.1.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
-    "shark7-shared": "workspace:",
-    "winston": "latest",
-    "winston-mongodb": "latest"
+    "shark7-shared": "workspace:"
   },
   "devDependencies": {
     "typescript": "latest"

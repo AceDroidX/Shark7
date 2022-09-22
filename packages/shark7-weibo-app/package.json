@@ -18,9 +18,7 @@
     "mongodb": "latest",
     "puppeteer": "14.1.1",
     "shark7-shared": "workspace:",
-    "shark7-weibo": "workspace:",
-    "winston": "latest",
-    "winston-mongodb": "latest"
+    "shark7-weibo": "workspace:"
   },
   "devDependencies": {
     "typescript": "latest"

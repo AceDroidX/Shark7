@@ -3,10 +3,9 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { NeteaseMusicDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger from 'shark7-shared/dist/logger';
+import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import winston from 'winston';
 import { MongoController } from './MongoController';
 import { fetchUser, insertUser, onUserEvent } from './user';
 
@@ -29,9 +28,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(NeteaseMusicDBs, MongoController)
 
-    logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: 'log-netease-music', tryReconnect: true
-    }))
+    addMongoTrans('log-netease-music')
 
     if (!process.env['user_id']) {
         logger.error('请设置user_id')

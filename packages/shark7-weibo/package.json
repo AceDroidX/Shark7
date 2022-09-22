@@ -19,9 +19,7 @@
     "logform": "latest",
     "mongodb": "latest",
     "puppeteer": "14.1.1",
-    "shark7-shared": "workspace:",
-    "winston": "latest",
-    "winston-mongodb": "latest"
+    "shark7-shared": "workspace:"
   },
   "devDependencies": {
     "typescript": "latest"
