@@ -48,8 +48,7 @@ export async function fetchLike(mongo: MongoController, config: WeiboLikeIdConfi
                 logger.warn(`card_type未知:${JSON.stringify(card)}`);
             }
         } catch (err) {
-            logErrorDetail('抓取点赞出错', err);
-            logger.error(`${JSON.stringify(card)}`);
+            logErrorDetail('抓取点赞出错', err, card);
         }
     });
     return true

@@ -52,26 +52,28 @@ function isValidKey(key: string | number | symbol, object: object): key is keyof
 }
 
 function logAxiosError(error: any, level: 'error' | 'warn' | 'info' | 'debug' = 'warn') {
-    if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        logger.log(level, error.response.data);
-        logger.log(level, error.response.status);
-        logger.log(level, JSON.stringify(error.response.headers));
-    } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        logger.log(level, error.request);
-    } else {
-        // Something happened in setting up the request that triggered an Error
-        logger.log(level, 'Error', error.message);
-    }
-    logger.log(level, JSON.stringify(error.config));
+    logger.log(level, JSON.stringify(error))
+    // if (error.response) {
+    //     // The request was made and the server responded with a status code
+    //     // that falls out of the range of 2xx
+    //     logger.log(level, error.response.data);
+    //     logger.log(level, error.response.status);
+    //     logger.log(level, JSON.stringify(error.response.headers));
+    // } else if (error.request) {
+    //     // The request was made but no response was received
+    //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    //     // http.ClientRequest in node.js
+    //     logger.log(level, error.request);
+    // } else {
+    //     // Something happened in setting up the request that triggered an Error
+    //     logger.log(level, 'Error', error.message);
+    // }
+    // logger.log(level, JSON.stringify(error.config));
 }
 
-function logErrorDetail(msg: string, error: any) {
-    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`)
+function logErrorDetail(msg: string, error: any, extra?: any) {
+    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`
+        + extra ? `\nextra:${JSON.stringify(extra)}` : '')
 }
 function logError(msg: string, error: any) {
     logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}`)

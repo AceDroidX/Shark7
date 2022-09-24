@@ -13,25 +13,26 @@ export class WeiboUserCtl {
 
     async getFromID(id: number): Promise<WeiboUser> {
         var result = await this.getRawUserInfo(id);
-        return WeiboUser.getFromRaw(result);
+        if (!result) process.exit(1);
+        return WeiboUser.getFromRaw(result)
     }
 
     async getRawUserInfo(id: number): Promise<any> {
         var result = await this.wbhttp.getURL(profile_info_prefix + id)
         if (!result) {
-            return {}
+            return null
         }
         if (result.status != 200) {
             logger.error(`getRawUserInfo status!=200:\n${JSON.stringify(result.data)}`);
-            return {};
+            return null;
         }
         if (result.data.ok != 1) {
             if (result.data.url == 'https://weibo.com/login.php') {
                 logger.error(`cookie已失效:getRawUserInfo error:\n${JSON.stringify(result.data)}`);
-                return {};
+                return null;
             } else {
                 logger.error(`getRawUserInfo error:\n${JSON.stringify(result.data)}`);
-                return {};
+                return null;
             }
         }
         return result.data['data']['user'];
@@ -43,13 +44,11 @@ export class WeiboUserCtl {
             return []
         }
         if (raw.status != 200) {
-            logger.error(`getMblogs status!=200:`);
-            logger.error(JSON.stringify(raw.data));
+            logger.error(`getMblogs status!=200:\n${JSON.stringify(raw.data)}`);
             return [];
         }
         if (raw.data.ok != 1) {
-            logger.error(`getMblogs error:`);
-            logger.error(JSON.stringify(raw.data));
+            logger.error(`getMblogs error:\n${JSON.stringify(raw.data)}`);
             return [];
         }
         const mblogs = raw.data.data.list.map((mblog: any) => new WeiboMsg(mblog, id));
@@ -71,8 +70,9 @@ export class WeiboUserCtl {
         }
         return result;
     }
-    async updateUserInfo(user: WeiboUser) {
+    async updateUserInfo(user: WeiboUser): Promise<WeiboUser | null> {
         var raw = await this.getRawUserInfo(user.id);
+        if (!raw) return null
         user.setInfoFromRaw(raw);
         return user;
     }

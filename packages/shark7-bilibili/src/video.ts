@@ -4,7 +4,7 @@ import { Shark7Event } from "shark7-shared";
 import { BiliApi, BiliVideo } from "shark7-shared/dist/bilibili";
 import logger from "shark7-shared/dist/logger";
 import { Scope } from 'shark7-shared/dist/scope';
-import { logErrorDetail } from "shark7-shared/dist/utils";
+import { logAxiosError, logErrorDetail } from "shark7-shared/dist/utils";
 import { MongoController } from "./MongoController";
 
 const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.4'
@@ -28,7 +28,11 @@ export async function getVideo(user_id: number, user_name: string, type: 'coin' 
         }
         return data
     } catch (err) {
-        logErrorDetail('抓取数据失败', err)
+        if (axios.isAxiosError(err)) {
+            logAxiosError(err)
+        } else {
+            logErrorDetail('抓取数据失败', err)
+        }
         return null
     }
 }

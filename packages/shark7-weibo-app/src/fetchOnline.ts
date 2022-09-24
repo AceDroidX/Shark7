@@ -54,8 +54,7 @@ export async function fetchOnline(mongo: MongoController, config: WeiboOnlineIdC
                 logger.warn(`card_type未知:${JSON.stringify(card)}`);
             }
         } catch (err) {
-            logErrorDetail('抓取在线状态出错', err);
-            logger.error(`${JSON.stringify(card)}`);
+            logErrorDetail('抓取在线状态出错', err, card);
         }
     });
     return true

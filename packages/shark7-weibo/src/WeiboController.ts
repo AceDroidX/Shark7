@@ -53,28 +53,19 @@ export class WeiboController {
     }
     async fetchUserInfo(): Promise<boolean> {
         logger.debug("开始抓取用户信息");
-        let new_user: WeiboUser[] = []
         try {
             for (const user of this.user) {
-                new_user = new_user.concat(await this.userCtl.updateUserInfo(user))
+                const updated = await this.userCtl.updateUserInfo(user)
+                if (updated) this.mongo.insertUserInfo(updated)
             }
-        } catch (e: any) {
-            logWarn('抓取微博出错', e)
-            if (e.response) {
-                logger.warn(JSON.stringify(e.response))
-            }
-            return false
-        }
-        try {
-            await Promise.all(new_user.map(user => this.mongo.insertUserInfo(user)))
+            return true;
         } catch (e: any) {
             logErrorDetail('抓取用户信息出错', e)
             return false
         }
-        return true
     }
     public async run() {
-        if (await this.userCtl.getRawUserInfo(this.user[0].id) == {}) {
+        if (await this.userCtl.getRawUserInfo(this.user[0].id) == null) {
             logger.error('数据获取测试失败')
             process.exit(1)
         }
