@@ -1,4 +1,4 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, Db, MongoClient } from "mongodb";
+import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, Db, Document, MongoClient } from "mongodb";
 import { getDBInstance } from ".";
 import { Shark7Event, UpdateTypeDoc } from "..";
 import { EventDBs } from "../database";
@@ -40,7 +40,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     async addShark7Event(event: Shark7Event) {
         await this.ctr.addShark7Event(event);
     }
-    addInsertChangeWatcher<T>(db: Collection<T>,
+    addInsertChangeWatcher<T extends Document>(db: Collection<T>,
         onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null>; },
         onUpdate?: { (ctr: C, event: ChangeStreamUpdateDocument<T>): Promise<Shark7Event | null>; }
     ) {

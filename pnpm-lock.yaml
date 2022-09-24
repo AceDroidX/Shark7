@@ -129,6 +129,7 @@ importers:
       typescript: latest
       winston: latest
       winston-mongodb: latest
+      winston-transport: latest
     dependencies:
       axios: 0.27.2
       logform: 2.4.2
@@ -139,6 +140,7 @@ importers:
       toad-scheduler: 1.6.1
       winston: 3.8.2
       winston-mongodb: 5.1.0_winston@3.8.2
+      winston-transport: 4.5.0
     devDependencies:
       typescript: 4.8.3
 
