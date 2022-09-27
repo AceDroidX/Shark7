@@ -32,7 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController)
 
-    addMongoTrans('log-apex')
+    addMongoTrans('apex')
 
     const apex_uid_str = process.env['apex_uid']
     if (!apex_uid_str) {

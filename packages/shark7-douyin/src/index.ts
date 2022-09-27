@@ -32,7 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController)
 
-    addMongoTrans('log-douyin')
+    addMongoTrans('douyin')
 
     if (!process.env['douyin_sec_uid']) {
         logger.error('请设置douyin_sec_uid')

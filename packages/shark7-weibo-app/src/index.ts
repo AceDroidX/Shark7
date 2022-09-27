@@ -32,7 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
-    addMongoTrans('log-weibo-app')
+    addMongoTrans('weibo-app')
 
     if (!process.env['weibo_id']) {
         logger.error('请设置weibo_id')

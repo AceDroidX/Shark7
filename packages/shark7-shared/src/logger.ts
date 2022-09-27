@@ -83,9 +83,9 @@ const logger = winston.createLogger({
     ],
 });
 
-export function addMongoTrans(collName: string) {
+export function addMongoTrans(collName: string, dbName = 'log') {
     logger.add(new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), collection: collName, tryReconnect: true
+        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), dbName, collection: collName, tryReconnect: true
     }))
 }
 

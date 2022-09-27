@@ -31,7 +31,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await getAllEventDBs()
 
-    addMongoTrans('log-main')
+    addMongoTrans('main')
 
     mongo.ctr.run()
 }

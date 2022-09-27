@@ -28,7 +28,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(NeteaseMusicDBs, MongoController)
 
-    addMongoTrans('log-netease-music')
+    addMongoTrans('netease-music')
 
     if (!process.env['user_id']) {
         logger.error('请设置user_id')

@@ -26,7 +26,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(BilibiliDBs, MongoController)
 
-    addMongoTrans('log-bilibili')
+    addMongoTrans('bilibili')
 
     if (!process.env['user_id']) {
         logger.error('请设置user_id')

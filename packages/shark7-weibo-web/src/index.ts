@@ -26,7 +26,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
-    addMongoTrans('log-weibo-web')
+    addMongoTrans('weibo-web')
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_Controller = await WeiboController.init(mongo.ctr)
     weibo_Controller.run()

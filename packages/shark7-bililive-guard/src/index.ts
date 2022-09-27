@@ -24,7 +24,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
 
-    addMongoTrans('log-bililive-guard')
+    addMongoTrans('bililive-guard')
 
     const marked_uid_str = process.env['marked_uid']
     if (!marked_uid_str) {
