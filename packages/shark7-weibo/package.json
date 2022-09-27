@@ -18,7 +18,7 @@
     "axios": "latest",
     "logform": "latest",
     "mongodb": "latest",
-    "puppeteer": "14.1.1",
+    "puppeteer": "18.0.5",
     "shark7-shared": "workspace:"
   },
   "devDependencies": {

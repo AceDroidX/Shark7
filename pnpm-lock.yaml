@@ -73,17 +73,17 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
-      puppeteer: 14.1.1
-      puppeteer-extra: ^3.2.3
-      puppeteer-extra-plugin-stealth: ^2.9.0
+      puppeteer: 18.0.5
+      puppeteer-extra: ^3.3.4
+      puppeteer-extra-plugin-stealth: ^2.11.1
       shark7-shared: 'workspace:'
       typescript: latest
     dependencies:
       axios: 0.27.2
       logform: 2.4.2
       mongodb: 4.10.0
-      puppeteer: 14.1.1
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer: 18.0.5
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin-stealth: 2.11.1_puppeteer-extra@3.3.4
       shark7-shared: link:../shark7-shared
     devDependencies:
@@ -122,9 +122,9 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
-      puppeteer: 14.1.1
-      puppeteer-extra: ^3.2.3
-      puppeteer-extra-plugin-stealth: ^2.9.0
+      puppeteer: 18.0.5
+      puppeteer-extra: ^3.3.4
+      puppeteer-extra-plugin-stealth: ^2.11.1
       toad-scheduler: latest
       typescript: latest
       winston: latest
@@ -134,8 +134,8 @@ importers:
       axios: 0.27.2
       logform: 2.4.2
       mongodb: 4.10.0
-      puppeteer: 14.1.1
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer: 18.0.5
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin-stealth: 2.11.1_puppeteer-extra@3.3.4
       toad-scheduler: 1.6.1
       winston: 3.8.2
@@ -149,14 +149,14 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
-      puppeteer: 14.1.1
+      puppeteer: 18.0.5
       shark7-shared: 'workspace:'
       typescript: latest
     dependencies:
       axios: 0.27.2
       logform: 2.4.2
       mongodb: 4.10.0
-      puppeteer: 14.1.1
+      puppeteer: 18.0.5
       shark7-shared: link:../shark7-shared
     devDependencies:
       typescript: 4.8.3
@@ -165,14 +165,14 @@ importers:
     specifiers:
       axios: latest
       mongodb: latest
-      puppeteer: 14.1.1
+      puppeteer: 18.0.5
       shark7-shared: 'workspace:'
       shark7-weibo: 'workspace:'
       typescript: latest
     dependencies:
       axios: 0.27.2
       mongodb: 4.10.0
-      puppeteer: 14.1.1
+      puppeteer: 18.0.5
       shark7-shared: link:../shark7-shared
       shark7-weibo: link:../shark7-weibo
     devDependencies:
@@ -183,9 +183,9 @@ importers:
       axios: latest
       logform: latest
       mongodb: latest
-      puppeteer: 14.1.1
-      puppeteer-extra: ^3.2.3
-      puppeteer-extra-plugin-stealth: ^2.9.0
+      puppeteer: 18.0.5
+      puppeteer-extra: ^3.3.4
+      puppeteer-extra-plugin-stealth: ^2.11.1
       shark7-shared: 'workspace:'
       shark7-weibo: 'workspace:'
       typescript: latest
@@ -193,8 +193,8 @@ importers:
       axios: 0.27.2
       logform: 2.4.2
       mongodb: 4.10.0
-      puppeteer: 14.1.1
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer: 18.0.5
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin-stealth: 2.11.1_puppeteer-extra@3.3.4
       shark7-shared: link:../shark7-shared
       shark7-weibo: link:../shark7-weibo
@@ -1166,8 +1166,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /devtools-protocol/0.0.982423:
-    resolution: {integrity: sha512-FnVW2nDbjGNw1uD/JRC+9U5768W7e1TfUwqbDTcSsAu1jXFjITSX8w3rkW5FEpHRMPPGpvNSmO1pOpqByiWscA==}
+  /devtools-protocol/0.0.1036444:
+    resolution: {integrity: sha512-0y4f/T8H9lsESV9kKP1HDUXgHxCdniFeJh6Erq+FbdOEvp/Ydp9t8kcAAM5gOd17pMrTDlFWntoHtzzeTUWKNw==}
     dev: false
 
   /diff/4.0.2:
@@ -2452,13 +2452,6 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
-  /pkg-dir/4.2.0:
-    resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
-    engines: {node: '>=8'}
-    dependencies:
-      find-up: 4.1.0
-    dev: false
-
   /pngjs/5.0.0:
     resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}
     engines: {node: '>=10.13.0'}
@@ -2518,7 +2511,7 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin: 3.2.2_puppeteer-extra@3.3.4
       puppeteer-extra-plugin-user-preferences: 2.4.0_puppeteer-extra@3.3.4
     transitivePeerDependencies:
@@ -2539,7 +2532,7 @@ packages:
     dependencies:
       debug: 4.3.4
       fs-extra: 10.1.0
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin: 3.2.2_puppeteer-extra@3.3.4
       rimraf: 3.0.2
     transitivePeerDependencies:
@@ -2560,7 +2553,7 @@ packages:
     dependencies:
       debug: 4.3.4
       deepmerge: 4.2.2
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
       puppeteer-extra-plugin: 3.2.2_puppeteer-extra@3.3.4
       puppeteer-extra-plugin-user-data-dir: 2.4.0_puppeteer-extra@3.3.4
     transitivePeerDependencies:
@@ -2582,12 +2575,12 @@ packages:
       '@types/debug': 4.1.7
       debug: 4.3.4
       merge-deep: 3.0.3
-      puppeteer-extra: 3.3.4_puppeteer@14.1.1
+      puppeteer-extra: 3.3.4_puppeteer@18.0.5
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /puppeteer-extra/3.3.4_puppeteer@14.1.1:
+  /puppeteer-extra/3.3.4_puppeteer@18.0.5:
     resolution: {integrity: sha512-fN5pHvSMJ8d1o7Z8wLLTQOUBpORD2BcFn+KDs7QnkGZs9SV69hcUcce67vX4L4bNSEG3A0P6Osrv+vWNhhdm8w==}
     engines: {node: '>=8'}
     peerDependencies:
@@ -2605,28 +2598,27 @@ packages:
       '@types/debug': 4.1.7
       debug: 4.3.4
       deepmerge: 4.2.2
-      puppeteer: 14.1.1
+      puppeteer: 18.0.5
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /puppeteer/14.1.1:
-    resolution: {integrity: sha512-4dC6GYR5YlXTmNO3TbYEHTdVSdml1cVD2Ok/h/f/xSTp4ITVdbRWkMjiOaEKRAhtIl6GqaP7B89zx+hfhcNGMQ==}
+  /puppeteer/18.0.5:
+    resolution: {integrity: sha512-s4erjxU0VtKojPvF+KvLKG6OHUPw7gO2YV1dtOsoryyCbhrs444fXb4QZqGWuTv3V/rgSCUzeixxu34g0ZkSMA==}
     engines: {node: '>=14.1.0'}
     requiresBuild: true
     dependencies:
       cross-fetch: 3.1.5
       debug: 4.3.4
-      devtools-protocol: 0.0.982423
+      devtools-protocol: 0.0.1036444
       extract-zip: 2.0.1
       https-proxy-agent: 5.0.1
-      pkg-dir: 4.2.0
       progress: 2.0.3
       proxy-from-env: 1.1.0
       rimraf: 3.0.2
       tar-fs: 2.1.1
       unbzip2-stream: 1.4.3
-      ws: 8.6.0
+      ws: 8.8.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3368,19 +3360,6 @@ packages:
 
   /wrappy/1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  /ws/8.6.0:
-    resolution: {integrity: sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
 
   /ws/8.8.1:
     resolution: {integrity: sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==}

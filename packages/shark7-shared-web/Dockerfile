@@ -10,7 +10,7 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared
 
-FROM zenika/alpine-chrome:101-with-node-16
+FROM zenika/alpine-chrome:102-with-node
 WORKDIR /app
 ENV TZ=Asia/Shanghai \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
