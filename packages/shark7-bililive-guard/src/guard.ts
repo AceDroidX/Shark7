@@ -120,16 +120,25 @@ function guardFilter(data: BiliGuardApiList[], user: BiliSimpleUser, page: numbe
 }
 
 async function getGuardApi(user: BiliSimpleUser, page: number) {
-    const resp = await axios.get<BiliApi<BiliGuardApi>>(makeURL(user.roomid, user.uid, page), { headers: { 'user-agent': UserAgent } })
-    if (resp.status != 200) {
-        logger.error('resp.status != 200:' + JSON.stringify(resp))
+    try {
+        const resp = await axios.get<BiliApi<BiliGuardApi>>(makeURL(user.roomid, user.uid, page), { headers: { 'user-agent': UserAgent } })
+        if (resp.status != 200) {
+            logger.error('resp.status != 200:' + JSON.stringify(resp))
+            return null
+        }
+        if (resp.data.code != 0) {
+            logger.error('resp.data.code != 0:' + JSON.stringify(resp))
+            return null
+        }
+        return resp
+    } catch (err) {
+        if (axios.isAxiosError(err)) {
+            logger.warn('抓取数据失败:请求错误\n' + JSON.stringify(err.toJSON()))
+        } else {
+            logErrorDetail('抓取数据失败', err)
+        }
         return null
     }
-    if (resp.data.code != 0) {
-        logger.error('resp.data.code != 0:' + JSON.stringify(resp))
-        return null
-    }
-    return resp
 }
 
 export async function onGuardEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<BiliGuardState>, origin?: BiliGuardState): Promise<Shark7Event | null> {

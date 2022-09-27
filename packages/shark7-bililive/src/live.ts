@@ -30,11 +30,11 @@ export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask
                 mongo.addShark7Event(filter)
             }
         } catch (error) {
-            logger.info(`<${roomid}>遇到错误，请检查日志；\n${error}`)
+            logger.error(`<${roomid}>遇到错误，请检查日志；\n${error}`)
         }
     })
     live.on('close', () => logger.info(`<${roomid}>连接关闭`))
-    live.on('error', (e) => logger.info(`<${roomid}>连接错误：${e}`))
+    live.on('error', (e) => logger.error(`<${roomid}>连接错误：${e}`))
 }
 
 async function msgFilter(data: any, marked_uid: number[], marked_Users: BiliUsers, msgRoomid: number): Promise<Shark7Event | undefined> {

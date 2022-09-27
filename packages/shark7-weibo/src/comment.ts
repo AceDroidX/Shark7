@@ -11,6 +11,7 @@ enum CommentFlow {
 
 async function getComments<T extends WeiboComment>(wbhttp: WeiboHTTP, id: number, flow: CommentFlow, count = 20, isSubComment = false): Promise<T[] | null> {
     const result = await wbhttp.getURL<WeiboCommentApi<T>>(`https://weibo.com/ajax/statuses/buildComments?flow=${flow}&id=${id}&is_show_bulletin=2&count=${count}&fetch_level=${Number(isSubComment)}`)
+    if (!result) return null;
     if (result.status != 200) {
         logger.error(`getComments result.status != 200:\n${JSON.stringify(result.data)}`);
         return null
