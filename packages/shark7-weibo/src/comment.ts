@@ -30,8 +30,6 @@ async function getInnerComments(wbhttp: WeiboHTTP, comments: WeiboRootComment[])
             const data = await getComments<WeiboReplyComment>(wbhttp, item.id, CommentFlow.ByHot, 100, true)
             if (data) {
                 innerComments = innerComments.concat(data)
-            } else {
-                logger.error('获取子评论出错')
             }
         } else {
             if (item.comments) innerComments = innerComments.concat(item.comments)
@@ -64,7 +62,6 @@ export async function fetchComments(mongo: MongoController, id: number, uid: num
     const hotComments = await getMblogComments(mongo, id, CommentFlow.ByHot, 100)
     const timeComments = await getMblogComments(mongo, id, CommentFlow.ByTime, 10)
     if (!hotComments || !timeComments) {
-        logger.error('获取评论出错')
         return false
     }
     for (const data of commentsFilter(hotComments, uid)) {

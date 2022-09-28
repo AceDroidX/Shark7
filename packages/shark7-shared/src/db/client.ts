@@ -69,7 +69,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
                             await this.addShark7Event(result);
                     }
                     else
-                        logger.warn(`insert数据更新\n${JSON.stringify(event)}`);
+                        logger.debug(`insert数据更新\n${JSON.stringify(event)}`);
                 }
             } else {
                 logger.warn(`insert数据未知operationType:${event.operationType}`);

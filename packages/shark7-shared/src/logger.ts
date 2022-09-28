@@ -10,7 +10,7 @@ class TimingQueue {
     MinInterval: number
     MaxLength: number
     list: { time: number, log: any }[] = []
-    constructor(interval = 30 * 1000, length = 2) {
+    constructor(interval = 30 * 1000, length = 3) {
         this.MinInterval = interval;
         this.MaxLength = length;
     }
