@@ -1,3 +1,10 @@
+enum LogScope {
+    Debug = 'Log.Debug',
+    Info = 'Log.Info',
+    Warn = 'Log.Warn',
+    Error = 'Log.Error',
+}
+
 enum WeiboScope {
     User = 'Weibo.User',
     Mblog = 'Weibo.Mblog',
@@ -31,6 +38,7 @@ enum NeteaseMusicScope {
 }
 
 export const Scope = {
+    Log: LogScope,
     Apex: 'Apex',
     Weibo: WeiboScope,
     BiliLive: BiliLiveScope,
@@ -40,6 +48,10 @@ export const Scope = {
 };
 
 export enum ScopeName {
+    'Log.Debug' = 'Debug',
+    'Log.Info' = 'Info',
+    'Log.Warn' = 'Warn',
+    'Log.Error' = 'Error',
     'Apex' = 'Apex信息',
     'Weibo.User' = '微博用户信息',
     'Weibo.Mblog' = '微博动态',
@@ -66,4 +78,12 @@ export function getScopeName(id: string): string | undefined {
             return value;
     }
     return undefined;
+}
+
+export function logLevelToScope(level: string): string {
+    for (const [key, value] of Object.entries(LogScope)) {
+        if (key.toLowerCase() == level)
+            return value;
+    }
+    return level;
 }

@@ -1,7 +1,7 @@
 import { ChangeStreamDocument, ChangeStreamInsertDocument } from "mongodb";
-import { Shark7Event } from "shark7-shared";
-import { getScopeName } from 'shark7-shared/dist/scope'
+import { LogEvent, Shark7Event } from "shark7-shared";
 import logger from "shark7-shared/dist/logger";
+import { getScopeName, logLevelToScope } from 'shark7-shared/dist/scope';
 import { getTime } from "shark7-shared/dist/utils";
 import { sendMsgWithScope } from "./sendMsg";
 
@@ -23,4 +23,14 @@ export function onEventChange(raw: ChangeStreamDocument) {
     const event = raw as ChangeStreamInsertDocument<Shark7Event>
     logger.info(`(${event.fullDocument.scope})事件改变: \n${JSON.stringify(raw)}`)
     sendEvent(event.fullDocument)
+}
+
+export function onLogChange(raw: ChangeStreamDocument, collName: string) {
+    if (raw.operationType != 'insert') {
+        logger.warn(`未知事件操作:${raw.operationType}`)
+        return
+    }
+    const event = raw as ChangeStreamInsertDocument<LogEvent>
+    const log = event.fullDocument
+    sendEvent({ ts: Number(new Date()), name: collName, scope: logLevelToScope(log.level), msg: log.message })
 }

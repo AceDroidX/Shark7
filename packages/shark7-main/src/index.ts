@@ -1,10 +1,12 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
+import { Collection } from 'mongodb';
 import { MongoDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
+import { onLogChange } from './event';
 import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
@@ -33,7 +35,14 @@ async function main() {
 
     addMongoTrans('main')
 
-    mongo.ctr.run()
+    mongo.ctr.run();
+
+    (await mongo.client.db('log').collections()).forEach(
+        (col: Collection) => {
+            logger.debug(col.collectionName)
+            col.watch().on('change', (event) => onLogChange(event, col.collectionName))
+        }
+    );
 }
 
 async function getAllEventDBs() {

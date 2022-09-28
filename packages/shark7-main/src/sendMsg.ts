@@ -42,6 +42,7 @@ export function sendMsgWithScope(formatedMsg: string, name: string, scope: strin
                 }
             }
         } else {
+            if (scope.startsWith('Log')) continue channelLoop
             sendToKHL(formatedMsg, channel.id)
         }
     }

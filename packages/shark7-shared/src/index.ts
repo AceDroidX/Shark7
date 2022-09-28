@@ -5,6 +5,13 @@ export type Shark7Event = {
     msg: string
 }
 
+export type LogEvent = {
+    timestamp: Date
+    level: string
+    message: string
+    meta: any
+}
+
 export type InsertTypeDoc = {
     shark7_id: string
     shark7_name?: string
