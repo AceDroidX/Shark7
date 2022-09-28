@@ -20,7 +20,7 @@ export class BiliSimpleUser {
 
     static async initByUID(uid: number): Promise<BiliSimpleUser | null> {
         try {
-            const resp = await axios.get<BiliApi<BiliUser>>(UID_info_prefix + uid, { headers: { 'user-agent': UserAgent } })
+            const resp = await axios.get<BiliApi<BiliUser>>(UID_info_prefix + uid, { headers: { 'user-agent': UserAgent, 'cookie': `buvid3=12345678-1234-1234-1234-123456789123infoc` } })
             if (resp.status != 200) {
                 logger.error('resp.status != 200:' + JSON.stringify(resp))
                 return null
