@@ -72,8 +72,8 @@ function logAxiosError(error: any, level: 'error' | 'warn' | 'info' | 'debug' = 
 }
 
 function logErrorDetail(msg: string, error: any, extra?: any) {
-    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}`
-        + extra ? `\nextra:${JSON.stringify(extra)}` : '')
+    logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}\nstack:${error.stack}
+    ${extra ? `\nextra:${JSON.stringify(extra)}` : ''}`)
 }
 function logError(msg: string, error: any) {
     logger.error(`${msg}\nname:${error.name}\nmessage:${error.message}`)
