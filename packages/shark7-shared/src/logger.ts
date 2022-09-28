@@ -79,7 +79,7 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: 'log/error.log', level: 'error' }),
         new winston.transports.File({ filename: 'log/combined.log' }),
         new transports.Console({ format: combine(winston.format.colorize(), timestamp(), myFormat) }),
-        new WarnHandleTransport(),
+        // new WarnHandleTransport(),
     ],
 });
 

@@ -19,4 +19,5 @@ todo:
   - cookie过期事件  
 - other:  
   - [x] 错误日志发送至kook  
-  - 封装Axios错误处理  
+  - [ ] 封装Axios错误处理  
+  - [ ] warn超速详细设置
