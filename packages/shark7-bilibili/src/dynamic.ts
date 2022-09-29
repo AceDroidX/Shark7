@@ -50,23 +50,33 @@ export async function onDynamicEvent(ctr: MongoController, event: ChangeStreamIn
         logger.error(`fullDocument为${data}`)
         process.exit(1)
     }
-    let type
+    let type: string, content: string | undefined
     switch (data.type) {
+        case 'DYNAMIC_TYPE_LIVE_RCMD':
+            return null
+        case 'DYNAMIC_TYPE_AV':
+            type = 'B站视频'
+            if (data.modules.module_dynamic.major.type != 'MAJOR_TYPE_ARCHIVE') {
+                logger.warn('not MAJOR_TYPE_ARCHIVE in DYNAMIC_TYPE_AV')
+                return null
+            }
+            content = data.modules.module_dynamic.desc?.text ?? ''
+            content += data.modules.module_dynamic.major.archive.title + '\nhttps://b23.tv/' + data.modules.module_dynamic.major.archive.bvid
+            break
         case 'DYNAMIC_TYPE_DRAW':
         case 'DYNAMIC_TYPE_WORD':
             type = 'B站动态'
-            break
-        case 'DYNAMIC_TYPE_AV':
-            type = 'B站视频'
+            content = data.modules.module_dynamic.desc?.text
             break
         case 'DYNAMIC_TYPE_FORWARD':
             type = 'B站转发'
+            content = data.modules.module_dynamic.desc?.text
             break
         default:
-            type = data.type
             logger.warn('未知类型' + data.type)
+            return null
     }
-    const msg = `${type}\n${data.modules.module_dynamic.desc.text}`
+    const msg = `${type}\n${content}}`
     return { ts: Number(new Date()), name: String(data.modules.module_author.name), scope: Scope.Bilibili.Dynamic, msg }
 }
 

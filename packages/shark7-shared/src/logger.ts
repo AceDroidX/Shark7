@@ -16,8 +16,8 @@ class TimingQueue {
     }
     push(data: any) {
         if (this.list.push({ time: new Date().getTime(), log: data }) > this.MaxLength) {
-            if (this.list[0].time - new Date().getTime() < this.MinInterval) {
-                logger.error("warn日志超速:\n" + JSON.stringify(this.list[0].log))
+            if (new Date().getTime() - this.list[0].time < this.MinInterval) {
+                logger.error(`warn日志超速(Interval:${new Date().getTime() - this.list[0].time},Length:${this.list.length}):\n` + JSON.stringify(this.list[0].log))
             }
             this.list.shift();
         }

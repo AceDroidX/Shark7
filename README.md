@@ -9,8 +9,8 @@ shark7-weibo-app:
 todo:  
 
 - bilibili:
-  - 视频动态无desc的处理  
-  - 评论
+  - [x] 视频动态无desc的处理  
+  - [ ] 评论
 - bililive-guard:  
   - 自动更新舰长列表  
 - weibo-app:  
