@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { DouyinDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
+import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { Puppeteer } from 'shark7-shared/dist/Puppeteer';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
@@ -32,7 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController)
 
-    addMongoTrans('douyin')
+    initLogger('douyin')
 
     if (!process.env['douyin_sec_uid']) {
         logger.error('请设置douyin_sec_uid')

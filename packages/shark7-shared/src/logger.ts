@@ -10,7 +10,7 @@ class TimingQueue {
     MinInterval: number
     MaxLength: number
     list: { time: number, log: any }[] = []
-    constructor(interval = 60 * 1000, length = 6) {
+    constructor(interval = 30 * 1000, length = 3) {
         this.MinInterval = interval;
         this.MaxLength = length;
     }
@@ -79,16 +79,19 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: 'log/error.log', level: 'error' }),
         new winston.transports.File({ filename: 'log/combined.log' }),
         new transports.Console({ format: combine(winston.format.colorize(), timestamp(), myFormat) }),
-        // new WarnHandleTransport(),
     ],
 });
 
-export function addMongoTrans(collName: string, dbName = 'log') {
+export function initLogger(collName: string, dbName = 'log') {
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), dbName, collection: collName, tryReconnect: true
     }))
+    if (process.env['warn_config']) {
+        const warn = process.env['warn_config'].split(',')
+        logger.add(new WarnHandleTransport({ interval: Number(warn[0]), length: Number(warn[1]) }))
+    }
+    else logger.add(new WarnHandleTransport())
 }
-
 export default logger
 
 //

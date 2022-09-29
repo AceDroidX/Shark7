@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ApexUserInfo } from "shark7-shared/dist/apex";
 import { ApexDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
+import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils';
 import { MongoController } from './MongoController';
@@ -32,7 +32,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController)
 
-    addMongoTrans('apex')
+    initLogger('apex')
 
     const apex_uid_str = process.env['apex_uid']
     if (!apex_uid_str) {

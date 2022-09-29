@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
+import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { MongoController } from './MongoController';
 import { WeiboController } from './WeiboController';
@@ -27,7 +27,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
 
-    addMongoTrans('weibo')
+    initLogger('weibo')
 
     if (!process.env['weibo_id']) {
         logger.error('请设置weibo_id')

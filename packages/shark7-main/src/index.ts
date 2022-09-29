@@ -4,7 +4,7 @@ if (process.env.NODE_ENV != 'production') {
 import { Collection } from 'mongodb';
 import { MongoDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
+import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { onLogChange } from './event';
 import { MongoController } from './MongoController';
@@ -33,7 +33,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await getAllEventDBs()
 
-    addMongoTrans('main')
+    initLogger('main')
 
     mongo.ctr.run();
 

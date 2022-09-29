@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != 'production') {
 }
 import { BilibiliDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { addMongoTrans } from 'shark7-shared/dist/logger';
+import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
 import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
@@ -26,7 +26,7 @@ if (require.main === module) {
 async function main() {
     const mongo = await MongoControlClient.getInstance(BilibiliDBs, MongoController)
 
-    addMongoTrans('bilibili')
+    initLogger('bilibili')
 
     if (!process.env['user_id']) {
         logger.error('请设置user_id')
