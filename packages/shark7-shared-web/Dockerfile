@@ -22,4 +22,6 @@ COPY --chown=chrome pnpm-lock.yaml ./
 RUN pnpm fetch --prod
 COPY --chown=chrome . ./
 COPY --from=build --chown=chrome /app/packages/shark7-shared/dist/ ./packages/shark7-shared/dist/
+RUN mkdir /app/puppeteer && chown chrome:chrome /app/puppeteer
+VOLUME /app/puppeteer
 RUN pnpm install --offline --prod

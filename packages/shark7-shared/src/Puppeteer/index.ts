@@ -1,11 +1,11 @@
-import { Browser } from 'puppeteer'
-import { Web } from './Web'
-import puppeteer from 'puppeteer-extra'
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import logger from '../logger';
-import fs from 'fs'
+import fs from 'fs';
+import { Browser } from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { EventDBs } from '../database';
 import { MongoControllerBase } from "../db/client";
+import logger from '../logger';
+import { Web } from './Web';
 
 export class Puppeteer<T extends Web> {
     browser: Browser
