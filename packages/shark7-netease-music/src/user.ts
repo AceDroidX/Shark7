@@ -55,6 +55,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         }
         switch (key) {
             case 'userPoint.updateTime':
+            case 'profile.privacyItemUnlimit.gender':
                 return
         }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
