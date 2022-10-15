@@ -11,8 +11,14 @@ todo:
 - bilibili:
   - [x] 视频动态无desc的处理  
   - [ ] 评论
+- bilibili-app:
+  - [ ] 粉丝装扮
+  - [ ] 关注数
+  - [ ] 其他
 - bililive-guard:  
   - 自动更新舰长列表  
+- weibo:
+  - [ ] 新关注
 - weibo-app:  
   - 微博超话评论
 - weibo-web:  
@@ -21,3 +27,5 @@ todo:
   - [x] 错误日志发送至kook  
   - [ ] 封装Axios错误处理  
   - [x] warn超速详细设置
+  - [ ] 时间语义解析
+  - [ ] Shark7-Android

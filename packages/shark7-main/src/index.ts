@@ -6,7 +6,8 @@ import { MongoDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { onLogChange } from './event';
+import { EventProcessor } from './event';
+import { FcmClient } from './fcm';
 import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
@@ -31,7 +32,14 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await getAllEventDBs()
+    let eventProcessor: EventProcessor
+    if (process.env['fcm_channels']) {
+        const fcm = new FcmClient()
+        eventProcessor = new EventProcessor(fcm)
+    } else {
+        eventProcessor = new EventProcessor()
+    }
+    const mongo = await getAllEventDBs(eventProcessor)
 
     initLogger('main')
 
@@ -40,16 +48,16 @@ async function main() {
     (await mongo.client.db('log').collections()).forEach(
         (col: Collection) => {
             logger.debug(col.collectionName)
-            col.watch().on('change', (event) => onLogChange(event, col.collectionName))
+            col.watch().on('change', (event) => eventProcessor.onLogChange(event, col.collectionName))
         }
     );
 }
 
-async function getAllEventDBs() {
+async function getAllEventDBs(eventProcessor: EventProcessor) {
     try {
         const client = await MongoControlClient.getMongoClientConfig().connect();
         const dbs = await MongoDBs.getInstance(client)
-        const ctr = new MongoController(dbs);
+        const ctr = new MongoController(eventProcessor, dbs);
         logger.info('数据库已连接');
         return new MongoControlClient(client, ctr);
     } catch (err) {
