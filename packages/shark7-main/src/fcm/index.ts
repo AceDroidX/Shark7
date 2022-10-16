@@ -23,6 +23,7 @@ export class FcmClient {
     fcm_client_email: string
 
     constructor() {
+        logger.debug('实例化FcmClient')
         if (!process.env['fcm_private_key']) {
             logger.error('fcm_private_key未设置')
             process.exit(1)
@@ -38,7 +39,7 @@ export class FcmClient {
             process.exit(1)
         }
         this.fcm_client_email = process.env['fcm_client_email']
-        logger.debug('实例化FcmClient')
+        jose.importPKCS8(this.fcm_private_key, "RS256").catch((e) => logErrorDetail('fcm_private_key加载失败', e))
     }
 
     async getToken(): Promise<string | null> {
