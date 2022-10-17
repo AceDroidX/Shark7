@@ -4,6 +4,7 @@ import { Shark7Event } from 'shark7-shared'
 import logger from 'shark7-shared/dist/logger'
 import { getScopeName } from 'shark7-shared/dist/scope'
 import { logErrorDetail } from 'shark7-shared/dist/utils'
+import { AndroidMessagePriority, FcmSendBody, Notification } from './model'
 
 const fcm_oauth_host = process.env['fcm_oauth_host'] ? process.env['fcm_oauth_host'] : "https://oauth2.googleapis.com"
 const fcm_host = process.env['fcm_host'] ? process.env['fcm_host'] : "https://fcm.googleapis.com"
@@ -73,7 +74,7 @@ export class FcmClient {
             if (!this.oauthToken) if (!await this.getToken()) return false
             if (!this.oauthToken) return false
             if (Date.now() > this.oauthToken.expire_to) if (!await this.getToken()) return false
-            const jsonPayload: FcmSendBody = { "message": { "notification": msg, "topic": topic } }
+            const jsonPayload: FcmSendBody = { "message": { "notification": msg, 'android': { priority: AndroidMessagePriority.HIGH }, "topic": topic } }
             const resp = await axios.post(`${fcm_host}/v1/projects/${this.fcm_project_id}/messages:send`, jsonPayload, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.oauthToken.token}` } })
             if (resp.status != 200) {
                 logger.error(resp.status.toString())
