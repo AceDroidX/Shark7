@@ -3,7 +3,7 @@ export type FcmSendBody = {
     message: Message
 }
 
-type Message = {
+export type Message = {
     data?: { [key: string]: string },
     notification?: Notification,
     android?: AndroidConfig,
