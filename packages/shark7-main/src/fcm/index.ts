@@ -124,11 +124,11 @@ export class FcmClient {
     }
 
     notificationToMsg(notification: Notification, topic = 'main'): Message {
-        return { "notification": notification, 'android': { priority: AndroidMessagePriority.HIGH }, "topic": topic }
+        return { notification, 'android': { priority: AndroidMessagePriority.HIGH }, topic }
     }
 
     dataToMsg(data: { [key: string]: string }, topic = 'main'): Message {
-        return { data, topic }
+        return { data, 'android': { priority: AndroidMessagePriority.HIGH }, topic }
     }
 
     async sendEvent(event: Shark7Event, topic = 'main'): Promise<boolean> {
