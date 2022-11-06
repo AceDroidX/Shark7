@@ -1,3 +1,5 @@
+import { Shark7Event } from "shark7-shared"
+
 export type FcmSendBody = {
     validate_only?: boolean,
     message: Message
@@ -39,4 +41,12 @@ type AndroidConfig = {
 export enum AndroidMessagePriority {
     NORMAL = 'normal',
     HIGH = 'high',
+}
+
+export type Shark7FcmData = {
+    event: string,
+} & Shark7FcmOptions
+
+export type Shark7FcmOptions = {
+    is_show_notification?: 'true' | 'false',
 }

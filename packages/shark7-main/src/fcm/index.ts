@@ -4,7 +4,7 @@ import { Shark7Event } from 'shark7-shared'
 import logger from 'shark7-shared/dist/logger'
 import { getScopeName } from 'shark7-shared/dist/scope'
 import { logErrorDetail } from 'shark7-shared/dist/utils'
-import { AndroidMessagePriority, Message, Notification } from './model'
+import { AndroidMessagePriority, Message, Notification, Shark7FcmData, Shark7FcmOptions } from './model'
 
 const fcm_oauth_host = process.env['fcm_oauth_host'] ? process.env['fcm_oauth_host'] : "https://oauth2.googleapis.com"
 const fcm_host = process.env['fcm_host'] ? process.env['fcm_host'] : "https://fcm.googleapis.com"
@@ -131,21 +131,30 @@ export class FcmClient {
         return { data, 'android': { priority: AndroidMessagePriority.HIGH }, topic }
     }
 
+    shark7FcmDataToMsg(event: Shark7Event, options?: Shark7FcmOptions, topic = 'main'): Message {
+        const data: Shark7FcmData = {
+            event: JSON.stringify(event),
+            ...options,
+        }
+        return this.dataToMsg(data, topic)
+    }
+
     async sendEvent(event: Shark7Event, topic = 'main'): Promise<boolean> {
         let scopename = getScopeName(event.scope)
         if (!scopename) {
             logger.warn(`未知scopename:${event}`)
             scopename = event.scope
         }
-        let eventStr = {
-            ts: String(event.ts),
-            name: event.name,
-            scope: event.scope,
-            msg: event.msg,
-        }
-        const msgs = [this.dataToMsg(eventStr, topic),
-        this.notificationToMsg({ title: `<${event.name}>(${scopename})`, body: event.msg }, topic)]
-        return this.sendMsg(msgs)
+        return this.sendMsg(this.shark7FcmDataToMsg(event))
+        // let eventStr = {
+        //     ts: String(event.ts),
+        //     name: event.name,
+        //     scope: event.scope,
+        //     msg: event.msg,
+        // }
+        // const msgs = [this.dataToMsg(eventStr, topic),
+        // this.notificationToMsg({ title: `<${event.name}>(${scopename})`, body: event.msg }, topic)]
+        // return this.sendMsg(msgs)
     }
 }
 
