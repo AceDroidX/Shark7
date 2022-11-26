@@ -18,8 +18,10 @@ class TimingQueue {
         if (this.list.push({ time: new Date().getTime(), log: data }) > this.MaxLength) {
             if (new Date().getTime() - this.list[0].time < this.MinInterval) {
                 logger.error(`warn日志超速(Interval:${new Date().getTime() - this.list[0].time},Length:${this.list.length}):\n` + JSON.stringify(this.list[0].log))
+                this.list.length = 0
+            } else {
+                this.list.shift();
             }
-            this.list.shift();
         }
     }
 }
@@ -45,7 +47,7 @@ class WarnHandleTransport extends Transport {
             this.emit('logged', info);
         });
         if (info.level == 'warn') {
-            this.queue.push(info);
+            if (info.label != 'EventSender') this.queue.push(info);
         }
         // Perform the writing to the remote service
         callback();
@@ -61,13 +63,9 @@ class MyTimestamp implements TimestampOptions {
 const myFormat = printf(({ level, message, label, timestamp }) => {
     return `${timestamp} [${level}] ${message}`;
 });
-const logger = winston.createLogger({
+
+const loggerConfig = {
     level: 'debug',
-    format: combine(
-        label({ label: 'default' }),
-        timestamp(new MyTimestamp()),
-        myFormat
-    ),
     // defaultMeta: { service: 'user-service' },
     transports: [
         //
@@ -80,12 +78,28 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: 'log/combined.log' }),
         new transports.Console({ format: combine(winston.format.colorize(), timestamp(), myFormat) }),
     ],
-});
+}
+const logger = winston.createLogger(Object.assign(Object.assign({}, loggerConfig), {
+    format: combine(
+        label({ label: 'default' }),
+        timestamp(new MyTimestamp()),
+        myFormat
+    )
+}));
+export const loggerEventSender = winston.createLogger(Object.assign(Object.assign({}, loggerConfig), {
+    format: combine(
+        label({ label: 'EventSender' }),
+        timestamp(new MyTimestamp()),
+        myFormat
+    )
+}));
 
 export function initLogger(collName: string, dbName = 'log') {
-    logger.add(new winston.transports.MongoDB({
+    const mongoTrans = new winston.transports.MongoDB({
         level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), dbName, collection: collName, tryReconnect: true
-    }))
+    })
+    logger.add(mongoTrans)
+    loggerEventSender.add(mongoTrans)
     if (process.env['warn_config']) {
         const warn = process.env['warn_config'].split(',')
         logger.add(new WarnHandleTransport({ interval: Number(warn[0]), length: Number(warn[1]) }))
