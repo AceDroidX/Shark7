@@ -7,23 +7,19 @@
         "start": "node dist/index.js",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
-        "dev": "concurrently -k \"tsc -w\" \"nodemon\"",
+        "dev": "nodemon src/index.ts",
         "build": "tsc",
-        "serve": "tsc&&node dist/index.js"
+        "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "axios": "latest",
         "logform": "latest",
-        "mongodb": "latest",
         "puppeteer": "18.0.5",
         "puppeteer-extra": "^3.3.4",
         "puppeteer-extra-plugin-stealth": "^2.11.1",
         "shark7-weibo": "workspace:",
         "shark7-shared": "workspace:"
     },
-    "devDependencies": {
-        "typescript": "latest"
-    }
+    "devDependencies": {}
 }

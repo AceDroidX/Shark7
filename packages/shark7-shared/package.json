@@ -10,14 +10,12 @@
         "clean": "tsc --build --clean",
         "dev": "tsc -w",
         "build": "tsc",
-        "serve": "tsc&&node dist/index.js"
+        "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "axios": "latest",
         "logform": "latest",
-        "mongodb": "latest",
         "puppeteer": "18.0.5",
         "puppeteer-extra": "^3.3.4",
         "puppeteer-extra-plugin-stealth": "^2.11.1",
@@ -26,7 +24,5 @@
         "winston-mongodb": "latest",
         "winston-transport": "latest"
     },
-    "devDependencies": {
-        "typescript": "latest"
-    }
+    "devDependencies": {}
 }

@@ -7,19 +7,15 @@
         "start": "node dist/index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "tsc --build --clean",
-        "dev": "concurrently -k \"tsc -w\" \"nodemon\"",
+        "dev": "nodemon src/index.ts",
         "build": "tsc",
-        "serve": "tsc&&node dist/index.js"
+        "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "axios": "latest",
-        "mongodb": "latest",
         "shark7-shared": "workspace:",
         "jose": "latest"
     },
-    "devDependencies": {
-        "typescript": "latest"
-    }
+    "devDependencies": {}
 }
