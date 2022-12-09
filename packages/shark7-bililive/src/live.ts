@@ -1,4 +1,4 @@
-import { TCPOptions } from 'bilibili-live-ws'
+import { KeepLiveTCP, TCPOptions } from 'bilibili-live-ws'
 import { Shark7Event } from "shark7-shared"
 import { BiliSimpleUser } from 'shark7-shared/dist/bililive'
 import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
@@ -12,7 +12,7 @@ const BILILIVEPREFIX = 'https://live.bilibili.com'
 
 export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask, roomid: any, marked_uid: number[], marked_Users: BiliUsers, roomid_Users: BiliUsers) {
     const liveconf = await confTask.getConf(roomid) as TCPOptions
-    const live = new KeepLiveTCPWithConf(roomid, confTask, liveconf)
+    const live = process.env['no_conf'] == 'true' ? new KeepLiveTCP(roomid) : new KeepLiveTCPWithConf(roomid, confTask, liveconf)
     // live.on('open', () => logger.info(`<${id}>WebSocket连接上了`))
     live.on('live', () => logger.info(`<${roomid}>成功登入房间`))
     // live.on('heartbeat', (online) => logger.info(`<${id}>当前人气值${online}`))
