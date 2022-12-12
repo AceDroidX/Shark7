@@ -19,9 +19,9 @@ const UserInfoDemo = {
     "charVer": 15219,     //用户数据版本(每次改动加一)
     "charIdx": 0,
     "privacy": "invite",  //群隐私
-    "cdata0": 0,
+    "cdata0": 0,          //Version
     "cdata1": 2147483648,
-    "cdata2": 898565421,
+    "cdata2": 898565421,  //LegendType
     "cdata3": 200518223,  //皮肤
     "cdata4": 2059064253, //边框
     "cdata5": 1649961270, //姿势
@@ -43,7 +43,7 @@ const UserInfoDemo = {
     "cdata21": 2147483648,
     "cdata22": 2147483648,
     "cdata23": 599,       //玩家等级
-    "cdata24": 92,
+    "cdata24": 92,        //AccountProgress
     "cdata25": 2147483648,
     "cdata26": 2147483648,
     "cdata27": 2147483648,
