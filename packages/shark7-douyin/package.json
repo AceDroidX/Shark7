@@ -15,7 +15,7 @@
     "license": "ISC",
     "dependencies": {
         "logform": "latest",
-        "puppeteer": "18.0.5",
+        "puppeteer": "19.6.3",
         "puppeteer-extra": "^3.3.4",
         "puppeteer-extra-plugin-stealth": "^2.11.1",
         "shark7-shared": "workspace:"

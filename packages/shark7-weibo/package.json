@@ -16,7 +16,7 @@
     "license": "ISC",
     "dependencies": {
         "logform": "latest",
-        "puppeteer": "18.0.5",
+        "puppeteer": "19.6.3",
         "shark7-shared": "workspace:"
     },
     "devDependencies": {}
