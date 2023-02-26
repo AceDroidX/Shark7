@@ -3,7 +3,7 @@ name: "Shark7 Docker Build"
 on:
     push:
         branches:
-            - v2
+            - prod
             - dev
     workflow_dispatch:
 
@@ -50,8 +50,8 @@ jobs:
                   file: ./packages/shark7-${{ matrix.package }}/Dockerfile
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
-                  cache-from: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache
-                  cache-to: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache,mode=max
+                #   cache-from: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache
+                #   cache-to: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache,mode=max
     build-docker:
         needs: [changes, build-shared]
         if: always() && (needs.build-shared.result == 'success' || needs.build-shared.result == 'skipped') && needs.changes.outputs.packages != '[]'
@@ -86,5 +86,5 @@ jobs:
                   build-args: IMAGE_TAG=${{ github.ref_name }}
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
-                  cache-from: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache
-                  cache-to: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache,mode=max
+                #   cache-from: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache
+                #   cache-to: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache,mode=max
