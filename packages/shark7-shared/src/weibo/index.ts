@@ -101,3 +101,5 @@ export type OnlineData = UpdateTypeDoc & {
 
 import { WeiboComment, WeiboCommentApi } from './comment'
 export { WeiboComment, WeiboCommentApi }
+
+export * from './nats'

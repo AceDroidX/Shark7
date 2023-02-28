@@ -66,4 +66,14 @@ export class Web implements IWeb {
     async refresh() {
         throw new Error("Method not implemented.");
     }
+    async refreshTask() {
+        const r = await Promise.race([
+            this.refresh(),
+            new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
+        ]);
+        if (r == 'timeout') {
+            logger.error(`刷新cookie超时`);
+            process.exit(1);
+        }
+    }
 }

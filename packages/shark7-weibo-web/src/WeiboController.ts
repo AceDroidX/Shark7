@@ -1,4 +1,3 @@
-import logger from "shark7-shared/dist/logger";
 import { Puppeteer } from "shark7-shared/dist/Puppeteer";
 import { Web } from "shark7-shared/dist/Puppeteer/Web";
 import { Scheduler } from 'shark7-shared/dist/scheduler';
@@ -27,15 +26,6 @@ export class WeiboController {
     public async run() {
         let interval = process.env['interval'] ? Number(process.env['interval']) : 1800
         const scheduler = new Scheduler()
-        scheduler.addJob('refreshCookie', interval, async () => {
-            const r = await Promise.race([
-                this.weiboWeb.refresh(),
-                new Promise(resolve => setTimeout(resolve, 120 * 1000, 'timeout'))
-            ]);
-            if (r == 'timeout') {
-                logger.error(`刷新cookie超时`);
-                process.exit(1);
-            }
-        })
+        scheduler.addJob('refreshCookie', interval, () => this.weiboWeb.refreshTask())
     }
 }

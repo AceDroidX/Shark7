@@ -1,6 +1,9 @@
+export * from './weibo'
+
 export type Shark7Event = {
     ts: number
     name: string
+    from?: string
     scope: string
     msg: string
 }

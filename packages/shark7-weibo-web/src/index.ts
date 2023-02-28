@@ -5,6 +5,7 @@ import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { MongoController } from './MongoController';
+import { natsMain } from './nats';
 import { WeiboController } from './WeiboController';
 
 process.on('uncaughtException', function (err) {
@@ -29,5 +30,6 @@ async function main() {
     initLogger('weibo-web')
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
     const weibo_Controller = await WeiboController.init(mongo.ctr)
-    weibo_Controller.run()
+    await weibo_Controller.run()
+    await natsMain(weibo_Controller)
 }

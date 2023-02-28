@@ -8,6 +8,9 @@ shark7-weibo-app:
 
 todo:  
 
+- shared:
+  - [ ] 数据预处理接口
+  - [ ] 新Shark7Event规范
 - bilibili:
   - [x] 视频动态无desc的处理  
   - [ ] 评论
@@ -29,3 +32,6 @@ todo:
   - [x] warn超速详细设置
   - [ ] 时间语义解析
   - [ ] Shark7-Android
+  - [ ] target ES2020
+  - [ ] NATS消息处理
+  - [ ] 优化包导出路径

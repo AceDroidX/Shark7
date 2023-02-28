@@ -1,11 +1,13 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
+import EventEmitter from 'events';
 import { WeiboDBs } from 'shark7-shared/dist/database';
 import { MongoControlClient } from 'shark7-shared/dist/db';
 import logger, { initLogger } from 'shark7-shared/dist/logger';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { MongoController } from './MongoController';
+import { Nats } from './nats';
 import { WeiboController } from './WeiboController';
 
 process.on('uncaughtException', function (err) {
@@ -40,6 +42,8 @@ async function main() {
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
-    const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr)
-    weibo_Controller.run()
+    const eventEmitter = new EventEmitter();
+    const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr, eventEmitter)
+    await weibo_Controller.run()
+    const nats = await Nats.init(eventEmitter)
 }

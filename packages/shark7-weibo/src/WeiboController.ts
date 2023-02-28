@@ -1,3 +1,4 @@
+import EventEmitter from "events";
 import logger from "shark7-shared/dist/logger";
 import { Scheduler } from 'shark7-shared/dist/scheduler';
 import { logErrorDetail, logWarn } from "shark7-shared/dist/utils";
@@ -18,11 +19,11 @@ export class WeiboController {
         this.user = user;
         this.mongo = mongo;
     }
-    static async init(uid: number[], mongo: MongoController) {
+    static async init(uid: number[], mongo: MongoController, eventEmitter: EventEmitter) {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const wbUserCtl = new WeiboUserCtl(new WeiboHTTP(mongo))
+        const wbUserCtl = new WeiboUserCtl(new WeiboHTTP(mongo), eventEmitter)
         const weiboUser = await Promise.all(uid.map(id => wbUserCtl.getFromID(id)))
         this.wc = new WeiboController(wbUserCtl, weiboUser, mongo)
         return this.wc;
