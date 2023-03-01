@@ -35,3 +35,4 @@ todo:
   - [ ] target ES2020
   - [ ] NATS消息处理
   - [ ] 优化包导出路径
+  - [ ] esbuild

@@ -1,6 +1,6 @@
 import axios from "axios"
-import logger from "shark7-shared/dist/logger"
-import { cookieJsonToStr, logErrorDetail } from "shark7-shared/dist/utils"
+import { logger } from "shark7-shared"
+import { cookieJsonToStr, logErrorDetail } from "shark7-shared"
 import { MongoController } from "../MongoController"
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36'
 

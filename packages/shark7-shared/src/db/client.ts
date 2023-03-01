@@ -2,7 +2,7 @@ import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, Db,
 import { getDBInstance } from ".";
 import { Shark7Event, UpdateTypeDoc } from "..";
 import { EventDBs } from "../database";
-import logger from "../logger";
+import { logger } from "../logger";
 import { logErrorDetail } from "../utils";
 
 export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {

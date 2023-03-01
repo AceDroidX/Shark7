@@ -1,5 +1,5 @@
-import logger from "shark7-shared/dist/logger";
-import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo'
+import { logger } from "shark7-shared";
+import { WeiboUser, WeiboMsg } from 'shark7-shared'
 import { WeiboHTTP } from "./WeiboHTTP";
 import { MongoController } from "../MongoController";
 import { WeiboNATSEventName } from "shark7-shared";

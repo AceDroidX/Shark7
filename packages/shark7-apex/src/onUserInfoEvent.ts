@@ -1,7 +1,7 @@
 import { ChangeStreamUpdateDocument } from "mongodb";
 import { Shark7Event } from "shark7-shared";
-import { Scope } from "shark7-shared/dist/scope";
-import logger from "shark7-shared/dist/logger";
+import { Scope } from "shark7-shared";
+import { logger } from "shark7-shared";
 import {
     getBadgeName,
     getFrameName,

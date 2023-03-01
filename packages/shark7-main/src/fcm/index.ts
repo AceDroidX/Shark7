@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 import * as jose from 'jose'
 import { Shark7Event } from 'shark7-shared'
-import { loggerEventSender } from 'shark7-shared/dist/logger'
-import { getScopeName } from 'shark7-shared/dist/scope'
-import { logErrorDetail } from 'shark7-shared/dist/utils'
+import { loggerEventSender } from 'shark7-shared'
+import { getScopeName } from 'shark7-shared'
+import { logErrorDetail } from 'shark7-shared'
 import { AndroidMessagePriority, Message, Notification, Shark7FcmData, Shark7FcmOptions } from './model'
 
 const fcm_oauth_host = process.env['fcm_oauth_host'] ? process.env['fcm_oauth_host'] : "https://oauth2.googleapis.com"

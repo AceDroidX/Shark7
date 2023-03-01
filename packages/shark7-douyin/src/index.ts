@@ -1,12 +1,12 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { DouyinDBs } from 'shark7-shared/dist/database';
-import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { initLogger } from 'shark7-shared/dist/logger';
-import { Puppeteer } from 'shark7-shared/dist/Puppeteer';
-import { Scheduler } from 'shark7-shared/dist/scheduler';
-import { logErrorDetail } from 'shark7-shared/dist/utils';
+import { DouyinDBs } from 'shark7-shared';
+import { MongoControlClient } from 'shark7-shared';
+import { logger, initLogger } from 'shark7-shared';
+import { Puppeteer } from 'shark7-shared';
+import { Scheduler } from 'shark7-shared';
+import { logErrorDetail } from 'shark7-shared';
 import { DouyinWeb } from './DouyinWeb';
 import { onUserDBEvent } from "./event";
 import { MongoController } from './MongoController';

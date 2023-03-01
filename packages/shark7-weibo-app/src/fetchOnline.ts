@@ -1,6 +1,4 @@
-import logger from 'shark7-shared/dist/logger';
-import { logErrorDetail } from 'shark7-shared/dist/utils';
-import { OnlineData } from 'shark7-shared/dist/weibo';
+import { logErrorDetail, logger, OnlineData } from 'shark7-shared';
 import { WeiboCard, WeiboOnlineIdConfig } from "./model";
 import { MongoController } from './MongoController';
 import { fetchURL, getReqConfig } from './utils';

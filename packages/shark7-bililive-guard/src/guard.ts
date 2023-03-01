@@ -1,12 +1,12 @@
 import axios from "axios"
 import { ChangeStreamUpdateDocument } from "mongodb"
 import { Shark7Event } from "shark7-shared"
-import { BiliApi } from "shark7-shared/dist/bilibili"
-import { BiliGuardApi, BiliGuardApiList, BiliGuardOnline, BiliGuardState, BiliSimpleUser } from "shark7-shared/dist/bililive"
-import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
-import logger from "shark7-shared/dist/logger"
-import { Scope } from "shark7-shared/dist/scope"
-import { logErrorDetail } from "shark7-shared/dist/utils"
+import { BiliApi } from "shark7-shared"
+import { BiliGuardApi, BiliGuardApiList, BiliGuardOnline, BiliGuardState, BiliSimpleUser } from "shark7-shared"
+import { BiliUsers } from "shark7-shared/BiliUsers"
+import { logger } from "shark7-shared"
+import { Scope } from "shark7-shared"
+import { logErrorDetail } from "shark7-shared"
 import { MongoController } from "./MongoController"
 
 const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.4'

@@ -1,8 +1,8 @@
 import EventEmitter from "events";
-import logger from "shark7-shared/dist/logger";
-import { Scheduler } from 'shark7-shared/dist/scheduler';
-import { logErrorDetail, logWarn } from "shark7-shared/dist/utils";
-import { WeiboMsg, WeiboUser } from 'shark7-shared/dist/weibo';
+import { logger } from "shark7-shared";
+import { Scheduler } from 'shark7-shared';
+import { logErrorDetail, logWarn } from "shark7-shared";
+import { WeiboMsg, WeiboUser } from 'shark7-shared';
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { WeiboUserCtl } from "./model/WeiboUserCtl";
 import { MongoController } from "./MongoController";

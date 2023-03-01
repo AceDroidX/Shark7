@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
 import { Protocol } from "puppeteer"
-import logger from "shark7-shared/dist/logger"
-import { logAxiosError, logErrorDetail } from "shark7-shared/dist/utils"
+import { logger } from "shark7-shared"
+import { logAxiosError, logErrorDetail } from "shark7-shared"
 import { MongoController } from "./MongoController"
 
 export function getReqConfig(mongo: MongoController, containerid: string): AxiosRequestConfig | undefined {

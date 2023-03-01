@@ -1,11 +1,11 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { WeiboDBs } from 'shark7-shared/dist/database';
-import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { initLogger } from 'shark7-shared/dist/logger';
-import { Scheduler } from 'shark7-shared/dist/scheduler';
-import { logErrorDetail } from 'shark7-shared/dist/utils';
+import { WeiboDBs } from 'shark7-shared';
+import { MongoControlClient } from 'shark7-shared';
+import { logger, initLogger } from 'shark7-shared';
+import { Scheduler } from 'shark7-shared';
+import { logErrorDetail } from 'shark7-shared';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
 import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';

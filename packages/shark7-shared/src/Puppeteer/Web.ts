@@ -1,5 +1,5 @@
 import { Browser, Protocol } from "puppeteer";
-import logger from "../logger";
+import { logger } from "../logger";
 
 interface IWeb {
     name: string;

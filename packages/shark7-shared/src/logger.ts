@@ -79,7 +79,7 @@ const loggerConfig = {
         new transports.Console({ format: combine(winston.format.colorize(), timestamp(), myFormat) }),
     ],
 }
-const logger = winston.createLogger(Object.assign(Object.assign({}, loggerConfig), {
+export const logger = winston.createLogger(Object.assign(Object.assign({}, loggerConfig), {
     format: combine(
         label({ label: 'default' }),
         timestamp(new MyTimestamp()),
@@ -106,7 +106,6 @@ export function initLogger(collName: string, dbName = 'log') {
     }
     else logger.add(new WarnHandleTransport())
 }
-export default logger
 
 //
 // If we're not in production then log to the `console` with the format:

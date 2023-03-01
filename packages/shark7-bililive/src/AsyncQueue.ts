@@ -1,4 +1,4 @@
-import logger from "shark7-shared/dist/logger";
+import { logger } from "shark7-shared";
 
 // https://www.kohai.top/article/design-a-async-queue-base-js
 export class AsyncQueue {

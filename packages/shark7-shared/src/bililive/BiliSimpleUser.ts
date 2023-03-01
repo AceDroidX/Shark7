@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BiliApi, BiliUser } from "../bilibili";
-import logger from "../logger";
+import { logger } from "../logger";
 import { logErrorDetail } from "../utils";
 import { BiliRoomInfo } from "./BiliRoomInfo";
 const UID_info_prefix = 'https://api.bilibili.com/x/space/acc/info?mid='

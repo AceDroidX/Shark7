@@ -1,8 +1,8 @@
 import { ChangeStreamUpdateDocument } from "mongodb";
 import { Shark7Event } from "shark7-shared";
-import logger from "shark7-shared/dist/logger";
-import { Scope } from 'shark7-shared/dist/scope';
-import { flattenObj } from "shark7-shared/dist/utils";
+import { logger } from "shark7-shared";
+import { Scope } from 'shark7-shared';
+import { flattenObj } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
 export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<DouyinUser>, origin?: DouyinUser): Promise<Shark7Event | null> {

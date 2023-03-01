@@ -1,7 +1,7 @@
 import { ChangeStreamDocument, ChangeStreamInsertDocument } from "mongodb";
 import { LogEvent, Shark7Event } from "shark7-shared";
-import logger from "shark7-shared/dist/logger";
-import { logLevelToScope } from 'shark7-shared/dist/scope';
+import { logger } from "shark7-shared";
+import { logLevelToScope } from 'shark7-shared';
 import { FcmClient } from "./fcm";
 import { sendMsgToFcmByScope, sendMsgToKHLByScope } from "./sendMsg";
 

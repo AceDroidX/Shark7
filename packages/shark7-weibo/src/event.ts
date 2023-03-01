@@ -1,8 +1,8 @@
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
-import { WeiboUser, WeiboMsg, WeiboComment } from 'shark7-shared/dist/weibo'
+import { WeiboUser, WeiboMsg, WeiboComment } from 'shark7-shared'
 import { Shark7Event } from "shark7-shared"
-import { Scope } from 'shark7-shared/dist/scope'
-import logger from "shark7-shared/dist/logger"
+import { Scope } from 'shark7-shared'
+import { logger } from "shark7-shared"
 import { MongoController } from "./MongoController"
 import { fetchComments } from './comment'
 

@@ -1,5 +1,5 @@
-import logger from "shark7-shared/dist/logger"
-import { Web } from 'shark7-shared/dist/Puppeteer/Web'
+import { logger } from "shark7-shared"
+import { Web } from 'shark7-shared'
 import { MongoController } from "./MongoController"
 import { Browser } from "puppeteer"
 

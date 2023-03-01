@@ -1,10 +1,10 @@
 import { ChangeStreamUpdateDocument } from "mongodb";
 import { user_detail } from 'NeteaseCloudMusicApi';
 import { Shark7Event } from "shark7-shared";
-import logger from "shark7-shared/dist/logger";
-import { NeteaseMusicUser } from "shark7-shared/dist/netease-music";
-import { Scope } from 'shark7-shared/dist/scope';
-import { flattenObj, logErrorDetail } from "shark7-shared/dist/utils";
+import { logger } from "shark7-shared";
+import { NeteaseMusicUser } from "shark7-shared";
+import { Scope } from 'shark7-shared';
+import { flattenObj, logErrorDetail } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
 export async function fetchUser(user_id: number): Promise<NeteaseMusicUser | null> {

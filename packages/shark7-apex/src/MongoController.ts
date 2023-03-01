@@ -1,6 +1,6 @@
-import { ApexUserInfo } from "shark7-shared/dist/apex";
-import { ApexDBs } from "shark7-shared/dist/database";
-import { MongoControllerBase } from 'shark7-shared/dist/db';
+import { ApexUserInfo } from "shark7-shared";
+import { ApexDBs } from "shark7-shared";
+import { MongoControllerBase } from 'shark7-shared';
 
 export {
     MongoController

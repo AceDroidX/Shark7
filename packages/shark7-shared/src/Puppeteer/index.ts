@@ -4,8 +4,10 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { EventDBs } from '../database';
 import { MongoControllerBase } from "../db/client";
-import logger from '../logger';
+import { logger } from '../logger';
 import { Web } from './Web';
+
+export * from './Web'
 
 export class Puppeteer<T extends Web> {
     browser: Browser

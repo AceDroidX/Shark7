@@ -1,6 +1,6 @@
-import logger from 'shark7-shared/dist/logger';
-import { WeiboComment, WeiboCommentApi } from 'shark7-shared/dist/weibo'
-import { WeiboRootComment, WeiboReplyComment } from 'shark7-shared/dist/weibo/comment';
+import logger from 'shark7-shared';
+import { WeiboComment, WeiboCommentApi } from 'shark7-shared'
+import { WeiboRootComment, WeiboReplyComment } from 'shark7-shared/comment';
 import { WeiboHTTP } from './model/WeiboHTTP'
 import { MongoController } from './MongoController';
 

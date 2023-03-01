@@ -2,12 +2,12 @@ if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
 import axios from 'axios';
-import { ApexUserInfo } from "shark7-shared/dist/apex";
-import { ApexDBs } from 'shark7-shared/dist/database';
-import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { initLogger } from 'shark7-shared/dist/logger';
-import { Scheduler } from 'shark7-shared/dist/scheduler';
-import { logErrorDetail, toNumOrStr } from 'shark7-shared/dist/utils';
+import { ApexUserInfo } from "shark7-shared";
+import { ApexDBs } from 'shark7-shared';
+import { MongoControlClient } from 'shark7-shared';
+import { logger, initLogger } from 'shark7-shared';
+import { Scheduler } from 'shark7-shared';
+import { logErrorDetail, toNumOrStr } from 'shark7-shared';
 import { MongoController } from './MongoController';
 import { onUserInfoEvent } from './onUserInfoEvent';
 

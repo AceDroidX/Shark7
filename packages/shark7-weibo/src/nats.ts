@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { connect, JSONCodec, NatsConnection } from "nats";
 import { WeiboNATSEventName, WeiboCookieExpireEvent } from "shark7-shared";
-import logger from "shark7-shared/dist/logger";
+import { logger } from "shark7-shared";
 
 const nats_server = process.env['nats_server'] ?? 'localhost'
 

@@ -1,13 +1,13 @@
 import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, WithId } from "mongodb"
 import { Protocol } from "puppeteer"
 import { Shark7Event } from "shark7-shared"
-import { WeiboDBs } from 'shark7-shared/dist/database'
+import { WeiboDBs } from 'shark7-shared'
 import { DataDBDoc, WeiboDataName } from "shark7-shared/dist/datadb"
-import { MongoControllerBase } from 'shark7-shared/dist/db'
-import logger from "shark7-shared/dist/logger"
-import { Scope } from 'shark7-shared/dist/scope'
-import { getTime } from "shark7-shared/dist/utils"
-import { OnlineData, WeiboMsg } from 'shark7-shared/dist/weibo'
+import { MongoControllerBase } from 'shark7-shared'
+import { logger } from "shark7-shared"
+import { Scope } from 'shark7-shared'
+import { getTime } from "shark7-shared"
+import { OnlineData, WeiboMsg } from 'shark7-shared'
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     cookieCache: Protocol.Network.Cookie[] | undefined

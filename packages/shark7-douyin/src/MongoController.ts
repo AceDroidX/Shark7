@@ -1,5 +1,5 @@
-import { DouyinDBs } from 'shark7-shared/dist/database';
-import { MongoControllerBase } from 'shark7-shared/dist/db';
+import { DouyinDBs } from 'shark7-shared';
+import { MongoControllerBase } from 'shark7-shared';
 
 export class MongoController extends MongoControllerBase<DouyinDBs> {
     async run() {

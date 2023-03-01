@@ -1,4 +1,4 @@
-import { WeiboUser, WeiboMsg } from 'shark7-shared/dist/weibo';
+import { WeiboUser, WeiboMsg } from 'shark7-shared';
 
 
 export type WeiboCard = {

@@ -2,9 +2,9 @@ if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
 import EventEmitter from 'events';
-import { WeiboDBs } from 'shark7-shared/dist/database';
-import { MongoControlClient } from 'shark7-shared/dist/db';
-import logger, { initLogger } from 'shark7-shared/dist/logger';
+import { WeiboDBs } from 'shark7-shared';
+import { MongoControlClient } from 'shark7-shared';
+import { logger, initLogger } from 'shark7-shared';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { MongoController } from './MongoController';
 import { Nats } from './nats';

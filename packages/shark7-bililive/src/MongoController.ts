@@ -1,5 +1,5 @@
-import { BiliLiveDBs } from "shark7-shared/dist/database";
-import { MongoControllerBase } from 'shark7-shared/dist/db';
+import { BiliLiveDBs } from "shark7-shared";
+import { MongoControllerBase } from 'shark7-shared';
 
 export {
     MongoController

@@ -1,6 +1,6 @@
-import { Puppeteer } from "shark7-shared/dist/Puppeteer";
-import { Web } from "shark7-shared/dist/Puppeteer/Web";
-import { Scheduler } from 'shark7-shared/dist/scheduler';
+import { Puppeteer } from "shark7-shared";
+import { Web } from "shark7-shared";
+import { Scheduler } from 'shark7-shared';
 import { MongoController } from "./MongoController";
 import { WeiboWeb } from './WeiboWeb';
 

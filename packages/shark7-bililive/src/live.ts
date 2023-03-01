@@ -1,9 +1,9 @@
 import { KeepLiveTCP, TCPOptions } from 'bilibili-live-ws'
 import { Shark7Event } from "shark7-shared"
-import { BiliSimpleUser } from 'shark7-shared/dist/bililive'
-import { BiliUsers } from "shark7-shared/dist/bililive/BiliUsers"
-import logger from "shark7-shared/dist/logger"
-import { Scope } from "shark7-shared/dist/scope"
+import { BiliSimpleUser } from 'shark7-shared'
+import { BiliUsers } from "shark7-shared/BiliUsers"
+import { logger } from "shark7-shared"
+import { Scope } from "shark7-shared"
 import { GetConfTask } from "./GetConfTask"
 import { KeepLiveTCPWithConf } from './KeepLiveTCPWithConf'
 import { MongoController } from "./MongoController"
