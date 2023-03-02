@@ -1,15 +1,13 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { WeiboDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { Scheduler } from 'shark7-shared';
-import { logErrorDetail } from 'shark7-shared';
+import EventEmitter from 'events';
+import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboDBs } from 'shark7-shared';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
 import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
 import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
+import { WeiboCookieMgr } from './WeiboCookieMgr';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -47,15 +45,16 @@ async function main() {
     }
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, onNewOnlineData)
-    await mongo.ctr.run()
-    if (!await getLike(mongo.ctr, like_id_config[0]) || !await getOnline(mongo.ctr, online_id_config[0])) {
+    const nc = await Nats.connect();
+    const wcm = await WeiboCookieMgr.init(nc)
+    if (!await getLike(wcm.cookie, like_id_config[0]) || !await getOnline(wcm.cookie, online_id_config[0])) {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
     let interval = process.env['interval'] ? Number(process.env['interval']) : 10
     const scheduler = new Scheduler()
-    scheduler.addJob('fetchLike', interval, () => { like_id_config.forEach(config => fetchLike(mongo.ctr, config)) })
-    scheduler.addJob('fetchOnline', interval, () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, config)) })
+    scheduler.addJob('fetchLike', interval, () => { like_id_config.forEach(config => fetchLike(mongo.ctr, wcm.cookie, config)) })
+    scheduler.addJob('fetchOnline', interval, () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, wcm.cookie, config)) })
     logger.info('weibo-app模块已启动')
 }
 

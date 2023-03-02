@@ -1,23 +1,17 @@
 import axios, { AxiosRequestConfig } from "axios"
 import { Protocol } from "puppeteer"
-import { logger } from "shark7-shared"
-import { logAxiosError, logErrorDetail } from "shark7-shared"
-import { MongoController } from "./MongoController"
+import { logErrorDetail, logger } from "shark7-shared"
 
-export function getReqConfig(mongo: MongoController, containerid: string): AxiosRequestConfig | undefined {
-    if (!mongo.cookieCache) {
-        logger.error('cookieCache为空')
-        return
-    }
+export function getReqConfig(cookie: Protocol.Network.Cookie[], containerid: string): AxiosRequestConfig | undefined {
     return {
         params: {
             c: 'android', lang: 'zh_CN',
             page: '1', count: '20',
             from: process.env['weibo_from'], s: process.env['weibo_s'], containerid: containerid,
-            gsid: getCookieByKey(mongo.cookieCache, 'SUB')
+            gsid: getCookieByKey(cookie, 'SUB')
         },
         headers: {
-            authorization: `WB-SUT ${getCookieByKey(mongo.cookieCache, 'SUB')}`
+            authorization: `WB-SUT ${getCookieByKey(cookie, 'SUB')}`
         },
         transformResponse: (r) => r,
     }

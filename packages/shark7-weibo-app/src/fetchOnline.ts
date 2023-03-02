@@ -1,24 +1,21 @@
+import { Protocol } from 'puppeteer';
 import { logErrorDetail, logger, OnlineData } from 'shark7-shared';
 import { WeiboCard, WeiboOnlineIdConfig } from "./model";
 import { MongoController } from './MongoController';
 import { fetchURL, getReqConfig } from './utils';
 
-export async function getOnline(mongo: MongoController, config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
-    if (!mongo.cookieCache) {
-        logger.error('cookieCache为空');
-        return null
-    }
+export async function getOnline(cookie: Protocol.Network.Cookie[], config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.online_cid
-    const reqConfig = getReqConfig(mongo, cid);
+    const reqConfig = getReqConfig(cookie, cid);
     const data = await fetchURL('https://api.weibo.cn/2/page', reqConfig);
     if (!data) return null
     return data.cards
 }
 
-export async function fetchOnline(mongo: MongoController, config: WeiboOnlineIdConfig): Promise<boolean> {
+export async function fetchOnline(mongo: MongoController, cookie: Protocol.Network.Cookie[], config: WeiboOnlineIdConfig): Promise<boolean> {
     logger.debug('开始抓取在线状态');
     const weibo_id = config.id
-    const cards = await getOnline(mongo, config)
+    const cards = await getOnline(cookie, config)
     if (!cards) return false
     cards.forEach(async (card: WeiboCard) => {
         try {

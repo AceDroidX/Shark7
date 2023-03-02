@@ -9,6 +9,8 @@ import { MongoController } from './MongoController';
 import { Nats } from './nats';
 import { WeiboController } from './WeiboController';
 
+export * from './nats'
+
 process.on('uncaughtException', function (err) {
     //打印出错误
     if (err.name == 'WeiboError') {
