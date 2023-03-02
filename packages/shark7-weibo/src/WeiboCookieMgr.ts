@@ -1,4 +1,4 @@
-import { JSONCodec, NatsConnection } from "nats";
+import { ErrorCode, JSONCodec, NatsConnection } from "nats";
 import { Protocol } from "puppeteer";
 import { logger, WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "shark7-shared";
 
@@ -17,8 +17,22 @@ export class WeiboCookieMgr {
         logger.info(`requestCookie`)
         const jc = JSONCodec<WeiboCookieRequest>();
         const request = jc.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime() });
-        const respond = await nc.request(WeiboNATSSubscribeName.Cookie, request, { timeout: 1000 })
-        return JSONCodec<WeiboCookieRespond>().decode(respond.data)
+        try {
+            const respond = await nc.request(WeiboNATSSubscribeName.Cookie, request, { timeout: 1000 })
+            return JSONCodec<WeiboCookieRespond>().decode(respond.data)
+        } catch (err: any) {
+            switch (err.code) {
+                case ErrorCode.NoResponders:
+                    logger.error("requestCookie ErrorCode.NoResponders");
+                    break;
+                case ErrorCode.Timeout:
+                    logger.error("requestCookie ErrorCode.Timeout");
+                    break;
+                default:
+                    logger.error("requestCookie" + JSON.stringify(err));
+            }
+            process.exit(1)
+        }
     }
     sendWeiboCookieExpireEvent() {
         logger.info(`sendWeiboCookieExpireEvent`)

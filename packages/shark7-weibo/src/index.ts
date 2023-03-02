@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { initLogger, logger, MongoControlClient, Nats, WeiboDBs } from 'shark7-shared';
+import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboDBs } from 'shark7-shared';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { WeiboHTTP } from './model/WeiboHTTP';
 import { MongoController } from './MongoController';
@@ -14,6 +14,8 @@ process.on('uncaughtException', function (err) {
     //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
+    } else {
+        logErrorDetail('未捕获的错误', err)
         process.exit(1);
     }
 });

@@ -55,9 +55,9 @@ export class Nats {
                 continue
             }
             if (m.respond(jcRespond.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime(), cookie: this.weiboWeb.cookie }))) {
-                logger.info(`[respondCookieTask] #${sub.getProcessed()}: ${jcRequest.decode(m.data)} handled`);
+                logger.info(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(jcRequest.decode(m.data))} handled`);
             } else {
-                logger.debug(`[respondCookieTask] #${sub.getProcessed()}: ${jcRequest.decode(m.data)} ignored - no reply subject`);
+                logger.debug(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(jcRequest.decode(m.data))} ignored - no reply subject`);
             }
         }
     }
