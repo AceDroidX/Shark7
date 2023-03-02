@@ -41,8 +41,8 @@ export class Puppeteer<T extends Web> {
             headless: true
         })
     }
-    static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>;
-    static async getInstance<W extends Web, D extends EventDBs, M extends MongoControllerBase<D>>(mongo: M, webfunc: { new(browser: Browser, mongo: M): W }): Promise<Puppeteer<W>> {
+    static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>
+    static async getInstance<W extends Web, D extends EventDBs, M extends MongoControllerBase<D>>(webfunc: { new(browser: Browser, mongo: M): W }, mongo: M): Promise<Puppeteer<W>> {
         const browser = await this.getBrowser()
         const web = new webfunc(browser, mongo)
         return new this(browser, web)

@@ -66,7 +66,7 @@ importers:
       jose: latest
       shark7-shared: 'workspace:'
     dependencies:
-      jose: 4.12.0
+      jose: 4.13.0
       shark7-shared: link:../shark7-shared
 
   packages/shark7-netease-music:
@@ -80,6 +80,7 @@ importers:
   packages/shark7-shared:
     specifiers:
       logform: latest
+      nats: latest
       puppeteer: 19.6.3
       puppeteer-extra: ^3.3.4
       puppeteer-extra-plugin-stealth: ^2.11.1
@@ -89,6 +90,7 @@ importers:
       winston-transport: latest
     dependencies:
       logform: 2.5.1
+      nats: 2.12.1
       puppeteer: 19.6.3
       puppeteer-extra: 3.3.4_puppeteer@19.6.3
       puppeteer-extra-plugin-stealth: 2.11.1_puppeteer-extra@3.3.4
@@ -1793,8 +1795,8 @@ packages:
       ws: 8.11.0
     dev: false
 
-  /jose/4.12.0:
-    resolution: {integrity: sha512-wW1u3cK81b+SFcHjGC8zw87yuyUweEFe0UJirrXEw1NasW00eF7sZjeG3SLBGz001ozxQ46Y9sofDvhBmWFtXQ==}
+  /jose/4.13.0:
+    resolution: {integrity: sha512-v6BN7fuPVfG9XIxcPT2jzyAg5EmA/mtNeJEXJ7d31Wz7fFOqOZeN8mPtNJYQmnuAIxJII7EcURcbZ7qXs9a4kA==}
     dev: false
 
   /js-tokens/4.0.0:

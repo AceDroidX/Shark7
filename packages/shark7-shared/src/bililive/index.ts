@@ -3,6 +3,8 @@ import { BiliSimpleUser } from "./BiliSimpleUser"
 
 export { BiliSimpleUser }
 
+export * from './BiliUsers'
+
 export enum BiliGuardOnline {
     OFFLINE = 0,
     ONLINE = 1,

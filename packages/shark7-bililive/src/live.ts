@@ -1,7 +1,7 @@
 import { KeepLiveTCP, TCPOptions } from 'bilibili-live-ws'
 import { Shark7Event } from "shark7-shared"
 import { BiliSimpleUser } from 'shark7-shared'
-import { BiliUsers } from "shark7-shared/BiliUsers"
+import { BiliUsers } from "shark7-shared"
 import { logger } from "shark7-shared"
 import { Scope } from "shark7-shared"
 import { GetConfTask } from "./GetConfTask"

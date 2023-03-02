@@ -40,7 +40,7 @@ async function main() {
     }
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
-    const puppeteerClient = await Puppeteer.getInstance(mongo.ctr, DouyinWeb)
+    const puppeteerClient = await Puppeteer.getInstance(DouyinWeb, mongo.ctr)
     await fetchUserInfo(puppeteerClient)
 
     let interval = process.env['interval'] ? Number(process.env['interval']) : 60
