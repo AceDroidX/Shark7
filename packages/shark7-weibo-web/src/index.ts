@@ -1,12 +1,9 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { WeiboDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { natsMain } from './nats';
-import { WeiboController } from './WeiboController';
+import { initLogger, logger, Puppeteer } from 'shark7-shared';
+import { Nats } from './nats';
+import { WeiboWeb } from './WeiboWeb';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -25,11 +22,9 @@ if (require.main === module) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
-
     initLogger('weibo-web')
-    // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
-    const weibo_Controller = await WeiboController.init(mongo.ctr)
-    await weibo_Controller.run()
-    await natsMain(weibo_Controller)
+    const nats = await Nats.connect()
+    const weiboWeb = (await Puppeteer.getInstance(WeiboWeb, nats)).web
+    nats.init(weiboWeb)
+    await weiboWeb.refresh()
 }

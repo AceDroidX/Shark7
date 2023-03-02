@@ -1,23 +1,20 @@
-import axios from "axios"
-import { logger } from "shark7-shared"
-import { cookieJsonToStr, logErrorDetail } from "shark7-shared"
-import { MongoController } from "../MongoController"
+import axios from "axios";
+import EventEmitter from "events";
+import { Protocol } from "puppeteer";
+import { cookieJsonToStr, logErrorDetail, logger, WeiboNATSSubscribeName } from "shark7-shared";
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36'
 
 export class WeiboHTTP {
-    mongo: MongoController
-
-    constructor(mongo: MongoController) {
-        this.mongo = mongo
+    eventEmitter: EventEmitter
+    cookieCache: Protocol.Network.Cookie[]
+    constructor(eventEmitter: EventEmitter, cookieCache: Protocol.Network.Cookie[]) {
+        this.eventEmitter = eventEmitter
+        this.cookieCache = cookieCache
+        this.eventEmitter.on(WeiboNATSSubscribeName.CookieUpdate, (cookie) => this.cookieCache = cookie)
     }
-
     async getURL<T = any>(url: string) {
         try {
-            if (this.mongo.cookieCache == undefined) {
-                logger.error("WeiboHTTP.getURL: cookieCache is undefined")
-                process.exit(1)
-            }
-            return await axios.get<T>(url, { headers: { 'User-Agent': UA, 'cookie': cookieJsonToStr(this.mongo.cookieCache) } })
+            return await axios.get<T>(url, { headers: { 'User-Agent': UA, 'cookie': cookieJsonToStr(this.cookieCache) } })
         }
         catch (err) {
             if (axios.isAxiosError(err)) {

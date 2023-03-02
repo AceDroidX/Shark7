@@ -1,6 +1,9 @@
 import url from 'url'
 import { InsertTypeDoc, UpdateTypeDoc } from '..';
 
+export * from './comment'
+export * from './nats'
+
 export class WeiboUser implements UpdateTypeDoc {
     shark7_id: string
 
@@ -98,8 +101,3 @@ export type OnlineData = UpdateTypeDoc & {
     desc1: string
     online: boolean
 }
-
-import { WeiboComment, WeiboCommentApi } from './comment'
-export { WeiboComment, WeiboCommentApi }
-
-export * from './nats'

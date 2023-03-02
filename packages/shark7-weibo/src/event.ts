@@ -5,6 +5,7 @@ import { Scope } from 'shark7-shared'
 import { logger } from "shark7-shared"
 import { MongoController } from "./MongoController"
 import { fetchComments } from './comment'
+import { WeiboHTTP } from "./model/WeiboHTTP"
 
 export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const nmb = event.fullDocument
@@ -40,12 +41,16 @@ export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInse
     return shark7event
 }
 
-export async function onMblogUpdate(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboMsg>): Promise<Shark7Event | null> {
+export async function onMblogUpdate(ctr: MongoController, event: ChangeStreamUpdateDocument<WeiboMsg>, wbhttp?: WeiboHTTP): Promise<Shark7Event | null> {
     if (!event.fullDocument) {
         logger.error('onMblogUpdate !event.fullDocument')
         return null
     }
-    await fetchComments(ctr, event.fullDocument.id, event.fullDocument._userid)
+    if (!wbhttp) {
+        logger.error('onMblogUpdate !wbhttp')
+        return null
+    }
+    await fetchComments(ctr, wbhttp, event.fullDocument.id, event.fullDocument._userid)
     return null
 }
 

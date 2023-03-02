@@ -40,9 +40,10 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     async addShark7Event(event: Shark7Event) {
         await this.ctr.addShark7Event(event);
     }
-    addInsertChangeWatcher<T extends Document>(db: Collection<T>,
-        onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>): Promise<Shark7Event | null>; },
-        onUpdate?: { (ctr: C, event: ChangeStreamUpdateDocument<T>): Promise<Shark7Event | null>; }
+    addInsertChangeWatcher<T extends Document, E>(db: Collection<T>,
+        onInsert: { (ctr: C, event: ChangeStreamInsertDocument<T>, extra?: E): Promise<Shark7Event | null>; },
+        onUpdate?: { (ctr: C, event: ChangeStreamUpdateDocument<T>, extra?: E): Promise<Shark7Event | null>; },
+        extra?: E
     ) {
         logger.info(`添加InsertChangeWatcher db:${db.dbName}.${db.collectionName} onInsert:${onInsert.name} onUpdate:${onUpdate?.name}`)
         const changeStream = db.watch([], { fullDocument: 'updateLookup' })
@@ -54,7 +55,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         changeStream.on('error', (event: any) => { logger.warn(`changeStream.error: ${JSON.stringify(event)}`) })
         changeStream.on('change', async (event) => {
             if (event.operationType == 'insert') {
-                const result = await onInsert(this.ctr, event);
+                const result = extra ? await onInsert(this.ctr, event, extra) : await onInsert(this.ctr, event)
                 if (result)
                     await this.addShark7Event(result);
             } else if (event.operationType == 'update') {
@@ -64,7 +65,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
                 }
                 if (isrealchange) {
                     if (onUpdate) {
-                        const result = await onUpdate(this.ctr, event);
+                        const result = extra ? await onUpdate(this.ctr, event, extra) : await onUpdate(this.ctr, event)
                         if (result)
                             await this.addShark7Event(result);
                     }

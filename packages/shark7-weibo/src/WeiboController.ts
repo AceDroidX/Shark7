@@ -1,8 +1,5 @@
 import EventEmitter from "events";
-import { logger } from "shark7-shared";
-import { Scheduler } from 'shark7-shared';
-import { logErrorDetail, logWarn } from "shark7-shared";
-import { WeiboMsg, WeiboUser } from 'shark7-shared';
+import { logErrorDetail, logger, logWarn, Scheduler, WeiboMsg, WeiboUser } from "shark7-shared";
 import { WeiboHTTP } from "./model/WeiboHTTP";
 import { WeiboUserCtl } from "./model/WeiboUserCtl";
 import { MongoController } from "./MongoController";
@@ -19,11 +16,11 @@ export class WeiboController {
         this.user = user;
         this.mongo = mongo;
     }
-    static async init(uid: number[], mongo: MongoController, eventEmitter: EventEmitter) {
+    static async init(uid: number[], mongo: MongoController, eventEmitter: EventEmitter, wbhttp: WeiboHTTP) {
         if (this.wc != undefined) {
             return this.wc;
         }
-        const wbUserCtl = new WeiboUserCtl(new WeiboHTTP(mongo), eventEmitter)
+        const wbUserCtl = new WeiboUserCtl(wbhttp, eventEmitter)
         const weiboUser = await Promise.all(uid.map(id => wbUserCtl.getFromID(id)))
         this.wc = new WeiboController(wbUserCtl, weiboUser, mongo)
         return this.wc;

@@ -1,20 +1,18 @@
-import { logger } from "shark7-shared"
-import { WeiboError } from "shark7-weibo/dist/model/model"
-import { cookieJsonToStr } from 'shark7-shared'
-import { Web } from 'shark7-shared'
-import { MongoController } from "./MongoController"
 import { Browser } from "puppeteer"
+import { cookieJsonToStr, logger, Web } from "shark7-shared"
+import { WeiboError } from "shark7-weibo/dist/model/model"
+import { Nats } from "./nats"
 
 const login_btn_selector = '#app > div.woo-box-flex.woo-box-column.Frame_wrap_3g67Q > div.Frame_top_2ybWw > div > div.Nav_wrap_gHB1a > div > div > div.woo-box-flex.woo-box-justifyEnd.Nav_right_pDw0F > div.Nav_loginArea_2HJSu > div > a.LoginBtn_btn_10QRY.LoginBtn_btna_1hH9H.loginBtn'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
 
 export class WeiboWeb extends Web {
     name: string = 'weibo'
-    mongo: MongoController
 
-    constructor(browser: Browser, mongo: MongoController) {
+    nats: Nats
+    constructor(browser: Browser, nats: Nats) {
         super(browser)
-        this.mongo = mongo
+        this.nats = nats
     }
 
     async refresh() {
@@ -77,7 +75,7 @@ export class WeiboWeb extends Web {
         var new_cookie = await page.cookies()
         logger.debug('puppeteer:new_cookie\n' + JSON.stringify(new_cookie))
 
-        if (this.isCookieChanged('SUB', new_cookie)) this.mongo.updateCookie(new_cookie)
+        if (this.isCookieChanged('SUB', new_cookie)) this.nats.sendWeiboCookieUpdateEvent(new_cookie)
 
         this.cookie_str = cookieJsonToStr(new_cookie)
         this.cookie = new_cookie
