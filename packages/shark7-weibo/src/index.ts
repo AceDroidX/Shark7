@@ -1,15 +1,14 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import EventEmitter from 'events';
-import { initLogger, logger, MongoControlClient, WeiboDBs } from 'shark7-shared';
+import { initLogger, logger, MongoControlClient, Nats, WeiboDBs } from 'shark7-shared';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { WeiboHTTP } from './model/WeiboHTTP';
 import { MongoController } from './MongoController';
-import { Nats } from './nats';
 import { WeiboController } from './WeiboController';
+import { WeiboCookieMgr } from './WeiboCookieMgr';
 
-export * from './nats'
+export * from './WeiboCookieMgr';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -38,14 +37,13 @@ async function main() {
     }
     const weibo_id = process.env['weibo_id'].split(',').map(x => parseInt(x))
 
-    const eventEmitter = new EventEmitter();
-    const nats = await Nats.init(eventEmitter)
-    const cookie = (await nats.requestCookie()).cookie
-    const wbhttp = new WeiboHTTP(eventEmitter, cookie)
+    const nc = await Nats.connect()
+    const wcm = await WeiboCookieMgr.init(nc)
+    const wbhttp = new WeiboHTTP(wcm)
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent, onMblogUpdate, wbhttp)
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.commentsDB, onCommentInsert, onCommentUpdate)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     // const weibo_id = roomid_str.split(',').map(x => parseInt(x))
-    const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr, eventEmitter, wbhttp)
+    const weibo_Controller = await WeiboController.init(weibo_id, mongo.ctr, wcm, wbhttp)
     await weibo_Controller.run()
 }

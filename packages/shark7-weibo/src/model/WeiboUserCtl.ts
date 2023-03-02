@@ -1,16 +1,16 @@
-import EventEmitter from "events";
-import { logger, WeiboMsg, WeiboNATSSubscribeName, WeiboUser } from "shark7-shared";
+import { logger, WeiboMsg, WeiboUser } from "shark7-shared";
 import { MongoController } from "../MongoController";
+import { WeiboCookieMgr } from "../WeiboCookieMgr";
 import { WeiboHTTP } from "./WeiboHTTP";
 const profile_info_prefix = 'https://weibo.com/ajax/profile/info?uid='
 const weibo_mblog_prefix = "https://weibo.com/ajax/statuses/mymblog?page=1&feature=0&uid="
 
 export class WeiboUserCtl {
     wbhttp: WeiboHTTP
-    eventEmitter: EventEmitter
-    constructor(wbhttp: WeiboHTTP, eventEmitter: EventEmitter) {
+    wcm: WeiboCookieMgr
+    constructor(wbhttp: WeiboHTTP, wcm: WeiboCookieMgr) {
         this.wbhttp = wbhttp
-        this.eventEmitter = eventEmitter
+        this.wcm = wcm
     }
 
     async getFromID(id: number): Promise<WeiboUser> {
@@ -31,7 +31,7 @@ export class WeiboUserCtl {
         if (result.data.ok != 1) {
             if (result.data.url == 'https://weibo.com/login.php') {
                 logger.error(`cookie已失效:getRawUserInfo error:\n${JSON.stringify(result.data)}`);
-                this.eventEmitter.emit(WeiboNATSSubscribeName.CookieExpire)
+                this.wcm.sendWeiboCookieExpireEvent()
                 return null;
             } else {
                 logger.error(`getRawUserInfo error:\n${JSON.stringify(result.data)}`);
@@ -53,7 +53,7 @@ export class WeiboUserCtl {
         if (raw.data.ok != 1) {
             if (raw.data.url == 'https://weibo.com/login.php') {
                 logger.error(`cookie已失效:getMblogs error:\n${JSON.stringify(raw.data)}`);
-                this.eventEmitter.emit(WeiboNATSSubscribeName.CookieExpire)
+                this.wcm.sendWeiboCookieExpireEvent()
                 return [];
             } else {
                 logger.error(`getMblogs error:\n${JSON.stringify(raw.data)}`);

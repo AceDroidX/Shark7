@@ -113,12 +113,10 @@ importers:
 
   packages/shark7-weibo-app:
     specifiers:
-      nats: latest
       puppeteer: 19.6.3
       shark7-shared: 'workspace:'
       shark7-weibo: 'workspace:'
     dependencies:
-      nats: 2.12.1
       puppeteer: 19.6.3
       shark7-shared: link:../shark7-shared
       shark7-weibo: link:../shark7-weibo

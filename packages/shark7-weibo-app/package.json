@@ -15,7 +15,6 @@
     "license": "ISC",
     "dependencies": {
         "puppeteer": "19.6.3",
-        "nats": "latest",
         "shark7-shared": "workspace:",
         "shark7-weibo": "workspace:"
     },

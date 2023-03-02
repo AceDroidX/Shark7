@@ -1,13 +1,12 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import EventEmitter from 'events';
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboDBs } from 'shark7-shared';
+import { WeiboCookieMgr } from 'shark7-weibo';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
 import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
 import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
-import { WeiboCookieMgr } from './WeiboCookieMgr';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
