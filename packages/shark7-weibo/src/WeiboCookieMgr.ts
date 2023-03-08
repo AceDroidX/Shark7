@@ -40,13 +40,15 @@ export class WeiboCookieMgr {
         this.nc.publish(WeiboNATSSubscribeName.CookieExpire, jc.encode({ name: WeiboNATSSubscribeName.CookieExpire, ts: new Date().getTime() }))
     }
     async subscribeCookieUpdateTask() {
-        logger.debug(`subscribe:${WeiboNATSSubscribeName.CookieUpdate}`)
-        const jc = JSONCodec<WeiboCookieUpdateEvent>();
-        const sub = this.nc.subscribe(WeiboNATSSubscribeName.CookieUpdate, { max: 1 });
-        for await (const m of sub) {
-            logger.info(`[${sub.getProcessed()}]: ${JSON.stringify(jc.decode(m.data))}`);
-            this.cookie = jc.decode(m.data).cookie
+        while (true) {
+            logger.debug(`subscribe:${WeiboNATSSubscribeName.CookieUpdate}`)
+            const jc = JSONCodec<WeiboCookieUpdateEvent>();
+            const sub = this.nc.subscribe(WeiboNATSSubscribeName.CookieUpdate, { max: 1 });
+            for await (const m of sub) {
+                logger.info(`[${sub.getProcessed()}]: ${JSON.stringify(jc.decode(m.data))}`);
+                this.cookie = jc.decode(m.data).cookie
+            }
+            logger.info("subscription closed");
         }
-        logger.info("subscription closed");
     }
 }

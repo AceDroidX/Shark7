@@ -76,6 +76,7 @@ export class WeiboWeb extends Web {
         logger.debug('puppeteer:new_cookie\n' + JSON.stringify(new_cookie))
 
         // if (this.isCookieChanged('SUB', new_cookie)) this.nats.sendWeiboCookieUpdateEvent(new_cookie)
+        this.isCookieChanged('SUB', new_cookie)
         this.nats.sendWeiboCookieUpdateEvent(new_cookie)
 
         this.cookie_str = cookieJsonToStr(new_cookie)
