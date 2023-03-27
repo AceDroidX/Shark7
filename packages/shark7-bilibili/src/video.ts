@@ -13,11 +13,11 @@ export async function getVideo(user_id: number, user_name: string, type: 'coin' 
     try {
         const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/space/${type}/video?vmid=${user_id}`, { headers: { 'user-agent': UserAgent } })
         if (resp.status != 200) {
-            logger.warn('resp.status!=200\n' + JSON.stringify(resp))
+            logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         if (resp.data.code != 0) {
-            logger.warn('resp.data.code!=0\n' + JSON.stringify(resp))
+            logger.warn(`resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         let data

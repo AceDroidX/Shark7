@@ -13,11 +13,11 @@ export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {
         const resp = await axios.get<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/acc/info?token=&platform=web&jsonp=jsonp&mid=${user_id}`, { headers: { 'user-agent': UserAgent, 'cookie': `buvid3=12345678-1234-1234-1234-123456789123infoc` } })
         if (resp.status != 200) {
-            logger.warn('resp.status!=200\n' + JSON.stringify(resp))
+            logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         if (resp.data.code != 0) {
-            logger.warn('resp.data.code!=0\n' + JSON.stringify(resp))
+            logger.warn(`resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         // logger.debug(JSON.stringify(resp))

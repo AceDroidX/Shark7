@@ -13,11 +13,11 @@ export async function getDynamic(user_id: number): Promise<BiliDynamic[] | null>
     try {
         const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=${user_id}`, { headers: { 'user-agent': UserAgent } })
         if (resp.status != 200) {
-            logger.warn('resp.status!=200\n' + JSON.stringify(resp))
+            logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         if (resp.data.code != 0) {
-            logger.warn('resp.data.code!=0\n' + JSON.stringify(resp))
+            logger.warn(`resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         let data = resp.data.data.items
