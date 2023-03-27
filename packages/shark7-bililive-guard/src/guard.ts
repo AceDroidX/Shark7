@@ -9,7 +9,7 @@ import { Scope } from "shark7-shared"
 import { logErrorDetail } from "shark7-shared"
 import { MongoController } from "./MongoController"
 
-const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.4'
+const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
 const guardlist_prefix = 'https://api.live.bilibili.com/xlive/app-room/v2/guardTab/topList?page_size=30'
 
 function makeURL(roomid: number, ruid: number, page: number) {

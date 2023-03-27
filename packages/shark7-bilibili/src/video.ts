@@ -7,11 +7,11 @@ import { Scope } from 'shark7-shared';
 import { logAxiosError, logErrorDetail } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
-const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.4'
+const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
 
 export async function getVideo(user_id: number, user_name: string, type: 'coin' | 'like'): Promise<BiliVideo[] | null> {
     try {
-        const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/space/${type}/video?vmid=${user_id}`, { headers: { 'user-agent': UserAgent } })
+        const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/space/${type}/video?vmid=${user_id}`, { headers: { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', 'cookie': `buvid3=12345678-1234-1234-1234-123456789123infoc` } })
         if (resp.status != 200) {
             logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
