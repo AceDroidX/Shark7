@@ -11,7 +11,7 @@ const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 
 export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {
-        const resp = await axios.get<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/acc/info?token=&platform=web&jsonp=jsonp&mid=${user_id}`, { headers: { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', 'cookie': `buvid3=12345678-1234-1234-1234-123456789123infoc` } })
+        const resp = await axios.get<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info?token=&platform=web&jsonp=jsonp&mid=${user_id}`, { headers: { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', 'cookie': `buvid3=12345678-1234-1234-1234-123456789123infoc` } })
         if (resp.status != 200) {
             logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null

@@ -3,7 +3,7 @@ import { BiliApi, BiliUser } from "../bilibili";
 import { logger } from "../logger";
 import { logErrorDetail } from "../utils";
 import { BiliRoomInfo } from "./BiliRoomInfo";
-const UID_info_prefix = 'https://api.bilibili.com/x/space/acc/info?mid='
+const UID_info_prefix = 'https://api.bilibili.com/x/space/wbi/acc/info?mid='
 const ROOMID_info_prefix = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="
 const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
 
