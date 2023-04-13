@@ -68,11 +68,11 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
             return
         }
         switch (key) {
-            case 'live_room.watched_show.num':
-            case 'live_room.watched_show.text_small':
-            case 'live_room.watched_show.text_large':
             case 'vip.label.path':
                 return
+        }
+        if (key.startsWith('live_room.watched_show')) { // 忽略直播间看过人数
+            return
         }
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
             switch (key) {
