@@ -32,6 +32,8 @@ export async function fetchUser(user_id: number, user_name: string): Promise<Rec
         })
     } catch (err) {
         logErrorDetail('抓取数据失败', err)
+        // TODO: token过期事件 目前先退出程序
+        process.exit(1)
         return null
     }
 }
