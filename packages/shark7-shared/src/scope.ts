@@ -37,6 +37,10 @@ enum NeteaseMusicScope {
     User = 'NeteaseMusic.User',
 }
 
+enum ReckfengScope {
+    User = 'ReckfengScope.User',
+}
+
 export const Scope = {
     Log: LogScope,
     Apex: 'Apex',
@@ -45,6 +49,7 @@ export const Scope = {
     Bilibili: BilibiliScope,
     Douyin: DouyinScope,
     NeteaseMusic: NeteaseMusicScope,
+    Reckfeng: ReckfengScope,
 };
 
 export enum ScopeName {
@@ -70,6 +75,7 @@ export enum ScopeName {
     'Bilibili.Dynamic' = 'B站动态',
     'Douyin.User' = '抖音用户信息',
     'NeteaseMusic.User' = '网易云音乐用户信息',
+    'ReckfengScope.User' = 'UP对战平台用户信息',
 }
 
 export function getScopeName(id: string): string | undefined {

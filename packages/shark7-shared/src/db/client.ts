@@ -16,7 +16,7 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         return new MongoClient(
             process.env.NODE_ENV == 'production'
                 ? `mongodb://admin:${process.env.MONGODB_PASS}@${process.env.MONGODB_IP}:27017/?authMechanism=DEFAULT`
-                : 'mongodb://admin:admin@localhost:27017/', { retryReads: true, retryWrites: true }
+                : 'mongodb://admin:admin@127.0.0.1:27017/?authSource=admin&readPreference=primary&authMechanism=DEFAULT&directConnection=true&ssl=false', { retryReads: true, retryWrites: true }
         );
     }
     static async getInstance<E extends EventDBs, C extends MongoControllerBase<E>>(dbfunc: {

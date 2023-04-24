@@ -7,6 +7,7 @@ import { getDBInstance } from "./db";
 import { DouyinUser } from "./douyin";
 import { NeteaseMusicUser } from "./netease-music";
 import { OnlineData, WeiboComment, WeiboMsg, WeiboUser } from "./weibo";
+import { ReckfengData } from "./reckfeng";
 
 export class EventDBs {
     event: Collection<Shark7Event>
@@ -118,5 +119,15 @@ export class BilibiliDBs extends EventDBs {
         this.coinDB = db.collection<BiliVideo>('coin')
         this.likeDB = db.collection<BiliVideo>('like')
         this.dynamicDB = db.collection<BiliDynamic>('dynamic')
+    }
+}
+
+export class ReckfengDBs extends EventDBs {
+    static dbname = 'reckfeng'
+    static postCollList = ['users']
+    userDB: Collection<ReckfengData>
+    constructor(db: Db) {
+        super(db)
+        this.userDB = db.collection<ReckfengData>('users')
     }
 }

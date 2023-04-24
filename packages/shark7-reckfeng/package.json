@@ -1,0 +1,20 @@
+{
+    "name": "shark7-reckfeng",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "clean": "tsc --build --clean",
+        "dev": "nodemon src/index.ts",
+        "build": "tsc",
+        "serve": "ts-node src/index.ts"
+    },
+    "author": "AceDroidX",
+    "license": "ISC",
+    "dependencies": {
+        "shark7-shared": "workspace:"
+    },
+    "devDependencies": {}
+}

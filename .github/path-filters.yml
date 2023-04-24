@@ -25,6 +25,9 @@ main:
 netease-music:
     - *shared
     - "packages/shark7-netease-music/**"
+reckfeng:
+    - *shared
+    - "packages/shark7-reckfeng/**"
 weibo-app:
     - *shared
     - "packages/shark7-weibo-app/**"
