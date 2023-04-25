@@ -65,6 +65,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         }
         switch (key) {
             case 'lastplayedSecond':
+            case 'lastplayed':
                 return
         }
         // if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
@@ -73,8 +74,8 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         if (flattenOrigin[key] == value) {
             return
         }
-        logger.info(`${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
-        result.push(`${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
+        logger.info(`${user.mapName}:${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
+        result.push(`${user.mapName}:${key}更改\n原：${JSON.stringify(flattenOrigin[key])}\n现：${JSON.stringify(value)}`)
     })
     if (result.length == 0) return null
     return { ts: Number(new Date()), name: String(user.shark7_name), scope: Scope.Reckfeng.User, msg: result.join('\n') }
