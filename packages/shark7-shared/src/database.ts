@@ -22,7 +22,8 @@ export class MongoDBs extends EventDBs {
     bilibili: BilibiliDBs
     douyin: DouyinDBs
     netease_music: NeteaseMusicDBs
-    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, bilibili: BilibiliDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs) {
+    reckfeng: ReckfengDBs
+    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, bilibili: BilibiliDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs, reckfeng: ReckfengDBs) {
         super(db)
         this.weibo = weibo
         this.apex = apex
@@ -30,6 +31,7 @@ export class MongoDBs extends EventDBs {
         this.bilibili = bilibili
         this.douyin = douyin
         this.netease_music = netease_music
+        this.reckfeng = reckfeng
     }
     static async getInstance(client: MongoClient) {
         return new this(client.db('main'),
@@ -39,6 +41,7 @@ export class MongoDBs extends EventDBs {
             await getDBInstance(client, BilibiliDBs),
             await getDBInstance(client, DouyinDBs),
             await getDBInstance(client, NeteaseMusicDBs),
+            await getDBInstance(client, ReckfengDBs),
         )
     }
 }

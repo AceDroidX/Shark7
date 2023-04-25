@@ -20,5 +20,6 @@ class MongoController extends MongoControllerBase<MongoDBs> {
         this.dbs.bilibili.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
         this.dbs.douyin.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
         this.dbs.netease_music.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
+        this.dbs.reckfeng.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
     }
 }
