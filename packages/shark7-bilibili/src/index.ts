@@ -42,6 +42,7 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
+    await insertUser(mongo.ctr, user_id) // 先获取用户数据
     let interval = process.env['interval'] ? Number(process.env['interval']) : 10
     const scheduler = new Scheduler()
     scheduler.addJob('fetchUser', interval, () => { insertUser(mongo.ctr, user_id) })

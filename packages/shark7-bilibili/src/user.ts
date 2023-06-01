@@ -1,19 +1,11 @@
 import axios from "axios";
 import { ChangeStreamUpdateDocument } from "mongodb";
-import { Shark7Event } from "shark7-shared";
-import { BiliApi, BiliUser } from "shark7-shared";
-import { logger } from "shark7-shared";
-import { Scope } from 'shark7-shared';
-import { flattenObj, logAxiosError, logErrorDetail } from "shark7-shared";
+import { BiliApi, BiliGet, BiliUser, Scope, Shark7Event, flattenObj, logAxiosError, logErrorDetail, logger } from "shark7-shared";
 import { MongoController } from "./MongoController";
-
-const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
 
 export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {
-        const cookie = process.env['cookie'] ?? 'buvid3=12345678-1234-1234-1234-123456789123infoc'
-        const headers = { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', cookie }
-        const resp = await axios.get<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info?token=&platform=web&jsonp=jsonp&mid=${user_id}`, { headers })
+        const resp = await BiliGet<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info`, { platform: 'web', jsonp: 'jsonp', mid: user_id })
         if (resp.status != 200) {
             logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null

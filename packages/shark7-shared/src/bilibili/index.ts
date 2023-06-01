@@ -1,8 +1,7 @@
-import { BiliDynamic } from "./BiliDynamic"
-import { BiliUser } from "./BiliUser"
-import { BiliVideo } from "./BiliVideo"
-
-export { BiliUser, BiliVideo, BiliDynamic }
+export * from './BiliDynamic'
+export * from './BiliUser'
+export * from './BiliVideo'
+export * from './BiliWbi'
 
 export type BiliApi<T = any> = {
     code: number
