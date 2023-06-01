@@ -17,8 +17,7 @@
     "dependencies": {
         "logform": "latest",
         "nats": "latest",
-        "puppeteer": "19.6.3",
-        "shark7-shared": "workspace:"
-    },
-    "devDependencies": {}
+        "puppeteer": "20.5.0",
+        "shark7-shared": "workspace:^"
+    }
 }

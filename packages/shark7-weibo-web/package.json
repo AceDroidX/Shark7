@@ -16,11 +16,10 @@
     "dependencies": {
         "logform": "latest",
         "nats": "latest",
-        "puppeteer": "19.6.3",
-        "puppeteer-extra": "^3.3.4",
-        "puppeteer-extra-plugin-stealth": "^2.11.1",
-        "shark7-weibo": "workspace:",
-        "shark7-shared": "workspace:"
-    },
-    "devDependencies": {}
+        "puppeteer": "20.5.0",
+        "puppeteer-extra": "^3.3.6",
+        "puppeteer-extra-plugin-stealth": "^2.11.2",
+        "shark7-shared": "workspace:^",
+        "shark7-weibo": "workspace:^"
+    }
 }

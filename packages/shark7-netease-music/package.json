@@ -15,7 +15,6 @@
     "license": "ISC",
     "dependencies": {
         "NeteaseCloudMusicApi": "latest",
-        "shark7-shared": "workspace:"
-    },
-    "devDependencies": {}
+        "shark7-shared": "workspace:^"
+    }
 }

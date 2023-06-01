@@ -14,9 +14,8 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "puppeteer": "19.6.3",
-        "shark7-shared": "workspace:",
-        "shark7-weibo": "workspace:"
-    },
-    "devDependencies": {}
+        "puppeteer": "20.5.0",
+        "shark7-shared": "workspace:^",
+        "shark7-weibo": "workspace:^"
+    }
 }

@@ -14,8 +14,7 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "shark7-shared": "workspace:",
-        "bilibili-live-ws": "latest"
-    },
-    "devDependencies": {}
+        "bilibili-live-ws": "latest",
+        "shark7-shared": "workspace:^"
+    }
 }

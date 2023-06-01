@@ -14,8 +14,7 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "shark7-shared": "workspace:",
-        "jose": "latest"
-    },
-    "devDependencies": {}
+        "jose": "latest",
+        "shark7-shared": "workspace:^"
+    }
 }
