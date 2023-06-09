@@ -11,15 +11,15 @@ const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 
 export async function getDynamic(user_id: number): Promise<BiliDynamic[] | null> {
     try {
-        const cookie = process.env['cookie'] ?? 'buvid3=12345678-1234-1234-1234-123456789123infoc'
+        const cookie = process.env['cookie'] ?? 'buvid3=12345678-1234-1234-1234-123456789123infoc;DedeUserID=123456789'
         const headers = { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', cookie }
         const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=${user_id}`, { headers })
         if (resp.status != 200) {
-            logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
+            logger.warn(`getDynamic resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         if (resp.data.code != 0) {
-            logger.warn(`resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
+            logger.warn(`getDynamic resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         let data = resp.data.data.items

@@ -7,11 +7,11 @@ export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {
         const resp = await BiliGet<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info`, { platform: 'web', jsonp: 'jsonp', mid: user_id })
         if (resp.status != 200) {
-            logger.warn(`resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
+            logger.warn(`getUser resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         if (resp.data.code != 0) {
-            logger.warn(`resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
+            logger.warn(`getUser resp.data.code!=0\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
         }
         // logger.debug(JSON.stringify(resp))
