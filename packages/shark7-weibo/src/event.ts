@@ -77,6 +77,9 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
     if (user.friends_count != undefined) {
         result.push(`微博关注数更改\n原：${origin.friends_count}\n现：${user.friends_count}`);
     }
+    if (user.statuses_count != undefined) {
+        result.push(`微博数量更改\n原：${origin.statuses_count}\n现：${user.statuses_count}`);
+    }
     if (user.description != undefined) {
         result.push(`微博简介更改\n原：${origin.description}\n现：${user.description}`);
     }
