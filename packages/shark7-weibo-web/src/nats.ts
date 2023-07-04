@@ -51,7 +51,11 @@ export class Nats {
         const sub = this.nc.subscribe(WeiboNATSSubscribeName.Cookie);
         for await (const m of sub) {
             if (!this.weiboWeb) {
-                logger.error('this.weiboWeb not init')
+                logger.warn('this.weiboWeb not init')
+                continue
+            }
+            if(!this.weiboWeb.cookie){
+                logger.warn('!this.weiboWeb.cookie')
                 continue
             }
             if (m.respond(jcRespond.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime(), cookie: this.weiboWeb.cookie }))) {
