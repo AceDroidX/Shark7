@@ -40,7 +40,7 @@ async function main() {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    let interval = process.env['interval'] ? Number(process.env['interval']) : 30
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 60
     const scheduler = new Scheduler()
     scheduler.addJob('fetchUserInfo', interval, () => { insertUser(mongo.ctr,sec_uid) })
     logger.info('douyin模块已启动')
