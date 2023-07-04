@@ -18,7 +18,7 @@
         "logform": "latest",
         "md5": "^2.3.0",
         "nats": "latest",
-        "puppeteer": "20.5.0",
+        "puppeteer": "20.7.4",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2",
         "toad-scheduler": "latest",
