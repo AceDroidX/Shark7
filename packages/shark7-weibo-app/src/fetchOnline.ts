@@ -9,6 +9,9 @@ export async function getOnline(cookie: Protocol.Network.Cookie[], config: Weibo
     const reqConfig = getReqConfig(cookie, cid);
     const data = await fetchURL('https://api.weibo.cn/2/page', reqConfig);
     if (!data) return null
+    if(!data.cards){
+        logger.warn(`getOnline !data.cards\n` + JSON.stringify(data))
+    }
     return data.cards
 }
 

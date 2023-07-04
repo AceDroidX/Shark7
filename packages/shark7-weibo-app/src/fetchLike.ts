@@ -10,6 +10,9 @@ export async function getLike(cookie: Protocol.Network.Cookie[], config: WeiboLi
     const data = await fetchURL('https://api.weibo.cn/2/cardlist', reqConfig);
     if (!data) return null
     let cards: WeiboCard[] = data.cards;
+    if(!cards){
+        logger.warn(`getLike !cards\n` + JSON.stringify(data))
+    }
     cards.reverse();
     return cards
 }
