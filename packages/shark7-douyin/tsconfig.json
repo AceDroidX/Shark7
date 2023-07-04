@@ -4,6 +4,8 @@
         "outDir": "./dist",
         "declaration": false,
         "declarationMap": false,
+        "allowJs": true,
+        "alwaysStrict": false,
     },
     "include": [
         "src/**/*.ts",
