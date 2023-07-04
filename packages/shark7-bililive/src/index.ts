@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { BiliUsers } from 'shark7-shared';
+import { BiliSimpleUser, BiliUsers } from 'shark7-shared';
 import { BiliLiveDBs } from 'shark7-shared';
 import { MongoControlClient } from 'shark7-shared';
 import { logger, initLogger } from 'shark7-shared';
@@ -57,7 +57,7 @@ async function main() {
         await new Promise(resolve => setTimeout(resolve, 200));
     }
     const confTask = new GetConfTask()
-    roomid_Users.roomidlist().forEach((value: number, index: number) => {
+    roomid_Users.users.forEach((value: BiliSimpleUser, index: number) => {
         // openOneRoom(parseInt(element))
         // getAllMsg(parseInt(element))
         setTimeout(() => getFiltedMsg(mongo.ctr, confTask, value, marked_uid, marked_Users, roomid_Users), 500 * index)

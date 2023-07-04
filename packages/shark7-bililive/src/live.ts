@@ -1,25 +1,26 @@
-import { KeepLiveTCP, TCPOptions } from 'bilibili-live-ws'
+import { LiveTCP, TCPOptions } from 'bilibili-live-ws'
 import { Shark7Event } from "shark7-shared"
 import { BiliSimpleUser } from 'shark7-shared'
 import { BiliUsers } from "shark7-shared"
 import { logger } from "shark7-shared"
 import { Scope } from "shark7-shared"
 import { GetConfTask } from "./GetConfTask"
-import { KeepLiveTCPWithConf } from './KeepLiveTCPWithConf'
 import { MongoController } from "./MongoController"
 
 const BILILIVEPREFIX = 'https://live.bilibili.com'
 
-export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask, roomid: any, marked_uid: number[], marked_Users: BiliUsers, roomid_Users: BiliUsers) {
-    const liveconf = await confTask.getConf(roomid) as TCPOptions
-    const live = process.env['no_conf'] == 'true' ? new KeepLiveTCP(roomid) : new KeepLiveTCPWithConf(roomid, confTask, liveconf)
+export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask, user: BiliSimpleUser, marked_uid: number[], marked_Users: BiliUsers, roomid_Users: BiliUsers) {
+    const roomid = user.roomid
+    const uid = user.uid
+    const liveconf = await confTask.getConf(roomid, uid) as TCPOptions
+    const live = process.env['no_conf'] == 'true' ? new LiveTCP(roomid) : new LiveTCP(roomid, liveconf)
     // live.on('open', () => logger.info(`<${id}>WebSocket连接上了`))
     live.on('live', () => logger.info(`<${roomid}>成功登入房间`))
     // live.on('heartbeat', (online) => logger.info(`<${id}>当前人气值${online}`))
     live.on('msg', async (data) => {
         try {
             if (process.env.NODE_ENV != 'production') {
-                logger.debug('弹幕服务器消息:\n' + JSON.stringify(data))
+                logger.debug(`<${roomid}>弹幕服务器消息:\n` + JSON.stringify(data))
             }
             const filter = await msgFilter(data, marked_uid, marked_Users, roomid)
             if (filter) {
@@ -33,7 +34,11 @@ export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask
             logger.error(`<${roomid}>遇到错误，请检查日志；\n${error}`)
         }
     })
-    live.on('close', () => logger.info(`<${roomid}>连接关闭`))
+    live.on('close', async () => {
+        logger.info(`<${roomid}>连接关闭`)
+        await new Promise(r => setTimeout(r, 5000));
+        await getFiltedMsg(mongo, confTask, user, marked_uid, marked_Users, roomid_Users)
+    })
     live.on('error', (e) => logger.error(`<${roomid}>连接错误：${e}`))
 }
 

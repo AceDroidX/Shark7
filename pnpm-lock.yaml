@@ -47,7 +47,7 @@ importers:
     dependencies:
       bilibili-live-ws:
         specifier: latest
-        version: 6.3.0(buffer@6.0.3)(events@3.3.0)(pako@2.1.0)
+        version: 6.3.1(buffer@6.0.3)(events@3.3.0)(pako@2.1.0)
       shark7-shared:
         specifier: workspace:^
         version: link:../shark7-shared
@@ -542,8 +542,8 @@ packages:
     engines: {node: '>=10.0.0'}
     dev: false
 
-  /bilibili-live-ws@6.3.0(buffer@6.0.3)(events@3.3.0)(pako@2.1.0):
-    resolution: {integrity: sha512-2kaZ4EmPM6mSFvjKYgRI09qlUxBUn+6knmU0YaZkhrXFUo6gCJmHOy5Xykz4PijcRaB7LuJai/PSThRNoqYjvA==}
+  /bilibili-live-ws@6.3.1(buffer@6.0.3)(events@3.3.0)(pako@2.1.0):
+    resolution: {integrity: sha512-+j15XRce44YqwkKF3rmG6G3IK3e57gX7WFJHBs4epX9aw+vJLISPJXbg6z/yiMQj1QtiTqyDDG9k/aDj7wDhMQ==}
     peerDependencies:
       buffer: ^6.0.3
       events: ^3.3.0
