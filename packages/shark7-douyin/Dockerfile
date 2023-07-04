@@ -12,6 +12,6 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-douyin build
 
-FROM acedroidx/shark7-shared-web:${IMAGE_TAG}
-COPY --from=build --chown=chrome /app/packages/shark7-douyin/dist/ ./packages/shark7-douyin/dist/
+FROM acedroidx/shark7-shared:${IMAGE_TAG}
+COPY --from=build /app/packages/shark7-douyin/dist/ ./packages/shark7-douyin/dist/
 CMD ["pnpm","run","-F","shark7-douyin","start"]

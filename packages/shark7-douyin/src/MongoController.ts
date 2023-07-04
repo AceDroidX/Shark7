@@ -1,4 +1,4 @@
-import { DouyinDBs } from 'shark7-shared';
+import { DouyinDBs, DouyinUser } from 'shark7-shared';
 import { MongoControllerBase } from 'shark7-shared';
 
 export class MongoController extends MongoControllerBase<DouyinDBs> {

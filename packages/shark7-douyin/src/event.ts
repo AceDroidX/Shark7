@@ -1,5 +1,5 @@
 import { ChangeStreamUpdateDocument } from "mongodb";
-import { Shark7Event } from "shark7-shared";
+import { DouyinUser, Shark7Event } from "shark7-shared";
 import { logger } from "shark7-shared";
 import { Scope } from 'shark7-shared';
 import { flattenObj } from "shark7-shared";

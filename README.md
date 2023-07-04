@@ -6,6 +6,12 @@ shark7-weibo-app:
 <https://gist.github.com/cnSchwarzer/db12f5ba66c37cfe10bb8912f82de3f0>  
 <https://github.com/corberan/Security-Research/blob/8ce59b382a0bde927b1efc1075bda08acf739f47/wbcall.go#L257>  
 
+shark7-douyin:  
+<https://github.com/aithedev/X-Bogus>
+<https://www.iculture.cc/knowledge/pig=33360>
+<https://github.com/Johnserf-Seed/TikTokDownload/issues/324>
+<https://github.com/JoeanAmier/TikTokDownloader/issues/9>
+
 todo:  
 
 - shared:

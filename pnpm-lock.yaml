@@ -60,18 +60,6 @@ importers:
 
   packages/shark7-douyin:
     dependencies:
-      logform:
-        specifier: latest
-        version: 2.5.1
-      puppeteer:
-        specifier: 20.5.0
-        version: 20.5.0(typescript@5.1.6)
-      puppeteer-extra:
-        specifier: ^3.3.6
-        version: 3.3.6(puppeteer@20.5.0)
-      puppeteer-extra-plugin-stealth:
-        specifier: ^2.11.2
-        version: 2.11.2(puppeteer-extra@3.3.6)
       shark7-shared:
         specifier: workspace:^
         version: link:../shark7-shared

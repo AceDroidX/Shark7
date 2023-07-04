@@ -1,15 +1,10 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { DouyinDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { Puppeteer } from 'shark7-shared';
-import { Scheduler } from 'shark7-shared';
-import { logErrorDetail } from 'shark7-shared';
-import { DouyinWeb } from './DouyinWeb';
-import { onUserDBEvent } from "./event";
+import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
 import { MongoController } from './MongoController';
+import { onUserDBEvent } from "./event";
+import { insertUser } from './user';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -34,21 +29,19 @@ async function main() {
 
     initLogger('douyin')
 
-    if (!process.env['douyin_sec_uid']) {
+    const sec_uid = process.env['douyin_sec_uid']
+    if (!sec_uid) {
         logger.error('请设置douyin_sec_uid')
         process.exit(1)
     }
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
     await mongo.ctr.run()
-    const puppeteerClient = await Puppeteer.getInstance(DouyinWeb, mongo.ctr)
-    await fetchUserInfo(puppeteerClient)
-
-    let interval = process.env['interval'] ? Number(process.env['interval']) : 60
+    if (!await insertUser(mongo.ctr, sec_uid)) {
+        logger.error('数据获取测试失败')
+        process.exit(1)
+    }
+    let interval = process.env['interval'] ? Number(process.env['interval']) : 30
     const scheduler = new Scheduler()
-    scheduler.addJob('fetchUserInfo', interval, () => { fetchUserInfo(puppeteerClient) })
+    scheduler.addJob('fetchUserInfo', interval, () => { insertUser(mongo.ctr,sec_uid) })
     logger.info('douyin模块已启动')
-}
-
-async function fetchUserInfo(puppeteerClient: Puppeteer<DouyinWeb>) {
-    await puppeteerClient.web.refresh()
 }

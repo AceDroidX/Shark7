@@ -14,10 +14,6 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "logform": "latest",
-        "puppeteer": "20.5.0",
-        "puppeteer-extra": "^3.3.6",
-        "puppeteer-extra-plugin-stealth": "^2.11.2",
         "shark7-shared": "workspace:^"
     }
 }
