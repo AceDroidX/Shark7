@@ -38,7 +38,7 @@ export class Puppeteer<T extends Web> {
             // args: ['--no-sandbox', '--disable-setuid-sandbox',
             //   '--disable-dev-shm-usage', '--single-process',"--no-zygote"],
             args: ['--no-sandbox', '--disable-dev-shm-usage'],
-            headless: 'new'
+            headless: true
         })
     }
     static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>
