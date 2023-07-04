@@ -69,6 +69,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
             switch (key) {
                 case 'live_room':
+                case 'elec':
                     return
             }
         }
