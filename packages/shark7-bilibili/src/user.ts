@@ -61,6 +61,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
         }
         switch (key) {
             case 'vip.label.path':
+            case 'fans_badge':
                 return
         }
         if (key.startsWith('live_room.watched_show')) { // 忽略直播间看过人数
