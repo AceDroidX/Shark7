@@ -11,8 +11,7 @@ const BILILIVEPREFIX = 'https://live.bilibili.com'
 
 export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask, user: BiliSimpleUser, marked_uid: number[], marked_Users: BiliUsers, roomid_Users: BiliUsers) {
     const roomid = user.roomid
-    const uid = user.uid
-    const liveconf = await confTask.getConf(roomid, uid) as TCPOptions
+    const liveconf = await confTask.getConf(roomid, process.env['cookie']) as TCPOptions
     const live = process.env['no_conf'] == 'true' ? new LiveTCP(roomid) : new LiveTCP(roomid, liveconf)
     // live.on('open', () => logger.info(`<${id}>WebSocket连接上了`))
     live.on('live', () => logger.info(`<${roomid}>成功登入房间`))

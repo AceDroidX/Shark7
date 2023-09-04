@@ -103,6 +103,19 @@ function cookieJsonToStr(source: any) {
     return result.replace(/;$/g, '')
 }
 
+export function cookieStrToMap(source: string) {
+    var result: any = {}
+    source.replace(/; /g, ';').replace(/;$/g, '').split(';').map(item => {
+        var name = item.match(/^.*?(?==)/)
+        var value = item.match(/(?<==)(.*)$/)
+        if (name == null || value == null) {
+            throw new Error('cookie格式错误')
+        }
+        result[name[0]] = value[0]
+    })
+    return result
+}
+
 function toNumOrStr(source: any) {
     var n = Number(source)
     if (isNaN(n)) {
