@@ -11,7 +11,7 @@ import { MongoController } from "./MongoController";
 
 const { sign } = require("./X-Bogus.js");
 const user_agent =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36";
 
 export async function insertUser(
     ctr: MongoController,
@@ -68,7 +68,7 @@ async function getUser(sec_uid: string): Promise<DouyinUser | null> {
 }
 
 function makeUrl(sec_uid: string, user_agent: string, msToken: string) {
-    const url = `https://www.douyin.com/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&source=channel_pc_web&sec_user_id=${sec_uid}&pc_client_type=1&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1536&screen_height=864&browser_language=zh-CN&browser_platform=Win32&browser_name=Chrome&browser_version=109.0.0.0&browser_online=true&engine_name=Blink&engine_version=109.0.0.0&os_name=Windows&os_version=10&cpu_core_num=8&device_memory=8&platform=PC&downlink=0.75&effective_type=4g&round_trip_time=50&webid=7251602090815604261&msToken=${msToken}`;
+    const url = `https://www.douyin.com/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&source=channel_pc_web&sec_user_id=${sec_uid}&pc_client_type=1&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1536&screen_height=864&browser_language=zh-CN&browser_platform=Win32&browser_name=Chrome&browser_version=116.0.0.0&browser_online=true&engine_name=Blink&engine_version=116.0.0.0&os_name=Windows&os_version=10&cpu_core_num=8&device_memory=8&platform=PC&downlink=10&effective_type=4g&round_trip_time=100&webid=7277039811630024251&msToken=${msToken}`;
     const query = url.includes("?") ? url.split("?")[1] : "";
     const xbogus = sign(query, user_agent);
     return url + "&X-Bogus=" + xbogus;
