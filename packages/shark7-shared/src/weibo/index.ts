@@ -3,6 +3,7 @@ import { InsertTypeDoc, UpdateTypeDoc } from '..';
 
 export * from './comment'
 export * from './nats'
+export * from './WeiboCookieMgr'
 
 export class WeiboUser implements UpdateTypeDoc {
     shark7_id: string

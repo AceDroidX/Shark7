@@ -1,14 +1,11 @@
 if (process.env.NODE_ENV != 'production') {
     require('dotenv').config({ debug: true })
 }
-import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboDBs } from 'shark7-shared';
+import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboCookieMgr, WeiboDBs } from 'shark7-shared';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { WeiboHTTP } from './model/WeiboHTTP';
 import { MongoController } from './MongoController';
 import { WeiboController } from './WeiboController';
-import { WeiboCookieMgr } from './WeiboCookieMgr';
-
-export * from './WeiboCookieMgr';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

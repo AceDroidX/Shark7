@@ -1,6 +1,5 @@
 import { Browser } from "puppeteer"
 import { cookieJsonToStr, logger, Web } from "shark7-shared"
-import { WeiboError } from "shark7-weibo/dist/model/model"
 import { Nats } from "./nats"
 
 const login_btn_selector = 'a ::-p-text(登录)'
@@ -85,5 +84,14 @@ export class WeiboWeb extends Web {
         // } catch (err) {
         //     logger.error(`刷新微博cookie失败：\n${JSON.stringify(err)}`)
         // }
+    }
+}
+
+class WeiboError extends Error {
+    code: number;
+    name = "WeiboError";
+    constructor(msg: string, code = 0) {
+        super(msg);
+        this.code = code;
     }
 }

@@ -3,20 +3,19 @@
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "scripts": {
         "start": "node dist/index.js",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",
-        "build": "tsc",
+        "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node",
         "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "logform": "latest",
-        "nats": "latest",
+        "logform": "^2.5.1",
+        "nats": "^2.16.0",
         "puppeteer": "20.7.4",
         "shark7-shared": "workspace:^"
     }

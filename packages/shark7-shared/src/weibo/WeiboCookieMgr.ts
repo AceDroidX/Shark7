@@ -1,6 +1,7 @@
 import { ErrorCode, JSONCodec, NatsConnection } from "nats";
 import { Protocol } from "puppeteer";
-import { logger, WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "shark7-shared";
+import { logger } from "../logger";
+import { WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "./nats";
 
 export class WeiboCookieMgr {
     nc: NatsConnection

@@ -8,13 +8,13 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",
-        "build": "tsc",
+        "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node",
         "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "NeteaseCloudMusicApi": "latest",
+        "NeteaseCloudMusicApi": "^4.12.2",
         "shark7-shared": "workspace:^"
     }
 }

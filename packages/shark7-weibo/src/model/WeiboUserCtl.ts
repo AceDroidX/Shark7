@@ -1,6 +1,5 @@
-import { logger, WeiboMsg, WeiboUser } from "shark7-shared";
+import { logger, WeiboCookieMgr, WeiboMsg, WeiboUser } from "shark7-shared";
 import { MongoController } from "../MongoController";
-import { WeiboCookieMgr } from "../WeiboCookieMgr";
 import { WeiboHTTP } from "./WeiboHTTP";
 const profile_info_prefix = 'https://weibo.com/ajax/profile/info?uid='
 const weibo_mblog_prefix = "https://weibo.com/ajax/statuses/mymblog?page=1&feature=0&uid="

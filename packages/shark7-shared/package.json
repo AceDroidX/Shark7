@@ -15,16 +15,16 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "logform": "latest",
+        "logform": "^2.5.1",
         "md5": "^2.3.0",
-        "nats": "latest",
+        "nats": "^2.16.0",
         "puppeteer": "20.7.4",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2",
-        "toad-scheduler": "latest",
-        "winston": "latest",
-        "winston-mongodb": "latest",
-        "winston-transport": "latest"
+        "toad-scheduler": "^3.0.0",
+        "winston": "^3.10.0",
+        "winston-mongodb": "^5.1.1",
+        "winston-transport": "^4.5.0"
     },
     "devDependencies": {
         "@types/md5": "^2.3.2"

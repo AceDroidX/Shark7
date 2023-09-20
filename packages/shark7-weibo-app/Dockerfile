@@ -10,9 +10,8 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm install --offline
-RUN pnpm run build:shared && pnpm run -F shark7-weibo build && pnpm run -F shark7-weibo-app build
+RUN pnpm run build:shared && pnpm run -F shark7-weibo-app build
 
 FROM acedroidx/shark7-shared:${IMAGE_TAG}
-COPY --from=build /app/packages/shark7-weibo/dist/ ./packages/shark7-weibo/dist/
 COPY --from=build /app/packages/shark7-weibo-app/dist/ ./packages/shark7-weibo-app/dist/
 CMD ["pnpm","run","-F","shark7-weibo-app","start"]
