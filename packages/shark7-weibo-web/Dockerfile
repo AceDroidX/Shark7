@@ -5,7 +5,7 @@ WORKDIR /app
 ENV TZ=Asia/Shanghai \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
-RUN npm install -g pnpm@8.6.0 && npm cache clean --force
+RUN npm install -g pnpm@8.7.6 && npm cache clean --force
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
@@ -16,7 +16,7 @@ FROM zenika/alpine-chrome:114-with-node
 WORKDIR /app
 ENV TZ=Asia/Shanghai
 # USER root
-# RUN chown -R chrome /app ; npm install -g pnpm@8.6.0 && npm cache clean --force
+# RUN chown -R chrome /app ; npm install -g pnpm@8.7.6 && npm cache clean --force
 USER chrome
 RUN mkdir /app/puppeteer && chown chrome:chrome /app/puppeteer
 VOLUME /app/puppeteer
