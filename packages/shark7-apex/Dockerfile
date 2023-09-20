@@ -12,6 +12,8 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-apex build
 
-FROM acedroidx/shark7-shared:${IMAGE_TAG}
-COPY --from=build /app/packages/shark7-apex/dist/ ./packages/shark7-apex/dist/
-CMD ["pnpm","run","-F","shark7-apex","start"]
+FROM node:18-alpine
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+COPY --from=build /app/packages/shark7-apex/dist/ /app/dist/
+CMD ["node","dist/index.js"]

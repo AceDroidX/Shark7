@@ -12,6 +12,8 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-douyin build
 
-FROM acedroidx/shark7-shared:${IMAGE_TAG}
-COPY --from=build /app/packages/shark7-douyin/dist/ ./packages/shark7-douyin/dist/
-CMD ["pnpm","run","-F","shark7-douyin","start"]
+FROM node:18-alpine
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+COPY --from=build /app/packages/shark7-douyin/dist/ /app/dist/
+CMD ["node","dist/index.js"]

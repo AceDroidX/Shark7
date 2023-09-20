@@ -12,6 +12,13 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-weibo-web build
 
-FROM acedroidx/shark7-shared-web:${IMAGE_TAG}
-COPY --from=build --chown=chrome /app/packages/shark7-weibo-web/dist/ ./packages/shark7-weibo-web/dist/
-CMD ["pnpm","run","-F","shark7-weibo-web","start"]
+FROM zenika/alpine-chrome:114-with-node
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+# USER root
+# RUN chown -R chrome /app ; npm install -g pnpm@8.6.0 && npm cache clean --force
+USER chrome
+RUN mkdir /app/puppeteer && chown chrome:chrome /app/puppeteer
+VOLUME /app/puppeteer
+COPY --from=build /app/packages/shark7-weibo-web/dist/ /app/dist/
+CMD ["node","dist/index.js"]

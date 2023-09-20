@@ -12,6 +12,8 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-bilibili build
 
-FROM acedroidx/shark7-shared:${IMAGE_TAG}
-COPY --from=build /app/packages/shark7-bilibili/dist/ ./packages/shark7-bilibili/dist/
-CMD ["pnpm","run","-F","shark7-bilibili","start"]
+FROM node:18-alpine
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+COPY --from=build /app/packages/shark7-bilibili/dist/ /app/dist/
+CMD ["node","dist/index.js"]

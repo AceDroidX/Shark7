@@ -12,6 +12,8 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-reckfeng build
 
-FROM acedroidx/shark7-shared:${IMAGE_TAG}
-COPY --from=build /app/packages/shark7-reckfeng/dist/ ./packages/shark7-reckfeng/dist/
-CMD ["pnpm","run","-F","shark7-reckfeng","start"]
+FROM node:18-alpine
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+COPY --from=build /app/packages/shark7-reckfeng/dist/ /app/dist/
+CMD ["node","dist/index.js"]
