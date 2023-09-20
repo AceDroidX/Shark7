@@ -16,7 +16,7 @@
     "dependencies": {
         "logform": "^2.5.1",
         "nats": "^2.16.0",
-        "puppeteer": "20.7.4",
+        "puppeteer": "21.3.1",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2",
         "shark7-shared": "workspace:^"

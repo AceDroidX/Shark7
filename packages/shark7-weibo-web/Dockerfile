@@ -12,7 +12,7 @@ COPY . ./
 RUN pnpm install --offline
 RUN pnpm run build:shared && pnpm run -F shark7-weibo-web build
 
-FROM zenika/alpine-chrome:114-with-node
+FROM zenika/alpine-chrome:115-with-node
 WORKDIR /app
 ENV TZ=Asia/Shanghai
 # USER root
