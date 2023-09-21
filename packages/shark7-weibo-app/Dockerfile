@@ -16,4 +16,4 @@ FROM node:18-alpine
 WORKDIR /app
 ENV TZ=Asia/Shanghai
 COPY --from=build /app/packages/shark7-weibo-app/dist/ /app/dist/
-CMD ["node","dist/index.js"]
+CMD ["node","--enable-source-maps","dist/index.js"]

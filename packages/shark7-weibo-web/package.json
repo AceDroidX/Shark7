@@ -4,7 +4,7 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "start": "node dist/index.js",
+        "start": "node --enable-source-maps dist/index.js",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",

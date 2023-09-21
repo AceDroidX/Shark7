@@ -31,14 +31,14 @@ todo:
 - weibo-app:  
   - 微博超话评论
 - weibo-web:  
-  - cookie过期事件  
+  - [x] cookie过期事件  
 - other:  
   - [x] 错误日志发送至kook  
   - [ ] 封装Axios错误处理  
   - [x] warn超速详细设置
   - [ ] 时间语义解析
-  - [ ] Shark7-Android
-  - [ ] target ES2020
+  - [x] Shark7-Android
+  - [x] target ES2020
   - [ ] NATS消息处理
-  - [ ] 优化包导出路径
-  - [ ] esbuild
+  - [x] 优化包导出路径
+  - [x] esbuild

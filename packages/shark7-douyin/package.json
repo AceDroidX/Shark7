@@ -4,11 +4,11 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "start": "node dist/index.js",
+        "start": "node --enable-source-maps dist/index.js",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",
-        "build": "esbuild src/index.ts --bundle --minify --outdir=dist --platform=node",
+        "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=node",
         "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
