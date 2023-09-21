@@ -14,7 +14,6 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "NeteaseCloudMusicApi": "^4.12.2",
         "shark7-shared": "workspace:^"
     }
 }

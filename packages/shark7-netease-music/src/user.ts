@@ -1,25 +1,23 @@
+import axios from "axios";
 import { ChangeStreamUpdateDocument } from "mongodb";
-import { user_detail } from 'NeteaseCloudMusicApi';
-import { Shark7Event } from "shark7-shared";
-import { logger } from "shark7-shared";
-import { NeteaseMusicUser } from "shark7-shared";
-import { Scope } from 'shark7-shared';
-import { flattenObj, logErrorDetail } from "shark7-shared";
+import { NeteaseMusicUser, Scope, Shark7Event, flattenObj, logErrorDetail, logger } from "shark7-shared";
 import { MongoController } from "./MongoController";
+
+const api_url = process.env['api_url']
 
 export async function fetchUser(user_id: number): Promise<NeteaseMusicUser | null> {
     try {
-        const resp = await user_detail({ uid: user_id })
+        const resp = await axios.get<NeteaseMusicUser>(`${api_url}/user/detail?uid=${user_id}&timestamp=${Number(new Date())}`)
         if (resp.status != 200) {
             logger.warn('resp.status!=200\n' + JSON.stringify(resp))
             return null
         }
-        if (resp.body.code != 200) {
+        if (resp.data.code != 200) {
             logger.warn('resp.body.code!=200\n' + JSON.stringify(resp))
             return null
         }
-        // logger.debug(JSON.stringify(resp))
-        let data: any = resp.body
+        // console.log(resp)
+        let data: any = resp.data
         data.shark7_id = String(user_id)
         return data
     } catch (err) {
