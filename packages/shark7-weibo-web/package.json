@@ -8,7 +8,7 @@
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",
-        "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node",
+        "build": "esbuild src/index.ts --bundle --minify --outdir=dist --platform=node",
         "serve": "ts-node src/index.ts"
     },
     "author": "AceDroidX",
