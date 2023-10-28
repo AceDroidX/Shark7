@@ -65,7 +65,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 const loggerConfig = {
-    level: 'debug',
+    level: process.env['log_level'] ?? 'debug',
     // defaultMeta: { service: 'user-service' },
     transports: [
         //
