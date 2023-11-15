@@ -69,7 +69,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
             return
         }
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
-            if(['live_room', 'elec', 'fans_medal.medal.wearing_status'].some(value => key==value)) return
+            if(['live_room', 'elec', 'fans_medal.medal.wearing_status', 'user_honour_info.is_latest_100honour'].some(value => key==value)) return
         }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
