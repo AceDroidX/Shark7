@@ -56,6 +56,9 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
             case 'profile.privacyItemUnlimit.gender':
                 return
         }
+        if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
+            if(['ip'].some(value => key==value)) return
+        }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
         }
