@@ -1,10 +1,7 @@
-import fs from 'fs';
 import { Browser } from 'puppeteer';
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteer from 'puppeteer';
 import { EventDBs } from '../database';
 import { MongoControllerBase } from "../db/client";
-import { logger } from '../logger';
 import { Web } from './Web';
 
 export * from './Web'
@@ -17,28 +14,8 @@ export class Puppeteer<T extends Web> {
         this.web = web
     }
     static async getBrowser() {
-        puppeteer.use(StealthPlugin())
-        logger.debug('使用StealthPlugin')
-        if (fs.existsSync('/usr/bin/google-chrome')) {
-            var exepath = '/usr/bin/google-chrome'
-        } else if (fs.existsSync('/usr/bin/chromium-browser')) {
-            var exepath = '/usr/bin/chromium-browser'
-        } else {
-            if (process.platform === "win32") {
-                var exepath = String.raw`D:\cli-tools\win64-991974\chrome-win\chrome.exe`
-            } else {
-                var exepath = ''
-            }
-        }
-        return await puppeteer.launch({
-            // pipe: true,
-            userDataDir: process.platform === "win32" ? './data/puppeteer' : '/app/puppeteer',
-            executablePath: exepath,
-            // args: ['--no-sandbox', "--single-process", "--no-zygote", '--disable-dev-shm-usage'],
-            // args: ['--no-sandbox', '--disable-setuid-sandbox',
-            //   '--disable-dev-shm-usage', '--single-process',"--no-zygote"],
-            args: ['--no-sandbox', '--disable-dev-shm-usage'],
-            headless: true
+        return await puppeteer.connect({
+            browserURL: process.env['browser_url'] ?? 'http://127.0.0.1:9222',
         })
     }
     static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>
