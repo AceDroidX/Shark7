@@ -24,7 +24,7 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
         if (key.startsWith('shark7_')) {
             return
         }
-        const isSkip = ['cover_url', 'white_cover_url', 'share_info'].some(value => key.startsWith(value))
+        const isSkip = ['cover_url', 'white_cover_url', 'share_info', 'urge_detail.ctl_map'].some(value => key.startsWith(value))
         if (isSkip) return
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
             if(['city', 'commerce_user_info', 'country','ip_location','cover_and_head_image_info','general_permission',
