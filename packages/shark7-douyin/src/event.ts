@@ -29,7 +29,7 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
             if(['city', 'commerce_user_info', 'country','ip_location','cover_and_head_image_info','general_permission',
             'life_story_block','original_musician','province','special_state_info','tab_settings',
-            'urge_detail','video_icon','enable_ai_double'].some(value => key==value)) return
+            'urge_detail','video_icon','enable_ai_double','profile_show'].some(value => key==value)) return
         }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
