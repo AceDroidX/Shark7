@@ -1,4 +1,4 @@
-import { Browser, Protocol } from "puppeteer";
+import { Browser, Cookie } from "puppeteer";
 import { logger } from "../logger";
 
 interface IWeb {
@@ -39,7 +39,7 @@ export class Web implements IWeb {
         logger.error(`cookie key:${key} not found`)
         return undefined
     }
-    isCookieChanged(cookie_key: string, new_cookie: Protocol.Network.Cookie[]) {
+    isCookieChanged(cookie_key: string, new_cookie: Cookie[]) {
         const newvalue = () => {
             for (const item of new_cookie) {
                 if (item.name == cookie_key) {

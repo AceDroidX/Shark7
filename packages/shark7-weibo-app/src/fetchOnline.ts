@@ -1,21 +1,21 @@
-import { Protocol } from 'puppeteer';
+import { Cookie } from 'puppeteer';
 import { logErrorDetail, logger, OnlineData } from 'shark7-shared';
 import { WeiboCard, WeiboOnlineIdConfig } from "./model";
 import { MongoController } from './MongoController';
 import { fetchURL, getReqConfig } from './utils';
 
-export async function getOnline(cookie: Protocol.Network.Cookie[], config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
+export async function getOnline(cookie: Cookie[], config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.online_cid
     const reqConfig = getReqConfig(cookie, cid);
     const data = await fetchURL('https://api.weibo.cn/2/page', reqConfig);
     if (!data) return null
-    if(!data.cards){
+    if (!data.cards) {
         logger.warn(`getOnline !data.cards\n` + JSON.stringify(data))
     }
     return data.cards
 }
 
-export async function fetchOnline(mongo: MongoController, cookie: Protocol.Network.Cookie[], config: WeiboOnlineIdConfig): Promise<boolean> {
+export async function fetchOnline(mongo: MongoController, cookie: Cookie[], config: WeiboOnlineIdConfig): Promise<boolean> {
     logger.debug('开始抓取在线状态');
     const weibo_id = config.id
     const cards = await getOnline(cookie, config)

@@ -1,12 +1,12 @@
 import { ErrorCode, JSONCodec, NatsConnection } from "nats";
-import { Protocol } from "puppeteer";
+import { Cookie } from "puppeteer";
 import { logger } from "../logger";
 import { WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "./nats";
 
 export class WeiboCookieMgr {
     nc: NatsConnection
-    cookie: Protocol.Network.Cookie[]
-    constructor(nc: NatsConnection, cookie: Protocol.Network.Cookie[]) {
+    cookie: Cookie[]
+    constructor(nc: NatsConnection, cookie: Cookie[]) {
         this.nc = nc
         this.cookie = cookie
         this.subscribeCookieUpdateTask()

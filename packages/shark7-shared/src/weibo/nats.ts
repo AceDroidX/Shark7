@@ -1,4 +1,4 @@
-import { Protocol } from "puppeteer"
+import { Cookie } from "puppeteer"
 
 export enum WeiboNATSSubscribeName {
     CookieExpire = 'Weibo.CookieExpire',
@@ -14,7 +14,7 @@ export type WeiboCookieExpireEvent = {
 export type WeiboCookieUpdateEvent = {
     name: WeiboNATSSubscribeName.CookieUpdate
     ts: number
-    cookie: Protocol.Network.Cookie[]
+    cookie: Cookie[]
 }
 
 export type WeiboCookieRequest = {
@@ -25,5 +25,5 @@ export type WeiboCookieRequest = {
 export type WeiboCookieRespond = {
     name: WeiboNATSSubscribeName.Cookie
     ts: number
-    cookie: Protocol.Network.Cookie[]
+    cookie: Cookie[]
 }

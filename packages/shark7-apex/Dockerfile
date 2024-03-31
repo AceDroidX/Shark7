@@ -3,9 +3,9 @@ ARG IMAGE_TAG=dev
 FROM node:18-alpine AS build
 WORKDIR /app
 ENV TZ=Asia/Shanghai \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_SKIP_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
-RUN npm install -g pnpm@8.7.6 && npm cache clean --force
+RUN npm install -g pnpm@8.15.5 && npm cache clean --force
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./

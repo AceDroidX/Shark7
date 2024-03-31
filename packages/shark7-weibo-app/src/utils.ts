@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios"
-import { Protocol } from "puppeteer"
+import { Cookie } from "puppeteer"
 import { logErrorDetail, logger } from "shark7-shared"
 
-export function getReqConfig(cookie: Protocol.Network.Cookie[], containerid: string): AxiosRequestConfig | undefined {
+export function getReqConfig(cookie: Cookie[], containerid: string): AxiosRequestConfig | undefined {
     return {
         params: {
             c: 'android', lang: 'zh_CN',
@@ -36,7 +36,7 @@ export async function fetchURL(url: string, reqConfig: AxiosRequestConfig | unde
     }
 }
 
-function getCookieByKey(cookie: Protocol.Network.Cookie[], key: string): string | undefined {
+function getCookieByKey(cookie: Cookie[], key: string): string | undefined {
     for (const item of cookie) {
         if (item.name == key) {
             return item.value

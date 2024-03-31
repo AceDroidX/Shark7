@@ -1,5 +1,5 @@
 import { connect, JSONCodec, NatsConnection } from "nats";
-import { Protocol } from "puppeteer";
+import { Cookie } from "puppeteer";
 import { logger, WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "shark7-shared";
 import { WeiboWeb } from "./WeiboWeb";
 
@@ -54,7 +54,7 @@ export class Nats {
                 logger.warn('this.weiboWeb not init')
                 continue
             }
-            if(!this.weiboWeb.cookie){
+            if (!this.weiboWeb.cookie) {
                 logger.warn('!this.weiboWeb.cookie')
                 continue
             }
@@ -65,7 +65,7 @@ export class Nats {
             }
         }
     }
-    sendWeiboCookieUpdateEvent(cookie: Protocol.Network.Cookie[]) {
+    sendWeiboCookieUpdateEvent(cookie: Cookie[]) {
         logger.info(`sendWeiboCookieUpdateEvent`)
         const jc = JSONCodec<WeiboCookieUpdateEvent>();
         this.nc.publish(WeiboNATSSubscribeName.CookieUpdate, jc.encode({ name: WeiboNATSSubscribeName.CookieUpdate, ts: new Date().getTime(), cookie }))

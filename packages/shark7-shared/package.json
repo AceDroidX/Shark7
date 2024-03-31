@@ -18,7 +18,7 @@
         "logform": "^2.5.1",
         "md5": "^2.3.0",
         "nats": "^2.16.0",
-        "puppeteer": "21.6.0",
+        "puppeteer": "22.6.1",
         "toad-scheduler": "^3.0.0",
         "winston": "^3.10.0",
         "winston-mongodb": "^5.1.1",

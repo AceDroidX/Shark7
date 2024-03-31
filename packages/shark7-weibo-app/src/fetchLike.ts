@@ -1,23 +1,23 @@
-import { Protocol } from 'puppeteer';
+import { Cookie } from 'puppeteer';
 import { logErrorDetail, logger, WeiboMsg } from 'shark7-shared';
 import { WeiboCard, WeiboLikeIdConfig } from "./model";
 import { MongoController } from './MongoController';
 import { fetchURL, getReqConfig } from './utils';
 
-export async function getLike(cookie: Protocol.Network.Cookie[], config: WeiboLikeIdConfig): Promise<WeiboCard[] | null> {
+export async function getLike(cookie: Cookie[], config: WeiboLikeIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.like_cid
     const reqConfig = getReqConfig(cookie, cid);
     const data = await fetchURL('https://api.weibo.cn/2/cardlist', reqConfig);
     if (!data) return null
     let cards: WeiboCard[] = data.cards;
-    if(!cards){
+    if (!cards) {
         logger.warn(`getLike !cards\n` + JSON.stringify(data))
     }
     cards.reverse();
     return cards
 }
 
-export async function fetchLike(mongo: MongoController, cookie: Protocol.Network.Cookie[], config: WeiboLikeIdConfig): Promise<boolean> {
+export async function fetchLike(mongo: MongoController, cookie: Cookie[], config: WeiboLikeIdConfig): Promise<boolean> {
     logger.debug('开始抓取点赞');
     const weibo_id = config.id
     const cards = await getLike(cookie, config)
