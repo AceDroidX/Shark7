@@ -1,6 +1,6 @@
-import { TimestampOptions } from 'logform';
+import { type TimestampOptions } from 'logform';
 import winston, { format, transports } from 'winston';
-import 'winston-mongodb';
+// import 'winston-mongodb';
 import Transport from 'winston-transport';
 import { MongoControlClient } from './db';
 import { getTime } from './utils';
@@ -95,11 +95,11 @@ export const loggerEventSender = winston.createLogger(Object.assign(Object.assig
 }));
 
 export function initLogger(collName: string, dbName = 'log') {
-    const mongoTrans = new winston.transports.MongoDB({
-        level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), dbName, collection: collName, tryReconnect: true
-    })
-    logger.add(mongoTrans)
-    loggerEventSender.add(mongoTrans)
+    // const mongoTrans = new winston.transports.MongoDB({
+    //     level: 'debug', db: MongoControlClient.getMongoClientConfig().connect(), dbName, collection: collName, tryReconnect: true
+    // })
+    // logger.add(mongoTrans)
+    // loggerEventSender.add(mongoTrans)
     if (process.env['warn_config']) {
         const warn = process.env['warn_config'].split(',')
         logger.add(new WarnHandleTransport({ interval: Number(warn[0]), length: Number(warn[1]) }))

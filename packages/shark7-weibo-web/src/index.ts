@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { initLogger, logger, Puppeteer } from 'shark7-shared';
 import { Nats } from './nats';
 import { WeiboWeb } from './WeiboWeb';

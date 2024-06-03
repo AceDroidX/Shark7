@@ -1,10 +1,9 @@
-import { Browser } from 'puppeteer';
-import puppeteer from 'puppeteer';
+import * as dns from "node:dns";
+import puppeteer, { Browser } from 'puppeteer';
 import { EventDBs } from '../database';
 import { MongoControllerBase } from "../db/client";
 import { Web } from './Web';
-
-export * from './Web'
+export * from './Web';
 
 export class Puppeteer<T extends Web> {
     browser: Browser
@@ -14,8 +13,9 @@ export class Puppeteer<T extends Web> {
         this.web = web
     }
     static async getBrowser() {
+        const addrs = await dns.promises.resolve4(process.env['browser_host'] ?? 'localhost');
         return await puppeteer.connect({
-            browserURL: process.env['browser_url'] ?? 'http://127.0.0.1:9222',
+            browserURL: `http://${addrs[0]}:9222`,
         })
     }
     static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>

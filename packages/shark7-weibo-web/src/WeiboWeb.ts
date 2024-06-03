@@ -53,12 +53,16 @@ export class WeiboWeb extends Web {
                 // await page.click(oldlogin_btn_selector)
             } else if (login_btn != null && oldlogin_btn == null) {
                 logger.debug('puppeteer:新版登录页面')
-                await page.click(login_btn_selector)
-                logger.debug('puppeteer:waitForResponse')
-                const finalResponse = await page.waitForResponse(response => response.url().includes('v2.qr.weibo.cn'), { timeout: 10000 });
-                logger.warn('请在60秒内扫描此二维码登录weibo：\n' + JSON.stringify(finalResponse.url()));
+                const result = await Promise.all([
+                    page.goto('https://passport.weibo.com/sso/signin?entry=miniblog&source=miniblog&disp=popup&url=https%3A%2F%2Fweibo.com%2Fu%2F7198559139', { timeout: 10000 }),
+                    page.waitForResponse(response => response.url().includes('v2.qr.weibo.cn'), { timeout: 10000 })
+                ])
+                const finalResponse = result[1];
+                logger.warn('请在60秒内扫描此二维码登录weibo：\n' + finalResponse.url());
                 try {
-                    await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' })
+                    await page.waitForNavigation({ timeout: 60000, waitUntil: 'networkidle2' })
+                    logger.debug('puppeteer:登录跳转中')
+                    await page.waitForResponse(response => response.url().includes('https://weibo.com/u/7198559139'), { timeout: 10000 });
                 } catch (e: any) {
                     throw new WeiboError('登录超时')
                 }
