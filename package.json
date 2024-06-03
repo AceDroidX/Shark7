@@ -2,24 +2,21 @@
     "name": "shark7",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build:shared": "pnpm run -F shark7-shared build"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "axios": "^1.5.0",
-        "mongodb": "^6.1.0"
+        "axios": "^1.7.2",
+        "mongodb": "^6.7.0",
+        "nats": "^2.26.0"
     },
     "devDependencies": {
-        "cz-conventional-changelog": "^3.3.0",
-        "dotenv": "^16.3.1",
-        "esbuild": "^0.19.3",
-        "nodemon": "^3.0.1",
-        "ts-node": "^10.9.1",
-        "typescript": "^5.2.2"
+        "@types/bun": "latest",
+        "typescript": "latest",
+        "cz-conventional-changelog": "^3.3.0"
     },
     "workspaces": [
         "packages/*"

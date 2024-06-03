@@ -2,8 +2,9 @@
     "name": "shark7-shared",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "module": "src/index.ts",
+    "main": "src/index.ts",
+    "type": "module",
     "scripts": {
         "start": "node --enable-source-maps dist/index.js",
         "test": "node dist/test.js",
@@ -15,14 +16,13 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "logform": "^2.5.1",
         "md5": "^2.3.0",
-        "nats": "^2.16.0",
-        "puppeteer": "22.6.1",
-        "toad-scheduler": "^3.0.0",
-        "winston": "^3.10.0",
+        "logform": "^2.6.0",
+        "winston": "^3.13.0",
         "winston-mongodb": "^5.1.1",
-        "winston-transport": "^4.5.0"
+        "winston-transport": "^4.7.0",
+        "puppeteer": "22.10.0",
+        "toad-scheduler": "^3.0.0"
     },
     "devDependencies": {
         "@types/md5": "^2.3.2"

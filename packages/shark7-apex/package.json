@@ -2,7 +2,8 @@
     "name": "shark7-apex",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
+    "module": "src/index.ts",
+    "type": "module",
     "scripts": {
         "start": "node --enable-source-maps dist/index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,6 +15,6 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "shark7-shared": "workspace:^"
+        "shark7-shared": "workspace:*"
     }
 }

@@ -49,7 +49,7 @@ jobs:
               uses: docker/build-push-action@v3
               with:
                   context: .
-                  file: ./packages/shark7-${{ matrix.package }}/Dockerfile
+                  target: ${{ matrix.package }}
                   build-args: IMAGE_TAG=${{ github.ref_name }}
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}

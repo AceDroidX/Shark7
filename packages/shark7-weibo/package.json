@@ -2,7 +2,8 @@
     "name": "shark7-weibo",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
+    "module": "src/index.ts",
+    "type": "module",
     "scripts": {
         "start": "node --enable-source-maps dist/index.js",
         "test": "node dist/test.js",
@@ -14,9 +15,7 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
-        "logform": "^2.5.1",
-        "nats": "^2.16.0",
-        "puppeteer": "21.3.1",
-        "shark7-shared": "workspace:^"
+        "puppeteer": "22.10.0",
+        "shark7-shared": "workspace:*"
     }
 }
