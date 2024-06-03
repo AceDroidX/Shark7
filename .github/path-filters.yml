@@ -10,9 +10,6 @@ apex:
 bilibili:
     - *shared
     - "packages/shark7-bilibili/**"
-bililive-guard:
-    - *shared
-    - "packages/shark7-bililive-guard/**"
 bililive:
     - *shared
     - "packages/shark7-bililive/**"
