@@ -1,9 +1,6 @@
-import { LiveTCP, TCPOptions } from 'bilibili-live-ws'
-import { Shark7Event } from "shark7-shared"
-import { BiliSimpleUser } from 'shark7-shared'
-import { BiliUsers } from "shark7-shared"
-import { logger } from "shark7-shared"
-import { Scope } from "shark7-shared"
+import { LiveTCP, type TCPOptions } from 'bilibili-live-ws'
+import type { Shark7Event } from "shark7-shared"
+import { BiliSimpleUser, BiliUsers, Scope, logger } from 'shark7-shared'
 import { GetConfTask } from "./GetConfTask"
 import { MongoController } from "./MongoController"
 

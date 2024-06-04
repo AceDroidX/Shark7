@@ -1,13 +1,13 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { Shark7Event } from ".";
-import { ApexUserInfo } from "./apex";
-import { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
-import { BiliGuardState } from "./bililive";
+import type { Shark7Event } from ".";
+import type { ApexUserInfo } from "./apex";
+import type { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
+import type { BiliGuardState } from "./bililive";
 import { getDBInstance } from "./db";
-import { DouyinUser } from "./douyin";
-import { NeteaseMusicUser } from "./netease-music";
-import { OnlineData, WeiboComment, WeiboMsg, WeiboUser } from "./weibo";
-import { ReckfengData } from "./reckfeng";
+import type { DouyinUser } from "./douyin";
+import type { NeteaseMusicUser } from "./netease-music";
+import type { ReckfengData } from "./reckfeng";
+import { WeiboMsg, WeiboUser, type OnlineData, type WeiboComment } from "./weibo";
 
 export class EventDBs {
     event: Collection<Shark7Event>

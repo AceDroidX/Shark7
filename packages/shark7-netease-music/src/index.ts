@@ -1,11 +1,4 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
-import { NeteaseMusicDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { Scheduler } from 'shark7-shared';
-import { logErrorDetail } from 'shark7-shared';
+import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
 import { MongoController } from './MongoController';
 import { fetchUser, insertUser, onUserEvent } from './user';
 

@@ -1,5 +1,3 @@
-import { Shark7Event } from "shark7-shared"
-
 export type FcmSendBody = {
     validate_only?: boolean,
     message: Message

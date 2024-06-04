@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { BiliSimpleUser, BiliUsers } from 'shark7-shared';
 import { BiliLiveDBs } from 'shark7-shared';
 import { MongoControlClient } from 'shark7-shared';

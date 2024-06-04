@@ -1,15 +1,14 @@
 import axios from "axios";
-import { DouyinUserApi } from "./model";
 import {
-    DouyinUser,
     cookieStrToJson,
     logAxiosError,
     logErrorDetail,
     logger,
+    type DouyinUser,
 } from "shark7-shared";
 import { MongoController } from "./MongoController";
-
-const { sign } = require("./X-Bogus.js");
+import { sign } from "./X-Bogus.js";
+import type { DouyinUserApi } from "./model";
 
 export async function insertUser(
     ctr: MongoController,

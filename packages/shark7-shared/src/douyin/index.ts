@@ -1,4 +1,4 @@
-import { UpdateTypeDoc } from ".."
+import type { UpdateTypeDoc } from ".."
 
 export type DouyinUser = UpdateTypeDoc & typeof DouyinUserDemo
 

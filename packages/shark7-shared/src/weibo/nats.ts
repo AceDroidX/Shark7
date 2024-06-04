@@ -1,4 +1,4 @@
-import { Cookie } from "puppeteer"
+import type { Cookie } from "puppeteer"
 
 export enum WeiboNATSSubscribeName {
     CookieExpire = 'Weibo.CookieExpire',

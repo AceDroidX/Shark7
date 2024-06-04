@@ -1,5 +1,5 @@
 import url from 'url'
-import { InsertTypeDoc, UpdateTypeDoc } from '..';
+import type { InsertTypeDoc, UpdateTypeDoc } from '..';
 
 export * from './comment'
 export * from './nats'

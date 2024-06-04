@@ -1,7 +1,7 @@
-import { ChangeStreamUpdateDocument } from "mongodb";
-import { Shark7Event } from "shark7-shared";
-import { Scope } from "shark7-shared";
-import { logger } from "shark7-shared";
+import type { ChangeStreamUpdateDocument } from "mongodb";
+import type { Shark7Event } from "shark7-shared";
+import { Scope, logger } from "shark7-shared";
+import { MongoController } from "./MongoController";
 import {
     getBadgeName,
     getFrameName,
@@ -9,8 +9,7 @@ import {
     getPosName,
     getSkinName,
 } from "./cdataType";
-import { MongoController } from "./MongoController";
-import { getKeyByValue, LegendName, TracerName } from "./cdataTypeMap";
+import { LegendName, TracerName, getKeyByValue } from "./cdataTypeMap";
 
 export async function onUserInfoEvent(
     ctr: MongoController,

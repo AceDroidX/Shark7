@@ -1,4 +1,4 @@
-import { UpdateTypeDocWithName } from ".."
+import type { UpdateTypeDocWithName } from ".."
 import { BiliSimpleUser } from "./BiliSimpleUser"
 
 export { BiliSimpleUser }

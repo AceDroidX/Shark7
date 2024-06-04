@@ -1,5 +1,4 @@
-import { DouyinDBs, DouyinUser } from 'shark7-shared';
-import { MongoControllerBase } from 'shark7-shared';
+import { DouyinDBs, MongoControllerBase, type DouyinUser } from 'shark7-shared';
 
 export class MongoController extends MongoControllerBase<DouyinDBs> {
     async run() {

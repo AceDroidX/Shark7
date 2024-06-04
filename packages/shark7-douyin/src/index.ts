@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
 import { MongoController } from './MongoController';
 import { onUserDBEvent } from "./event";

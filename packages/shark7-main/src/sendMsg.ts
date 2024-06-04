@@ -1,4 +1,4 @@
-import { Shark7Event } from "shark7-shared"
+import type { Shark7Event } from "shark7-shared"
 import { FcmClient } from "./fcm"
 import { sendEventToKHL } from "./khl"
 

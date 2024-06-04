@@ -1,6 +1,5 @@
-import { BiliDynamic, BiliUser, BiliVideo } from 'shark7-shared';
-import { BilibiliDBs } from 'shark7-shared';
-import { MongoControllerBase } from 'shark7-shared';
+import type { BiliDynamic, BiliUser, BiliVideo } from 'shark7-shared';
+import { BilibiliDBs, MongoControllerBase } from 'shark7-shared';
 
 export class MongoController extends MongoControllerBase<BilibiliDBs> {
     async insertUser(user: BiliUser) {

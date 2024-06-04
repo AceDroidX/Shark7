@@ -1,8 +1,6 @@
 import axios from "axios";
-import { Shark7Event } from "shark7-shared";
-import { loggerEventSender } from "shark7-shared";
-import { getScopeName } from "shark7-shared";
-import { getTime } from "shark7-shared";
+import type { Shark7Event } from "shark7-shared";
+import { getScopeName, getTime, loggerEventSender } from "shark7-shared";
 import { KHLAPIPREFIX } from "../constants";
 
 // async function sendLogToKHL(log: string) {

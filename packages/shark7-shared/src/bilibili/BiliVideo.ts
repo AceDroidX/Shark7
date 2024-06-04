@@ -1,4 +1,4 @@
-import { InsertTypeDoc } from ".."
+import type { InsertTypeDoc } from ".."
 
 export type BiliVideo = InsertTypeDoc & typeof BiliVideoDemo
 

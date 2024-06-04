@@ -1,5 +1,5 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
-import { getTime, logger, MongoControllerBase, OnlineData, Scope, Shark7Event, WeiboDBs, WeiboMsg } from "shark7-shared"
+import type { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
+import { MongoControllerBase, Scope, WeiboDBs, WeiboMsg, getTime, logger, type OnlineData, type Shark7Event } from "shark7-shared"
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     async insertLike(mblog: WeiboMsg) {

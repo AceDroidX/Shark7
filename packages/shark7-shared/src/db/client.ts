@@ -1,6 +1,6 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument, Collection, Db, Document, MongoClient } from "mongodb";
+import { Collection, Db, MongoClient, type ChangeStreamInsertDocument, type ChangeStreamUpdateDocument, type Document } from "mongodb";
 import { getDBInstance } from ".";
-import { Shark7Event, UpdateTypeDoc } from "..";
+import type { Shark7Event, UpdateTypeDoc } from "..";
 import { EventDBs } from "../database";
 import { logger } from "../logger";
 import { logErrorDetail } from "../utils";

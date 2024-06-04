@@ -1,8 +1,6 @@
-import { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
-import { WeiboUser, WeiboMsg, WeiboComment } from 'shark7-shared'
-import { Shark7Event } from "shark7-shared"
-import { Scope } from 'shark7-shared'
-import { logger } from "shark7-shared"
+import type { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
+import type { Shark7Event, WeiboComment } from "shark7-shared"
+import { Scope, WeiboMsg, WeiboUser, logger } from 'shark7-shared'
 import { MongoController } from "./MongoController"
 import { fetchComments } from './comment'
 import { WeiboHTTP } from "./model/WeiboHTTP"

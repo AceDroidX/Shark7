@@ -1,4 +1,4 @@
-import { MongoControllerBase, WeiboComment, WeiboDBs, WeiboMsg, WeiboUser } from 'shark7-shared';
+import { MongoControllerBase, WeiboDBs, WeiboMsg, WeiboUser, type WeiboComment } from 'shark7-shared';
 
 export class MongoController extends MongoControllerBase<WeiboDBs> {
     async insertMblog(mblog: WeiboMsg) {

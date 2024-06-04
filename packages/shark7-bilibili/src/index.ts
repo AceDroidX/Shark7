@@ -1,13 +1,6 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
-import { BilibiliDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { Scheduler } from 'shark7-shared';
-import { logErrorDetail } from 'shark7-shared';
-import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
+import { BilibiliDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
 import { MongoController } from './MongoController';
+import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
 import { insertUser, onUserEvent } from './user';
 import { insertVideo, onCoinEvent, onLikeEvent, onVideoUpdate } from './video';
 

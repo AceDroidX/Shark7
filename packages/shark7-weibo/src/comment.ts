@@ -1,6 +1,7 @@
-import { logger, WeiboComment, WeiboCommentApi, WeiboReplyComment, WeiboRootComment } from 'shark7-shared';
-import { WeiboHTTP } from './model/WeiboHTTP';
+import type { WeiboComment, WeiboCommentApi, WeiboReplyComment, WeiboRootComment } from 'shark7-shared';
+import { logger } from 'shark7-shared';
 import { MongoController } from './MongoController';
+import { WeiboHTTP } from './model/WeiboHTTP';
 
 enum CommentFlow {
     ByHot = 0,

@@ -1,6 +1,7 @@
 import axios from "axios";
-import { ChangeStreamUpdateDocument } from "mongodb";
-import { BiliApi, BiliGet, BiliUser, Scope, Shark7Event, flattenObj, logAxiosError, logErrorDetail, logger } from "shark7-shared";
+import type { ChangeStreamUpdateDocument } from "mongodb";
+import type { BiliApi, BiliUser, Shark7Event } from "shark7-shared";
+import { BiliGet, Scope, flattenObj, logAxiosError, logErrorDetail, logger } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
 export async function getUser(user_id: number): Promise<BiliUser | null> {
@@ -69,7 +70,7 @@ export async function onUserEvent(ctr: MongoController, event: ChangeStreamUpdat
             return
         }
         if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
-            if(['live_room', 'elec', 'fans_medal.medal.wearing_status', 'user_honour_info.is_latest_100honour'].some(value => key==value)) return
+            if (['live_room', 'elec', 'fans_medal.medal.wearing_status', 'user_honour_info.is_latest_100honour'].some(value => key == value)) return
         }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return

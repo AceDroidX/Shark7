@@ -1,5 +1,4 @@
-import { MongoDBs } from "shark7-shared";
-import { MongoControllerBase } from 'shark7-shared';
+import { MongoControllerBase, MongoDBs } from "shark7-shared";
 import { EventProcessor } from "./event";
 
 export {

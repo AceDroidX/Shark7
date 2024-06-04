@@ -1,6 +1,6 @@
-import { Cookie } from 'puppeteer';
+import type { Cookie } from 'puppeteer';
 import { logErrorDetail, logger, WeiboMsg } from 'shark7-shared';
-import { WeiboCard, WeiboLikeIdConfig } from "./model";
+import type { WeiboCard, WeiboLikeIdConfig } from "./model";
 import { MongoController } from './MongoController';
 import { fetchURL, getReqConfig } from './utils';
 

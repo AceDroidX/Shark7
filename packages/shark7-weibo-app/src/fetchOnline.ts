@@ -1,7 +1,7 @@
-import { Cookie } from 'puppeteer';
-import { logErrorDetail, logger, OnlineData } from 'shark7-shared';
-import { WeiboCard, WeiboOnlineIdConfig } from "./model";
+import type { Cookie } from 'puppeteer';
+import { logErrorDetail, logger, type OnlineData } from 'shark7-shared';
 import { MongoController } from './MongoController';
+import type { WeiboCard, WeiboOnlineIdConfig } from "./model";
 import { fetchURL, getReqConfig } from './utils';
 
 export async function getOnline(cookie: Cookie[], config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {

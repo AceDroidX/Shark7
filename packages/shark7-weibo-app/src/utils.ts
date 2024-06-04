@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios"
-import { Cookie } from "puppeteer"
+import axios, { type AxiosRequestConfig } from "axios"
+import type { Cookie } from "puppeteer"
 import { logErrorDetail, logger } from "shark7-shared"
 
 export function getReqConfig(cookie: Cookie[], containerid: string): AxiosRequestConfig | undefined {

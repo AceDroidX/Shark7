@@ -1,10 +1,7 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboCookieMgr, WeiboDBs } from 'shark7-shared';
 import { fetchLike, getLike } from './fetchLike';
 import { fetchOnline, getOnline } from './fetchOnline';
-import { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
+import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
 import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
 
 process.on('uncaughtException', function (err) {

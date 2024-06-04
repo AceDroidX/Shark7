@@ -1,4 +1,4 @@
-import { DouyinUser } from "shark7-shared"
+import type { DouyinUser } from "shark7-shared"
 
 const DouyinApiDemo = {
     "extra": {

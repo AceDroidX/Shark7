@@ -1,4 +1,4 @@
-import { Browser, Cookie } from "puppeteer";
+import { Browser, type Cookie } from "puppeteer";
 import { logger } from "../logger";
 
 interface IWeb {

@@ -1,14 +1,8 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { Collection } from 'mongodb';
-import { MongoDBs } from 'shark7-shared';
-import { MongoControlClient } from 'shark7-shared';
-import { logger, initLogger } from 'shark7-shared';
-import { logErrorDetail } from 'shark7-shared';
+import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger } from 'shark7-shared';
+import { MongoController } from './MongoController';
 import { EventProcessor } from './event';
 import { FcmClient } from './fcm';
-import { MongoController } from './MongoController';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

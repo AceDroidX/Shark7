@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ debug: true })
-}
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboCookieMgr, WeiboDBs } from 'shark7-shared';
 import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
 import { WeiboHTTP } from './model/WeiboHTTP';

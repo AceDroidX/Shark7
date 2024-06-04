@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ChangeStreamUpdateDocument } from "mongodb";
-import { NeteaseMusicUser, Scope, Shark7Event, flattenObj, logErrorDetail, logger } from "shark7-shared";
+import type { ChangeStreamUpdateDocument } from "mongodb";
+import { Scope, flattenObj, logErrorDetail, logger, type NeteaseMusicUser, type Shark7Event } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
 const api_url = process.env['api_url']
