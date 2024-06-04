@@ -112,6 +112,7 @@ export async function onUserInfoEvent(
             case "cdata18":
                 const introVoice = getIntroVoice(updated[field]);
                 msg += `\n开场台词改变: ${introVoice}`;
+                break;
             case "cdata23":
                 msg += `\n玩家等级改变: ${updated[field]}`;
                 break;
