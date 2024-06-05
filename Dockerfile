@@ -50,20 +50,15 @@ COPY . .
 # RUN bun run build
 
 # copy production dependencies and source code into final image
-FROM base AS weibo-web
+FROM base AS release
+ARG PACKAGE
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /app/packages/shark7-shared ./packages/shark7-shared
-COPY --from=prerelease /app/packages/shark7-weibo-web ./packages/shark7-weibo-web
+COPY --from=prerelease /app/packages/shark7-${PACKAGE} ./packages/shark7-${PACKAGE}
 
 # run the app
 # USER bun
 # EXPOSE 3000/tcp
-ENTRYPOINT bun run packages/shark7-weibo-web/src/index.ts
+ENTRYPOINT bun run packages/shark7-${PACKAGE}/src/index.ts
 # ENTRYPOINT [ "bun", "run", "src/index.ts" ]
 # ENTRYPOINT bash
-
-FROM base AS weibo
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /app/packages/shark7-shared ./packages/shark7-shared
-COPY --from=prerelease /app/packages/shark7-weibo ./packages/shark7-weibo
-ENTRYPOINT bun run packages/shark7-weibo/src/index.ts

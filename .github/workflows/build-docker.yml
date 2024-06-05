@@ -49,8 +49,9 @@ jobs:
               uses: docker/build-push-action@v3
               with:
                   context: .
-                  target: ${{ matrix.package }}
-                  build-args: IMAGE_TAG=${{ github.ref_name }}
+                  build-args: |
+                    IMAGE_TAG=${{ github.ref_name }}
+                    PACKAGE=${{ matrix.package }}
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                 #   cache-from: type=registry,ref=acedroidx/shark7-${{ matrix.package }}:buildcache
