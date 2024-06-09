@@ -18,7 +18,7 @@ process.on('uncaughtException', function (err) {
 //     process.exit(1);
 // });
 // init
-if (require.main === module) {
+if (import.meta.main) {
     main()
 }
 async function main() {

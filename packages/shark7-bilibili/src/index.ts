@@ -13,7 +13,7 @@ process.on('uncaughtException', function (err) {
 //     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
 //     process.exit(1);
 // });
-if (require.main === module) {
+if (import.meta.main) {
     main()
 }
 async function main() {
