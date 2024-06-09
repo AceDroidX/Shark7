@@ -52,6 +52,7 @@ COPY . .
 # copy production dependencies and source code into final image
 FROM base AS release
 ARG PACKAGE
+ENV PACKAGE=${PACKAGE}
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /app/packages/shark7-shared ./packages/shark7-shared
 COPY --from=prerelease /app/packages/shark7-${PACKAGE} ./packages/shark7-${PACKAGE}
