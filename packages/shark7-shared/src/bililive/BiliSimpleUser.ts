@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BiliGet, type BiliApi, type BiliUser } from "../bilibili";
+import { BiliGet, get_w_webid, headers, type BiliApi, type BiliUser } from "../bilibili";
 import { logger } from "../logger";
 import { logErrorDetail } from "../utils";
 import type { BiliRoomInfo } from "./BiliRoomInfo";
@@ -18,7 +18,7 @@ export class BiliSimpleUser {
 
     static async initByUID(uid: number): Promise<BiliSimpleUser | null> {
         try {
-            const resp = await BiliGet<BiliApi<BiliUser>>(UID_info_prefix, { mid: uid })
+            const resp = await BiliGet<BiliApi<BiliUser>>(UID_info_prefix, { platform: 'web', mid: uid, w_webid: await get_w_webid() })
             if (resp.status != 200) {
                 logger.error('resp.status != 200:' + JSON.stringify(resp))
                 return null
@@ -35,13 +35,13 @@ export class BiliSimpleUser {
     }
     static async initByRoomid(roomid: number): Promise<BiliSimpleUser | null> {
         try {
-            const resp = await axios.get<BiliApi<BiliRoomInfo>>(ROOMID_info_prefix + roomid)
+            const resp = await axios.get<BiliApi<BiliRoomInfo>>(ROOMID_info_prefix + roomid, { headers })
             if (resp.status != 200) {
                 logger.error('resp.status != 200:' + JSON.stringify(resp))
                 return null
             }
             if (resp.data.code != 0) {
-                logger.error('resp.data.code != 0:' + JSON.stringify(resp))
+                logger.error('resp.data.code != 0:' + JSON.stringify(resp.data))
                 return null
             }
             const uid = resp.data.data.room_info.uid
