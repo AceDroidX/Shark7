@@ -21,6 +21,8 @@ export async function getUser(user_id: number): Promise<BiliUser | null> {
         data.nameplate.image = 'https://i0.' + data.nameplate.image.match('hdslb.com.*$')?.[0]
         data.nameplate.image_small = 'https://i0.' + data.nameplate.image_small.match('hdslb.com.*$')?.[0]
         data.top_photo = 'https://i0.' + data.top_photo.match('hdslb.com.*$')?.[0]
+        data.top_photo_v2.l_img = 'https://i0.' + data.top_photo_v2.l_img.match('hdslb.com.*$')?.[0]
+        data.top_photo_v2.l_200h_img = 'https://i0.' + data.top_photo_v2.l_200h_img.match('hdslb.com.*$')?.[0]
         let dataAny: any = data
         dataAny.shark7_id = String(user_id)
         return dataAny
