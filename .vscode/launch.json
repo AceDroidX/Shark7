@@ -1,34 +1,12 @@
 {
     "configurations": [
         {
-            "name": "run test",
-            "program": "${workspaceFolder}/dist/test.ts",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            // "preLaunchTask": "",
-            "type": "pwa-node"
-        },
-        {
-            "name": "run index",
-            "program": "${workspaceFolder}/dist/index.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            // "preLaunchTask": "",
-            "type": "pwa-node"
-        },
-        {
-            "name": "run qqbot",
-            "program": "${workspaceFolder}/dist/qqbot.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            // "preLaunchTask": "",
-            "type": "pwa-node"
+            "type": "bun",
+            "request": "attach",
+            "name": "Attach to Bun",
+            // The URL of the WebSocket inspector to attach to.
+            // This value can be retrieved by using `bun --inspect`.
+            "url": "ws://localhost:6499/bun",
         }
     ]
 }
