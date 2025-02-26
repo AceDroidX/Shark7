@@ -28,6 +28,7 @@ export async function onUserDBEvent(
         logger.error(`updatedFields为${user}`);
         process.exit(1);
     }
+    logger.debug(`用户发生变化\n${JSON.stringify(event)}\n${JSON.stringify(origin)}`);
     const flattenOrigin = flattenObj(origin);
     var result: string[] = [];
     Object.entries(updated).forEach((item) => {

@@ -23,6 +23,7 @@ export async function fetchUser(
     ctr: MongoController,
     sec_uid: string
 ): Promise<boolean> {
+    logger.debug("fetchUser:" + sec_uid);
     const data = await getUser(sec_uid);
     if (!data) return false;
     await ctr.updateUserInfo(data);
@@ -33,6 +34,7 @@ export async function fetchNote(
     ctr: MongoController,
     sec_uid: string
 ): Promise<boolean> {
+    logger.debug("fetchNote:" + sec_uid);
     const data = await getNote(sec_uid);
     if (!data) return false;
     for (const item of data) {
@@ -45,6 +47,7 @@ export async function fetchNoteDetail(
     ctr: MongoController,
     sec_uid: string
 ): Promise<boolean> {
+    logger.debug("fetchNoteDetail:" + sec_uid);
     const data = await getNoteDetail(sec_uid);
     if (!data) return false;
     await ctr.insertNoteDetail(data);
@@ -55,21 +58,50 @@ export async function fetchComment(
     ctr: MongoController,
     uid: string
 ): Promise<boolean> {
-    const list = await ctr.getNoteByUidAndTimeLimit(uid);
-    const task = list
-        ? list.map(async (item) => {
-              const data = await getComment(item.note_id);
-              if (!data) return false;
-              for (const item of data) {
-                  await ctr.insertComment(item);
-              }
-              return true;
-          })
-        : [await ctr.getOneNoteByUid(uid)];
-    return (await Promise.all(task)).every((item) => item);
+    logger.debug("fetchComment:" + uid);
+    let isSuccess = true;
+    async function getCommentTask() {
+        const timeNoteList = await ctr.getNoteByUidAndTimeLimit(uid);
+        logger.debug(
+            "fetchComment: timeNoteList.length:" + timeNoteList?.length
+        );
+        if (timeNoteList.length > 0) {
+            return timeNoteList.map((item) => getComment(item.note_id));
+        } else {
+            const one = await ctr.getOneNoteByUid(uid);
+            if (!one) {
+                logger.warn("fetchComment: getOneNoteByUid is null");
+                isSuccess = false;
+                return [];
+            }
+            return [getComment(one.note_id)];
+        }
+    }
+    const task = await getCommentTask();
+    logger.debug("fetchComment: task.length:" + task.length);
+    const result = await Promise.all(task);
+    let comments: RednoteComment[] = [];
+    for (const item of result) {
+        if (!item) {
+            logger.warn("fetchComment: some result is null");
+            isSuccess = false;
+            continue;
+        }
+        for (const comment of item) {
+            comments.push(comment);
+            if ("sub_comments" in comment) {
+                comments = comments.concat(comment.sub_comments);
+            }
+        }
+    }
+    for (const item of comments) {
+        if (item.user_info.user_id == uid) await ctr.insertComment(item);
+    }
+    return isSuccess;
 }
 
 export async function getUser(uid: string): Promise<RednoteUser | null> {
+    logger.debug("getUser:" + uid);
     try {
         const data = { target_user_id: uid };
         const resp = await axios_rednote.get<RednoteApi<RednoteUser>>(
@@ -91,6 +123,7 @@ export async function getUser(uid: string): Promise<RednoteUser | null> {
 }
 
 export async function getNote(uid: string): Promise<RednoteNote[] | null> {
+    logger.debug("getNote:" + uid);
     try {
         const data = {
             num: "30",
@@ -117,6 +150,7 @@ export async function getNoteDetail(
     note_id: string
 ): Promise<RednoteNoteDetail | null> {
     try {
+        logger.debug("getNoteDetail:" + note_id);
         if (!xsec_token) {
             logger.error("xsec_token不存在");
             return null;
@@ -146,6 +180,7 @@ export async function getComment(
     note_id: string
 ): Promise<RednoteComment[] | null> {
     try {
+        logger.debug("getComment:" + note_id);
         if (!xsec_token) {
             logger.error("xsec_token不存在");
             return null;
