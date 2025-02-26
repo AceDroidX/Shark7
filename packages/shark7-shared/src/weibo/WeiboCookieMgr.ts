@@ -18,22 +18,24 @@ export class WeiboCookieMgr {
     static async requestCookie(nc: NatsConnection) {
         logger.info(`requestCookie`)
         const jc = JSONCodec<WeiboCookieRequest>();
-        const request = jc.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime() });
-        try {
-            const respond = await nc.request(WeiboNATSSubscribeName.Cookie, request, { timeout: 1000 })
-            return JSONCodec<WeiboCookieRespond>().decode(respond.data)
-        } catch (err: any) {
-            switch (err.code) {
-                case ErrorCode.NoResponders:
-                    logger.error("requestCookie ErrorCode.NoResponders");
-                    break;
-                case ErrorCode.Timeout:
-                    logger.error("requestCookie ErrorCode.Timeout");
-                    break;
-                default:
-                    logger.error("requestCookie" + JSON.stringify(err));
+        while (true) {
+            try {
+                const request = jc.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime() });
+                const respond = await nc.request(WeiboNATSSubscribeName.Cookie, request, { timeout: 1000 })
+                return JSONCodec<WeiboCookieRespond>().decode(respond.data)
+            } catch (err: any) {
+                switch (err.code) {
+                    case ErrorCode.NoResponders:
+                        logger.error("requestCookie ErrorCode.NoResponders");
+                        break;
+                    case ErrorCode.Timeout:
+                        logger.error("requestCookie ErrorCode.Timeout");
+                        break;
+                    default:
+                        logger.error("requestCookie" + JSON.stringify(err));
+                }
+                await new Promise(resolve => setTimeout(resolve, 10000))
             }
-            process.exit(1)
         }
     }
     sendWeiboCookieExpireEvent() {

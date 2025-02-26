@@ -20,7 +20,7 @@ export class MongoController extends MongoControllerBase<RednoteDBs> {
         );
     }
     async insertNote(data: RednoteNote) {
-        return await this.dbs.commentsDB.updateOne(
+        return await this.dbs.notesDB.updateOne(
             { note_id: data.note_id },
             [{ $replaceWith: data }],
             { upsert: true }

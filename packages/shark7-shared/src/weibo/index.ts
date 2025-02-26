@@ -18,12 +18,22 @@ export class WeiboUser implements UpdateTypeDoc {
     verified_reason: string | undefined;
     description: string | undefined;
 
-    constructor(shark7_id: string, id: number, screen_name: string, profile_image_url: string, avatar_hd: string, friends_count: number,statuses_count: number, verified_reason: string | undefined, description: string | undefined) {
+    constructor(shark7_id: string, id: number, screen_name: string, profile_image_url: string, avatar_hd: string, friends_count: number, statuses_count: number, verified_reason: string | undefined, description: string | undefined) {
         this.shark7_id = shark7_id
         this.id = id;
         this.screen_name = screen_name;
-        this.profile_image_url = profile_image_url != '' ? url.format(new url.URL(profile_image_url), { search: false }) : '';
-        this.avatar_hd = avatar_hd != '' ? url.format(new url.URL(avatar_hd), { search: false }) : '';
+        if (profile_image_url != '') {
+            const profileUrl = new URL(profile_image_url);
+            this.profile_image_url = `${profileUrl.origin}${profileUrl.pathname}`
+        } else {
+            this.profile_image_url = ''
+        }
+        if (avatar_hd != '') {
+            const avatarUrl = new URL(avatar_hd);
+            this.avatar_hd = `${avatarUrl.origin}${avatarUrl.pathname}`
+        } else {
+            this.avatar_hd = ''
+        }
         this.friends_count = friends_count
         this.statuses_count = statuses_count
         this.verified_reason = verified_reason;
@@ -32,8 +42,18 @@ export class WeiboUser implements UpdateTypeDoc {
 
     setInfoFromRaw(raw: any) {
         this.screen_name = raw.screen_name;
-        this.profile_image_url = raw.profile_image_url != '' ? url.format(new url.URL(raw.profile_image_url), { search: false }) : '';
-        this.avatar_hd = raw.avatar_hd != '' ? url.format(new url.URL(raw.avatar_hd), { search: false }) : '';
+        if (raw.profile_image_url != '') {
+            const profileUrl = new URL(raw.profile_image_url);
+            this.profile_image_url = `${profileUrl.origin}${profileUrl.pathname}`
+        } else {
+            this.profile_image_url = ''
+        }
+        if (raw.avatar_hd != '') {
+            const avatarUrl = new URL(raw.avatar_hd);
+            this.avatar_hd = `${avatarUrl.origin}${avatarUrl.pathname}`
+        } else {
+            this.avatar_hd = ''
+        }
         this.friends_count = raw.friends_count;
         this.statuses_count = raw.statuses_count;
         this.verified_reason = raw.verified_reason;

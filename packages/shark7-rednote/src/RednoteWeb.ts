@@ -8,7 +8,7 @@ import {
 } from "shark7-shared";
 import type { BrowserSign } from "./model";
 
-// const login_btn_selector = "a ::-p-text(登录)";
+const login_btn_selector = '//*[text()="登录"]';
 // const oldlogin_btn_selector =
 //     "#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a";
 
@@ -23,8 +23,51 @@ export class RednoteWeb extends Web {
         super(browser);
     }
 
+    setCookie() {
+        const cookieStr = process.env["cookie"];
+        if (!cookieStr) {
+            logger.error("请设置cookie");
+            process.exit(1);
+        }
+        this.browser.setCookie(
+            ...cookieStrToJson(cookieStr, ".xiaohongshu.com")
+        );
+    }
+
+    async clearStorage() {
+        if (!this.page) {
+            logger.error("puppeteer:page不存在");
+            return;
+        }
+        logger.info("puppeteer:清除localStorage");
+        await this.page.evaluate(() => {
+            localStorage.clear();
+        });
+        logger.info("puppeteer:清除sessionStorage");
+        await this.page.evaluate(() => {
+            sessionStorage.clear();
+        });
+        logger.info("puppeteer:清除cookie");
+        await this.browser.deleteCookie(
+            ...(
+                await this.browser.cookies()
+            ).filter((cookie) => cookie.domain.endsWith(".xiaohongshu.com"))
+        );
+    }
+
     async open() {
         // try {
+        logger.info("puppeteer:检查cookie");
+        const isCookieExist = (await this.browser.cookies()).find(
+            (cookie) => cookie.domain == ".xiaohongshu.com"
+        );
+        if (isCookieExist) {
+            logger.info("puppeteer:cookie已存在");
+        } else {
+            logger.info("puppeteer:cookie不存在");
+            this.setCookie();
+            logger.info("puppeteer:已设置cookie");
+        }
         logger.info("puppeteer:检查是否已经有打开的标签页");
         const pages = await this.browser.pages();
         for (const page of pages) {
@@ -34,34 +77,6 @@ export class RednoteWeb extends Web {
                 return;
             }
         }
-        logger.info("puppeteer:检查cookie");
-        const isCookieExist = (await this.browser.cookies()).find(
-            (cookie) => cookie.domain == ".xiaohongshu.com"
-        );
-        if (isCookieExist) {
-            logger.info("puppeteer:cookie已存在");
-        } else {
-            logger.info("puppeteer:cookie不存在");
-            const cookieStr = process.env["cookie"];
-            if (!cookieStr) {
-                logger.error("请设置cookie");
-                process.exit(1);
-            }
-            this.browser.setCookie(
-                ...cookieStrToJson(cookieStr, ".xiaohongshu.com")
-            );
-            logger.info("puppeteer:已设置cookie");
-        }
-        logger.info("puppeteer:测试pages");
-        const r: any = await Promise.race([
-            this.browser.pages(),
-            new Promise((resolve) => setTimeout(resolve, 1000, "timeout")),
-        ]);
-        if (r == "timeout") {
-            logger.error(`puppeteer:获取pages超时`);
-            process.exit(1);
-        }
-        logger.debug(`puppeteer:pages:${r.length}`);
         this.page = await this.browser.newPage();
     }
 
@@ -76,15 +91,16 @@ export class RednoteWeb extends Web {
         await this.page.setRequestInterception(true);
         this.page.on("request", (interceptedRequest) => {
             if (interceptedRequest.isInterceptResolutionHandled()) return;
-            const blocklist = [
-                "https://t2.xiaohongshu.com/api/v2/collect",
-                "https://apm-fe.xiaohongshu.com/api/data",
-                "https://edith.xiaohongshu.com/api/sns/web/unread_count",
-            ];
-            if (blocklist.includes(interceptedRequest.url())) {
-                interceptedRequest.abort();
-                console.log("blocked:", interceptedRequest.url());
-            } else if (interceptedRequest.resourceType() == "image")
+            // const blocklist = [
+            //     "https://t2.xiaohongshu.com/api/v2/collect",
+            //     "https://apm-fe.xiaohongshu.com/api/data",
+            //     "https://edith.xiaohongshu.com/api/sns/web/unread_count",
+            // ];
+            // if (blocklist.includes(interceptedRequest.url())) {
+            //     interceptedRequest.abort();
+            //     console.log("blocked:", interceptedRequest.url());
+            // } else
+            if (interceptedRequest.resourceType() == "image")
                 interceptedRequest.abort();
             else if (interceptedRequest.resourceType() == "media")
                 interceptedRequest.abort();
@@ -105,19 +121,50 @@ export class RednoteWeb extends Web {
             this.page.goto(
                 "https://www.xiaohongshu.com/user/profile/" +
                     process.env["uid"],
-                { timeout: 30000 }
+                { timeout: 60000 }
             ),
-            this.page.waitForNavigation({ waitUntil: "networkidle2" }),
+            this.page.waitForNavigation({ waitUntil: 'networkidle2' }),
         ]);
         // if (page.url().startsWith("https://passport.weibo.com")) {
         //     logger.debug("puppeteer:passport页面 等待中");
         //     await page.waitForNavigation({ waitUntil: "networkidle2" });
         // }
         logger.debug(`puppeteer:更新前cookie\n${JSON.stringify(this.cookie)}`);
+        const login_btn = await this.page.evaluate(
+            (selector) =>
+                document.evaluate(
+                    selector,
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue,
+            login_btn_selector
+        );
+        logger.debug("puppeteer:login_btn_selector:" + login_btn?.textContent);
+        if (login_btn == null) {
+            logger.debug("puppeteer:已登录");
+            // logger.debug("puppeteer:screenshot");
+            // await this.page.screenshot({
+            //     path: "log/weibo.png",
+            //     fullPage: false,
+            // });
+
+            var new_cookie = await this.page.cookies();
+            logger.debug("puppeteer:new_cookie\n" + JSON.stringify(new_cookie));
+
+            // if (this.isCookieChanged('SUB', new_cookie)) this.nats.sendWeiboCookieUpdateEvent(new_cookie)
+            this.isCookieChanged("a1", new_cookie);
+
+            this.cookie_str = cookieJsonToStr(new_cookie);
+            this.cookie = new_cookie;
+        } else {
+            await this.clearStorage();
+            this.setCookie();
+            await this.refresh();
+        }
         // await page.screenshot({ path: "log/weibo-0.png", fullPage: false });
-        // const login_btn = await page.$(login_btn_selector);
         // const oldlogin_btn = await page.$(oldlogin_btn_selector);
-        // logger.debug("puppeteer:login_btn_selector:" + login_btn);
         // logger.debug("puppeteer:oldlogin_btn_selector:" + oldlogin_btn);
         // if (login_btn == null && oldlogin_btn == null) {
         //     // logger.debug('puppeteer:setCookie')
@@ -167,17 +214,7 @@ export class RednoteWeb extends Web {
         //         throw new WeiboError("未知页面");
         //     }
         // }
-        logger.debug("puppeteer:screenshot");
-        await this.page.screenshot({ path: "log/weibo.png", fullPage: false });
 
-        var new_cookie = await this.page.cookies();
-        logger.debug("puppeteer:new_cookie\n" + JSON.stringify(new_cookie));
-
-        // if (this.isCookieChanged('SUB', new_cookie)) this.nats.sendWeiboCookieUpdateEvent(new_cookie)
-        this.isCookieChanged("a1", new_cookie);
-
-        this.cookie_str = cookieJsonToStr(new_cookie);
-        this.cookie = new_cookie;
         // await page.close();
         // } catch (err) {
         //     logger.error(`刷新微博cookie失败：\n${JSON.stringify(err)}`)
