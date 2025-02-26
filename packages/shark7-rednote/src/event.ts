@@ -28,7 +28,9 @@ export async function onUserDBEvent(
         logger.error(`updatedFields为${user}`);
         process.exit(1);
     }
-    logger.debug(`用户发生变化\n${JSON.stringify(event)}\n${JSON.stringify(origin)}`);
+    logger.debug(
+        `用户发生变化\n${JSON.stringify(event)}\n${JSON.stringify(origin)}`
+    );
     const flattenOrigin = flattenObj(origin);
     var result: string[] = [];
     Object.entries(updated).forEach((item) => {
@@ -126,10 +128,10 @@ export async function onCommentEvent(
     }
     let msg = data.content;
     if ("target_comment" in data) {
-        const origin = await ctr.getCommentById(data.target_comment.id);
         msg =
             `原评论<${data.target_comment.user_info.nickname}>:\n${
-                origin?.content ?? `评论获取失败:${data.target_comment.id}`
+                data.target_comment.shark7_raw?.content ??
+                `评论获取失败:${data.target_comment.id}`
             }\n回复:\n` + msg;
     }
     return {

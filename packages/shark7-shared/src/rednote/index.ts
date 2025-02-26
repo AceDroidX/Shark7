@@ -295,6 +295,7 @@ export type RednoteComment = typeof RednoteCommentBaseDemo &
                       image: string;
                       xsec_token: string;
                   };
+                  shark7_raw?: RednoteComment;
               };
           }
     );

@@ -88,14 +88,32 @@ export async function fetchComment(
             continue;
         }
         for (const comment of item) {
-            comments.push(comment);
             if ("sub_comments" in comment) {
                 comments = comments.concat(comment.sub_comments);
             }
+            comments.push(comment);
         }
     }
     for (const item of comments) {
-        if (item.user_info.user_id == uid) await ctr.insertComment(item);
+        if (item.user_info.user_id != uid) continue;
+        if ("target_comment" in item) {
+            const newComment: RednoteComment = {
+                ...item,
+                target_comment: {
+                    ...item.target_comment,
+                    shark7_raw: comments.find(
+                        (c) => c.id == item.target_comment.id
+                    ),
+                },
+            };
+            if (!newComment.target_comment.shark7_raw) {
+                logger.warn("fetchComment: target_comment.shark7_raw is null");
+                isSuccess = false;
+            }
+            await ctr.insertComment(newComment);
+        } else {
+            await ctr.insertComment(item);
+        }
     }
     return isSuccess;
 }
