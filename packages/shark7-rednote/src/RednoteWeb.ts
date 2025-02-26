@@ -29,9 +29,9 @@ export class RednoteWeb extends Web {
             logger.error("请设置cookie");
             process.exit(1);
         }
-        this.browser.setCookie(
-            ...cookieStrToJson(cookieStr, ".xiaohongshu.com")
-        );
+        this.browser
+            .defaultBrowserContext()
+            .setCookie(...cookieStrToJson(cookieStr, ".xiaohongshu.com"));
     }
 
     async clearStorage() {
@@ -123,7 +123,7 @@ export class RednoteWeb extends Web {
                     process.env["uid"],
                 { timeout: 60000 }
             ),
-            this.page.waitForNavigation({ waitUntil: 'networkidle2' }),
+            this.page.waitForNavigation({ waitUntil: "networkidle2" }),
         ]);
         // if (page.url().startsWith("https://passport.weibo.com")) {
         //     logger.debug("puppeteer:passport页面 等待中");

@@ -21,7 +21,7 @@
         "winston": "^3.13.0",
         "winston-mongodb": "^5.1.1",
         "winston-transport": "^4.7.0",
-        "puppeteer": "24.3.0",
+        "puppeteer": "npm:rebrowser-puppeteer@23.10.3",
         "toad-scheduler": "^3.0.0"
     },
     "devDependencies": {
