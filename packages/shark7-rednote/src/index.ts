@@ -58,17 +58,22 @@ async function main() {
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.commentsDB, onCommentEvent);
     await mongo.ctr.run();
     await initWeb();
+    if (!(await fetchUser(mongo.ctr, uid))) {
+        logger.error("fetchUser数据获取测试失败");
+        process.exit(1);
+    }
     if (!(await getNote(uid))) {
-        logger.error("数据获取测试失败");
+        logger.error("getNote数据获取测试失败");
         process.exit(1);
     }
     let interval = process.env["interval"]
         ? Number(process.env["interval"])
         : 60;
     const scheduler = new Scheduler();
-    scheduler.addJob("fetchUser", interval, () => {
-        fetchUser(mongo.ctr, uid);
-    });
+    // 暂时关闭
+    // scheduler.addJob("fetchUser", interval, () => {
+    //     fetchUser(mongo.ctr, uid);
+    // });
     scheduler.addJob("fetchNote", interval, () => {
         fetchNote(mongo.ctr, uid);
     });
