@@ -1,0 +1,21 @@
+{
+    "name": "shark7-rednote",
+    "version": "1.0.0",
+    "description": "",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "dev": "bun --watch src/index.ts"
+    },
+    "author": "AceDroidX",
+    "license": "ISC",
+    "dependencies": {
+        "crc-32": "^1.2.2",
+        "crypto-js": "^4.2.0",
+        "puppeteer": "24.3.0",
+        "shark7-shared": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/crypto-js": "^4.2.2"
+    }
+}

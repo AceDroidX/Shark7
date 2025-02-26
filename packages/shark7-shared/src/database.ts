@@ -1,5 +1,5 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import type { Shark7Event } from ".";
+import type { RednoteComment, RednoteNote, RednoteNoteDetail, RednoteUser, Shark7Event } from ".";
 import type { ApexUserInfo } from "./apex";
 import type { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
 import type { BiliGuardState } from "./bililive";
@@ -23,7 +23,8 @@ export class MongoDBs extends EventDBs {
     douyin: DouyinDBs
     netease_music: NeteaseMusicDBs
     reckfeng: ReckfengDBs
-    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, bilibili: BilibiliDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs, reckfeng: ReckfengDBs) {
+    rednote: RednoteDBs
+    constructor(db: Db, weibo: WeiboDBs, apex: ApexDBs, bililive: BiliLiveDBs, bilibili: BilibiliDBs, douyin: DouyinDBs, netease_music: NeteaseMusicDBs, reckfeng: ReckfengDBs, rednote: RednoteDBs) {
         super(db)
         this.weibo = weibo
         this.apex = apex
@@ -32,6 +33,7 @@ export class MongoDBs extends EventDBs {
         this.douyin = douyin
         this.netease_music = netease_music
         this.reckfeng = reckfeng
+        this.rednote = rednote
     }
     static async getInstance(client: MongoClient) {
         return new this(client.db('main'),
@@ -42,6 +44,7 @@ export class MongoDBs extends EventDBs {
             await getDBInstance(client, DouyinDBs),
             await getDBInstance(client, NeteaseMusicDBs),
             await getDBInstance(client, ReckfengDBs),
+            await getDBInstance(client, RednoteDBs),
         )
     }
 }
@@ -132,5 +135,21 @@ export class ReckfengDBs extends EventDBs {
     constructor(db: Db) {
         super(db)
         this.userDB = db.collection<ReckfengData>('users')
+    }
+}
+
+export class RednoteDBs extends EventDBs {
+    static dbname = 'rednote'
+    static postCollList = ['users']
+    userDB: Collection<RednoteUser>
+    notesDB: Collection<RednoteNote>
+    notesDetailDB: Collection<RednoteNoteDetail>
+    commentsDB: Collection<RednoteComment>
+    constructor(db: Db) {
+        super(db)
+        this.userDB = db.collection<RednoteUser>('users')
+        this.notesDB = db.collection<RednoteNote>('notes')
+        this.notesDetailDB = db.collection<RednoteNoteDetail>('notes_detail')
+        this.commentsDB = db.collection<RednoteComment>('comments')
     }
 }

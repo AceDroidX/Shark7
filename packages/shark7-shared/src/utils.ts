@@ -82,7 +82,7 @@ function logWarn(msg: string, error: any) {
     logger.warn(`${msg}\nname:${error.name}\nmessage:${error.message}`)
 }
 
-function cookieStrToJson(source: string) {
+function cookieStrToJson(source: string, domain: string) {
     if (source == '') return []
     return source.replace(/; /g, ';').replace(/;$/g, '').split(';').map(item => {
         var name = item.match(/^.*?(?==)/)
@@ -91,7 +91,7 @@ function cookieStrToJson(source: string) {
             throw new Error('cookie格式错误')
         }
         return {
-            name: name[0], value: value[0], domain: 'weibo.com'
+            name: name[0], value: value[0], domain: domain
         }
     })
 }

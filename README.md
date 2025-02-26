@@ -12,6 +12,10 @@ shark7-douyin:
 <https://github.com/Johnserf-Seed/TikTokDownload/issues/324>
 <https://github.com/JoeanAmier/TikTokDownloader/issues/9>
 
+shark7-rednote:  
+<https://github.com/Cloxl/xhshow>
+<https://github.com/NanmiCoder/MediaCrawler/blob/main/media_platform/xhs/core.py>
+
 todo:  
 
 - shared:

@@ -3,18 +3,18 @@ import { logger } from "../logger";
 
 interface IWeb {
     name: string;
-    cookie: string;
+    cookie: Cookie[] | undefined;
     cookie_str: string;
     browser: Browser;
     getCookieStr(): string;
-    getCookieByKey(key: string): string;
+    getCookieByKey(key: string): string | undefined;
     refresh(): Promise<void>;
 }
 
 export class Web implements IWeb {
     name: string = 'web'
 
-    cookie: any = undefined
+    cookie: Cookie[] | undefined = undefined
     cookie_str: string = ''
     browser: Browser;
     constructor(browser: Browser) {

@@ -41,6 +41,12 @@ enum ReckfengScope {
     User = 'ReckfengScope.User',
 }
 
+enum RednoteScope {
+    User = 'Rednote.User',
+    Note = 'Rednote.Note',
+    Comment = 'Rednote.Comment',
+}
+
 export const Scope = {
     Log: LogScope,
     Apex: 'Apex',
@@ -50,6 +56,7 @@ export const Scope = {
     Douyin: DouyinScope,
     NeteaseMusic: NeteaseMusicScope,
     Reckfeng: ReckfengScope,
+    Rednote: RednoteScope,
 };
 
 export enum ScopeName {
@@ -76,6 +83,9 @@ export enum ScopeName {
     'Douyin.User' = '抖音用户信息',
     'NeteaseMusic.User' = '网易云音乐用户信息',
     'ReckfengScope.User' = 'UP对战平台用户信息',
+    'Rednote.User' = '小红书用户信息',
+    'Rednote.Note' = '小红书动态',
+    'Rednote.Comment' = '小红书评论',
 }
 
 export function getScopeName(id: string): string | undefined {

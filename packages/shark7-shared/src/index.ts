@@ -4,6 +4,7 @@ export * from './bililive'
 export * from './db'
 export * from './douyin'
 export * from './netease-music'
+export * from './rednote'
 export * from './Puppeteer'
 export * from './weibo'
 export * from './database'
@@ -28,17 +29,15 @@ export type LogEvent = {
     meta: any
 }
 
-export type InsertTypeDoc = {
+export type Shark7Doc = {
     shark7_id: string
     shark7_name?: string
     shark7_raw?: any
 }
 
-export type UpdateTypeDoc = {
-    shark7_id: string
-    shark7_name?: string
-    shark7_raw?: any
-}
+export type InsertTypeDoc = Shark7Doc
+
+export type UpdateTypeDoc = Shark7Doc
 
 export type UpdateTypeDocWithName = UpdateTypeDoc & {
     shark7_name: string

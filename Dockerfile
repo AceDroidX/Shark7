@@ -1,6 +1,6 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
+FROM oven/bun:1 AS base
 WORKDIR /app
 ENV TZ=Asia/Shanghai \
     PUPPETEER_SKIP_DOWNLOAD=true \
@@ -21,6 +21,7 @@ COPY ./packages/shark7-netease-music/package.json /temp/dev/packages/shark7-nete
 COPY ./packages/shark7-weibo/package.json /temp/dev/packages/shark7-weibo/
 COPY ./packages/shark7-weibo-app/package.json /temp/dev/packages/shark7-weibo-app/
 COPY ./packages/shark7-weibo-web/package.json /temp/dev/packages/shark7-weibo-web/
+COPY ./packages/shark7-rednote/package.json /temp/dev/packages/shark7-rednote/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
@@ -36,6 +37,7 @@ COPY ./packages/shark7-netease-music/package.json /temp/prod/packages/shark7-net
 COPY ./packages/shark7-weibo/package.json /temp/prod/packages/shark7-weibo/
 COPY ./packages/shark7-weibo-app/package.json /temp/prod/packages/shark7-weibo-app/
 COPY ./packages/shark7-weibo-web/package.json /temp/prod/packages/shark7-weibo-web/
+COPY ./packages/shark7-rednote/package.json /temp/prod/packages/shark7-rednote/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # copy node_modules from temp directory

@@ -31,3 +31,6 @@ weibo-web:
 weibo:
     - *shared
     - "packages/shark7-weibo/**"
+rednote:
+    - *shared
+    - "packages/shark7-rednote/**"
