@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BiliGet, get_w_webid, headers, type BiliApi, type BiliUser } from "../bilibili";
+import { BiliGet, headers, type BiliApi, type BiliUser } from "../bilibili";
 import { logger } from "../logger";
 import { logErrorDetail } from "../utils";
 import type { BiliRoomInfo } from "./BiliRoomInfo";
@@ -18,7 +18,7 @@ export class BiliSimpleUser {
 
     static async initByUID(uid: number): Promise<BiliSimpleUser | null> {
         try {
-            const resp = await BiliGet<BiliApi<BiliUser>>(UID_info_prefix, { platform: 'web', mid: uid, w_webid: await get_w_webid() })
+            const resp = await BiliGet<BiliApi<BiliUser>>(UID_info_prefix, { platform: 'web', mid: uid })
             if (resp.status != 200) {
                 logger.error('resp.status != 200:' + JSON.stringify(resp))
                 return null

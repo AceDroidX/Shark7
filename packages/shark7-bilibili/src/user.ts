@@ -1,12 +1,12 @@
 import axios from "axios";
 import type { ChangeStreamUpdateDocument } from "mongodb";
 import type { BiliApi, BiliUser, Shark7Event } from "shark7-shared";
-import { BiliGet, Scope, flattenObj, get_w_webid, logAxiosError, logErrorDetail, logger } from "shark7-shared";
+import { BiliGet, Scope, flattenObj, logAxiosError, logErrorDetail, logger } from "shark7-shared";
 import { MongoController } from "./MongoController";
 
 export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {
-        const resp = await BiliGet<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info`, { platform: 'web', mid: user_id, w_webid: await get_w_webid() })
+        const resp = await BiliGet<BiliApi<BiliUser>>(`https://api.bilibili.com/x/space/wbi/acc/info`, { platform: 'web', mid: user_id })
         if (resp.status != 200) {
             logger.warn(`getUser resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
