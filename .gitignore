@@ -1,5 +1,4 @@
-docker-compose.yml
-docker-compose-*.yml
+/docker-compose-*.yml
 
 config/config.json
 config/weibo_cookie.json

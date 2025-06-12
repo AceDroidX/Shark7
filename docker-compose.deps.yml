@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+    shark7-mongo:
+        image: bitnami/mongodb:6.0.9-debian-11-r2
+        restart: unless-stopped
+        container_name: shark7-mongo
+        volumes:
+            - shark7-mongodata:/bitnami/mongodb
+        networks:
+            - default
+        ports:
+            - "27017:27017"
+        environment:
+            - MONGODB_ROOT_USER=admin
+            - MONGODB_ROOT_PASSWORD=admin
+            - MONGODB_REPLICA_SET_MODE=primary
+            - MONGODB_REPLICA_SET_NAME=rs0
+            - MONGODB_INITIAL_PRIMARY_HOST=shark7-mongo
+            - MONGODB_ADVERTISED_HOSTNAME=shark7-mongo
+            - MONGODB_REPLICA_SET_KEY=shark7replicasetkey
+        deploy:
+            resources:
+                limits:
+                    cpus: '2.0'
+                    memory: 512M
+    shark7-nats:
+        image: nats
+        restart: unless-stopped
+        container_name: shark7-nats
+        ports:
+            - 4222:4222
+        networks:
+            - default
+volumes:
+    shark7-mongodata:
+        name: "shark7-mongodata"
+
+networks:
+    default:
+        driver: bridge
+
