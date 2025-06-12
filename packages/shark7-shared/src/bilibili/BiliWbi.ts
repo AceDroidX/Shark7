@@ -66,7 +66,7 @@ async function getWbiKeys() {
     }
 }
 
-const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
+const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Trailer/93.3.3570.29'
 const cookie = process.env['cookie'] ?? 'buvid3=12345678-1234-1234-1234-123456789123infoc'
 export const headers = { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', cookie }
 
