@@ -1,9 +1,9 @@
 import url from 'url'
-import type { InsertTypeDoc, UpdateTypeDoc } from '..';
+import type { InsertTypeDoc, UpdateTypeDoc } from '../index.ts';
 
-export * from './comment'
-export * from './nats'
-export * from './WeiboCookieMgr'
+export * from './comment.ts'
+export * from './nats.ts'
+export * from './WeiboCookieMgr.ts'
 
 export class WeiboUser implements UpdateTypeDoc {
     shark7_id: string

@@ -1,7 +1,7 @@
-export * from './BiliDynamic'
-export * from './BiliUser'
-export * from './BiliVideo'
-export * from './BiliWbi'
+export * from './BiliDynamic.ts'
+export * from './BiliUser.ts'
+export * from './BiliVideo.ts'
+export * from './BiliWbi.ts'
 
 export type BiliApi<T = any> = {
     code: number

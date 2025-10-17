@@ -1,5 +1,6 @@
 import type { CookieData } from "puppeteer";
-import { logger } from "./logger";
+import { logger } from "./logger.ts";
+import { atomizeChangeset, diff, type IAtomicChange, type Options } from "json-diff-ts";
 
 export {
     timePrefix,
@@ -154,3 +155,7 @@ export const flattenObj = (data: any) => {
     recurse(data, "");
     return result;
 };
+
+export function jsonDiff<T>(oldObj:T, newObj:T,options:Options):IAtomicChange[]{
+    return atomizeChangeset(diff(oldObj, newObj, options));
+}

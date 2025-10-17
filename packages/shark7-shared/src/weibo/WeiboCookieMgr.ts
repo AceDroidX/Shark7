@@ -1,8 +1,8 @@
 import { ErrorCode, JSONCodec, type NatsConnection } from "nats";
 import type { Cookie } from "puppeteer";
-import { logger } from "../logger";
-import type { WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent } from "./nats";
-import { WeiboNATSSubscribeName } from "./nats";
+import { logger } from "../logger.ts";
+import type { WeiboCookieExpireEvent, WeiboCookieRequest, WeiboCookieRespond, WeiboCookieUpdateEvent } from "./nats.ts";
+import { WeiboNATSSubscribeName } from "./nats.ts";
 
 export class WeiboCookieMgr {
     nc: NatsConnection

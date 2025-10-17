@@ -1,4 +1,4 @@
-import type { InsertTypeDoc } from ".."
+import type { InsertTypeDoc } from "../index.ts"
 
 export type BiliVideo = InsertTypeDoc & typeof BiliVideoDemo
 

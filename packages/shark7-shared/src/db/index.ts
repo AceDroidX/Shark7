@@ -1,6 +1,6 @@
 import { Db, MongoClient } from 'mongodb'
-import { EventDBs } from '../database'
-export * from './client'
+import { EventDBs } from '../database.ts'
+export * from './client.ts'
 
 export async function getDBInstance<T extends EventDBs>(client: MongoClient, eventdbs: {
     dbname: string, postCollList: string[], new(db: Db): T

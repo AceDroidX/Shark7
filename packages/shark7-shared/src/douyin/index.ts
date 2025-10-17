@@ -1,4 +1,4 @@
-import type { UpdateTypeDoc } from ".."
+import type { UpdateTypeDoc } from "../index.ts"
 
 export type DouyinUser = UpdateTypeDoc & typeof DouyinUserDemo
 

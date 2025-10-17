@@ -1,7 +1,7 @@
 import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { onUserDBEvent } from "./event";
-import { insertUser } from './user';
+import { MongoController } from './MongoController.ts';
+import { onUserDBEvent } from "./event.ts";
+import { insertUser } from './user.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -18,9 +18,10 @@ process.on('uncaughtException', function (err) {
 //     process.exit(1);
 // });
 // init
-if (import.meta.main) {
-    main()
-}
+// if (import.meta.main) {
+//     main()
+// }
+main()
 async function main() {
     const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController)
 

@@ -6,9 +6,9 @@ import {
     logger,
     type DouyinUser,
 } from "shark7-shared";
-import { MongoController } from "./MongoController";
+import { MongoController } from "./MongoController.ts";
 import { sign } from "./X-Bogus.js";
-import type { DouyinUserApi } from "./model";
+import type { DouyinUserApi } from "./model.ts";
 
 export async function insertUser(
     ctr: MongoController,
@@ -92,13 +92,13 @@ function getDouyinUserApi(
     });
 }
 
-function getMsTokenFromCookie(cookie: string) {
-    const cookiejson = cookieStrToJson(cookie);
-    for (const item of cookiejson) {
-        if (item.name == "msToken") return item.value;
-    }
-    return null;
-}
+// function getMsTokenFromCookie(cookie: string) {
+//     const cookiejson = cookieStrToJson(cookie);
+//     for (const item of cookiejson) {
+//         if (item.name == "msToken") return item.value;
+//     }
+//     return null;
+// }
 
 function parseCookieString(cookieString: string): Record<string, string> {
     const cookies: Record<string, string> = {};

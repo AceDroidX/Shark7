@@ -1,7 +1,7 @@
 import type { ChangeStreamUpdateDocument } from "mongodb";
 import type { DouyinUser, Shark7Event } from "shark7-shared";
 import { Scope, flattenObj, logger } from "shark7-shared";
-import { MongoController } from "./MongoController";
+import { MongoController } from "./MongoController.ts";
 
 export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpdateDocument<DouyinUser>, origin?: DouyinUser): Promise<Shark7Event | null> {
     const user = event.fullDocument

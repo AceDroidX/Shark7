@@ -1,4 +1,4 @@
-import type { Shark7Doc } from "..";
+import type { Shark7Doc } from "../index.ts";
 
 const RednoteUserDemo = {
     result: {

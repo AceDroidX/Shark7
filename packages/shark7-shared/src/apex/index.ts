@@ -1,6 +1,6 @@
-import type { UpdateTypeDoc } from ".."
+import type { UpdateTypeDocWithName } from "../index.ts"
 
-export type ApexUserInfo = UpdateTypeDoc & typeof UserInfoDemo
+export type ApexUserInfo = UpdateTypeDocWithName & typeof UserInfoDemo
 
 //curl.exe -A "Respawn HTTPS/1.0" "https://r5-crossplay.r5prod.stryder.respawn.com/user.php?qt=user-getinfo&getinfo=1&hardware=PC&uid=1111111111111&language=english&timezoneOffset=8&ugc=1&rep=1&searching=0&change=7&loadidx=1"
 //"userInfo":

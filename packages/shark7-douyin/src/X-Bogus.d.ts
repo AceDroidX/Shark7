@@ -1,0 +1,1 @@
+export function sign(query: string, userAgent: string): string;

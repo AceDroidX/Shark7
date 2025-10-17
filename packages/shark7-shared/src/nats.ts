@@ -1,5 +1,5 @@
 import { connect } from "nats";
-import { logger } from "./logger";
+import { logger } from "./logger.ts";
 
 const nats_server = process.env['nats_server'] ?? 'localhost'
 export class Nats {

@@ -1,4 +1,4 @@
-import { BiliSimpleUser } from ".";
+import { BiliSimpleUser } from "./index.ts";
 
 export class BiliUsers {
     users: BiliSimpleUser[];

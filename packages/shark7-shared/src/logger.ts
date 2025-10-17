@@ -2,8 +2,8 @@ import { type TimestampOptions } from 'logform';
 import winston, { format, transports } from 'winston';
 // import 'winston-mongodb';
 import Transport from 'winston-transport';
-import { MongoControlClient } from './db';
-import { getTime } from './utils';
+// import { MongoControlClient } from './db/index.ts';
+import { getTime } from './utils.ts';
 const { combine, timestamp, label, printf } = format;
 
 class TimingQueue {

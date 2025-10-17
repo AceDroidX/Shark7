@@ -1,5 +1,5 @@
-import { WeiboUser } from ".";
-import type { InsertTypeDoc } from "..";
+import { WeiboUser } from "./index.ts";
+import type { InsertTypeDoc } from "../index.ts";
 
 const WeiboCommentDemo = {
     "created_at": "Sun Aug 07 09:32:04 +0800 2022",

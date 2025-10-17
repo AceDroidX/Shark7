@@ -1,9 +1,9 @@
 import { Collection, Db, MongoClient, type ChangeStreamInsertDocument, type ChangeStreamUpdateDocument, type Document } from "mongodb";
-import { getDBInstance } from ".";
-import type { Shark7Event, UpdateTypeDoc } from "..";
-import { EventDBs } from "../database";
-import { logger } from "../logger";
-import { logErrorDetail } from "../utils";
+import { getDBInstance } from "./index.ts";
+import type { Shark7Event, UpdateTypeDoc } from "../index.ts";
+import { EventDBs } from "../database.ts";
+import { logger } from "../logger.ts";
+import { logErrorDetail } from "../utils.ts";
 
 export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {
     client: MongoClient;

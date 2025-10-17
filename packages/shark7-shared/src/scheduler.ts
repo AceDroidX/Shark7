@@ -1,5 +1,5 @@
 import { SimpleIntervalJob, Task, ToadScheduler } from 'toad-scheduler';
-import { logErrorDetail } from './utils';
+import { logErrorDetail } from './utils.ts';
 
 export class Scheduler extends ToadScheduler {
     scheduler = new ToadScheduler()

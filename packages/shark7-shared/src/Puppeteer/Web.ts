@@ -1,5 +1,5 @@
 import { Browser, type Cookie } from "puppeteer";
-import { logger } from "../logger";
+import { logger } from "../logger.ts";
 
 interface IWeb {
     name: string;

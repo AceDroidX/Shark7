@@ -1,51 +1,51 @@
-enum LogScope {
-    Debug = 'Log.Debug',
-    Info = 'Log.Info',
-    Warn = 'Log.Warn',
-    Error = 'Log.Error',
-}
+const LogScope = {
+    Debug: 'Log.Debug',
+    Info: 'Log.Info',
+    Warn: 'Log.Warn',
+    Error: 'Log.Error',
+} as const;
 
-enum WeiboScope {
-    User = 'Weibo.User',
-    Mblog = 'Weibo.Mblog',
-    Comment = 'Weibo.Comment',
-    Like = 'Weibo.Like',
-    Online = 'Weibo.Online'
-}
+const WeiboScope = {
+    User: 'Weibo.User',
+    Mblog: 'Weibo.Mblog',
+    Comment: 'Weibo.Comment',
+    Like: 'Weibo.Like',
+    Online: 'Weibo.Online'
+} as const;
 
-enum BiliLiveScope {
-    GuardOnline = 'BiliLive.GuardOnline',
-    EntryEffect = 'BiliLive.EntryEffect',
-    EntryWord = 'BiliLive.EntryWord',
-    Danmaku = 'BiliLive.Danmaku',
-    Gift = 'BiliLive.Gift',
-    Live = 'BiliLive.Live'
-}
+const BiliLiveScope = {
+    GuardOnline: 'BiliLive.GuardOnline',
+    EntryEffect: 'BiliLive.EntryEffect',
+    EntryWord: 'BiliLive.EntryWord',
+    Danmaku: 'BiliLive.Danmaku',
+    Gift: 'BiliLive.Gift',
+    Live: 'BiliLive.Live'
+} as const;
 
-enum BilibiliScope {
-    User = 'Bilibili.User',
-    Coin = 'Bilibili.Coin',
-    Like = 'Bilibili.Like',
-    Dynamic = 'Bilibili.Dynamic',
-}
+const BilibiliScope = {
+    User: 'Bilibili.User',
+    Coin: 'Bilibili.Coin',
+    Like: 'Bilibili.Like',
+    Dynamic: 'Bilibili.Dynamic',
+} as const;
 
-enum DouyinScope {
-    User = 'Douyin.User',
-}
+const DouyinScope = {
+    User: 'Douyin.User',
+} as const;
 
-enum NeteaseMusicScope {
-    User = 'NeteaseMusic.User',
-}
+const NeteaseMusicScope = {
+    User: 'NeteaseMusic.User',
+} as const;
 
-enum ReckfengScope {
-    User = 'ReckfengScope.User',
-}
+const ReckfengScope = {
+    User: 'ReckfengScope.User',
+} as const;
 
-enum RednoteScope {
-    User = 'Rednote.User',
-    Note = 'Rednote.Note',
-    Comment = 'Rednote.Comment',
-}
+const RednoteScope = {
+    User: 'Rednote.User',
+    Note: 'Rednote.Note',
+    Comment: 'Rednote.Comment',
+} as const;
 
 export const Scope = {
     Log: LogScope,
@@ -59,34 +59,34 @@ export const Scope = {
     Rednote: RednoteScope,
 };
 
-export enum ScopeName {
-    'Log.Debug' = 'Debug',
-    'Log.Info' = 'Info',
-    'Log.Warn' = 'Warn',
-    'Log.Error' = 'Error',
-    'Apex' = 'Apex信息',
-    'Weibo.User' = '微博用户信息',
-    'Weibo.Mblog' = '微博动态',
-    'Weibo.Comment' = '微博评论',
-    'Weibo.Like' = '微博点赞',
-    'Weibo.Online' = '微博在线',
-    'BiliLive.GuardOnline' = '大航海在线',
-    'BiliLive.EntryEffect' = '直播间进入效果',
-    'BiliLive.EntryWord' = '直播间进入提示',
-    'BiliLive.Danmaku' = '发送弹幕',
-    'BiliLive.Gift' = '赠送礼物',
-    'BiliLive.Live' = '直播间状态',
-    'Bilibili.User' = 'B站用户信息',
-    'Bilibili.Coin' = 'B站投币视频',
-    'Bilibili.Like' = 'B站点赞视频',
-    'Bilibili.Dynamic' = 'B站动态',
-    'Douyin.User' = '抖音用户信息',
-    'NeteaseMusic.User' = '网易云音乐用户信息',
-    'ReckfengScope.User' = 'UP对战平台用户信息',
-    'Rednote.User' = '小红书用户信息',
-    'Rednote.Note' = '小红书动态',
-    'Rednote.Comment' = '小红书评论',
-}
+export const ScopeName: { [key: string]: string } = {
+    'Log.Debug': 'Debug',
+    'Log.Info': 'Info',
+    'Log.Warn': 'Warn',
+    'Log.Error': 'Error',
+    'Apex': 'Apex信息',
+    'Weibo.User': '微博用户信息',
+    'Weibo.Mblog': '微博动态',
+    'Weibo.Comment': '微博评论',
+    'Weibo.Like': '微博点赞',
+    'Weibo.Online': '微博在线',
+    'BiliLive.GuardOnline': '大航海在线',
+    'BiliLive.EntryEffect': '直播间进入效果',
+    'BiliLive.EntryWord': '直播间进入提示',
+    'BiliLive.Danmaku': '发送弹幕',
+    'BiliLive.Gift': '赠送礼物',
+    'BiliLive.Live': '直播间状态',
+    'Bilibili.User': 'B站用户信息',
+    'Bilibili.Coin': 'B站投币视频',
+    'Bilibili.Like': 'B站点赞视频',
+    'Bilibili.Dynamic': 'B站动态',
+    'Douyin.User': '抖音用户信息',
+    'NeteaseMusic.User': '网易云音乐用户信息',
+    'ReckfengScope.User': 'UP对战平台用户信息',
+    'Rednote.User': '小红书用户信息',
+    'Rednote.Note': '小红书动态',
+    'Rednote.Comment': '小红书评论',
+};
 
 export function getScopeName(id: string): string | undefined {
     for (const [key, value] of Object.entries(ScopeName)) {

@@ -1,13 +1,16 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import type { RednoteComment, RednoteNote, RednoteNoteDetail, RednoteUser, Shark7Event } from ".";
-import type { ApexUserInfo } from "./apex";
-import type { BiliDynamic, BiliUser, BiliVideo } from "./bilibili";
-import type { BiliGuardState } from "./bililive";
-import { getDBInstance } from "./db";
-import type { DouyinUser } from "./douyin";
-import type { NeteaseMusicUser } from "./netease-music";
-import type { ReckfengData } from "./reckfeng";
-import { WeiboMsg, WeiboUser, type OnlineData, type WeiboComment } from "./weibo";
+import type { RednoteComment, RednoteNote, RednoteNoteDetail, RednoteUser, Shark7Event } from "./index.ts";
+import type { ApexUserInfo } from "./apex/index.ts";
+import type { BiliDynamic } from "./bilibili/BiliDynamic.ts";
+import type { BiliUser } from "./bilibili/BiliUser.ts";
+import type { BiliVideo } from "./bilibili/BiliVideo.ts";
+import type { BiliGuardState } from "./bililive/index.ts";
+import { getDBInstance } from "./db/index.ts";
+import type { DouyinUser } from "./douyin/index.ts";
+import type { NeteaseMusicUser } from "./netease-music/index.ts";
+import type { ReckfengData } from "./reckfeng/index.ts";
+import { WeiboMsg, WeiboUser, type OnlineData } from "./weibo/index.ts";
+import type { WeiboComment } from "./weibo/comment.ts";
 
 export class EventDBs {
     event: Collection<Shark7Event>

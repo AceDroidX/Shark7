@@ -2,10 +2,8 @@
     "name": "shark7-douyin",
     "version": "1.0.0",
     "description": "",
-    "module": "src/index.ts",
-    "type": "module",
     "scripts": {
-        "start": "node --enable-source-maps dist/index.js",
+        "start": "node --env-file=.env src/index.ts",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
         "dev": "nodemon src/index.ts",

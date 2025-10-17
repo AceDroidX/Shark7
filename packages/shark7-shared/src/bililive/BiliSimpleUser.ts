@@ -1,8 +1,10 @@
 import axios from "axios";
-import { BiliGet, headers, type BiliApi, type BiliUser } from "../bilibili";
-import { logger } from "../logger";
-import { logErrorDetail } from "../utils";
-import type { BiliRoomInfo } from "./BiliRoomInfo";
+import { BiliGet, headers } from "../bilibili/BiliWbi.ts";
+import type { BiliUser } from "../bilibili/BiliUser.ts";
+import { logger } from "../logger.ts";
+import { logErrorDetail } from "../utils.ts";
+import type { BiliRoomInfo } from "./BiliRoomInfo.ts";
+import type { BiliApi } from "../bilibili/index.ts";
 const UID_info_prefix = 'https://api.bilibili.com/x/space/wbi/acc/info'
 const ROOMID_info_prefix = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="
 export class BiliSimpleUser {

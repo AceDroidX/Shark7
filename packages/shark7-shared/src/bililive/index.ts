@@ -1,15 +1,16 @@
-import type { UpdateTypeDocWithName } from ".."
-import { BiliSimpleUser } from "./BiliSimpleUser"
+import type { UpdateTypeDocWithName } from "../index.ts"
+import { BiliSimpleUser } from "./BiliSimpleUser.ts"
 
 export { BiliSimpleUser }
 
-export * from './BiliUsers'
+export * from './BiliUsers.ts'
 
-export enum BiliGuardOnline {
-    OFFLINE = 0,
-    ONLINE = 1,
-    NONE = 2,
-}
+export const BiliGuardOnline = {
+    OFFLINE: 0,
+    ONLINE: 1,
+    NONE: 2,
+} as const;
+export type BiliGuardOnline = typeof BiliGuardOnline[keyof typeof BiliGuardOnline];
 
 export type BiliGuardState = UpdateTypeDocWithName & BiliSimpleUser & {
     page: number
@@ -25,7 +26,7 @@ export type BiliGuardApi = {
 export type BiliGuardApiList = typeof BiliGuardApiListDemo
 
 function BiliGuardConvert(data: BiliGuardApiList, user: BiliSimpleUser, page: number): BiliGuardState {
-    return { ...user, page, shark7_id: String(data.ruid), shark7_name: data.username, isOnline: data.is_alive }
+    return { ...user, page, shark7_id: String(data.ruid), shark7_name: data.username, isOnline: data.is_alive as BiliGuardOnline }
 }
 
 const BiliGuardApiListDemo = {

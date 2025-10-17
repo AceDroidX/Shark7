@@ -20,9 +20,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"oven.bun-vscode",
 				"mhutchie.git-graph",
-				"vivaxy.vscode-conventional-commits"
+				"vivaxy.vscode-conventional-commits",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}

@@ -1,9 +1,10 @@
-FROM oven/bun:1
+FROM node:24.10-alpine
 
-RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
-    && apt-get update && apt-get install -y \
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
+    && apk update && apk add --no-cache \
     git \
     curl \
     wget \
     nano \
-    && rm -rf /var/lib/apt/lists/*
+    && npm config set registry https://registry.npmmirror.com/ \
+    && npm install -g pnpm@10.18.3

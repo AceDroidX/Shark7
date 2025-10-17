@@ -1,9 +1,9 @@
 import * as dns from "node:dns";
 import puppeteer, { Browser } from 'puppeteer';
-import { EventDBs } from '../database';
-import { MongoControllerBase } from "../db/client";
-import { Web } from './Web';
-export * from './Web';
+import { EventDBs } from '../database.ts';
+import { MongoControllerBase } from "../db/client.ts";
+import { Web } from './Web.ts';
+export * from './Web.ts';
 
 export class Puppeteer<T extends Web> {
     browser: Browser

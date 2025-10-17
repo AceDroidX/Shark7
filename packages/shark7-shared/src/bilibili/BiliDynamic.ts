@@ -1,4 +1,4 @@
-import type { InsertTypeDoc } from ".."
+import type { InsertTypeDoc } from "../index.ts"
 
 export type BiliDynamic = InsertTypeDoc & typeof BiliDynamicDemo & {
     orig?: BiliDynamic
