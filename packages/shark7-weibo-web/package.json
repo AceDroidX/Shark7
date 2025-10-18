@@ -5,7 +5,7 @@
     "module": "src/index.ts",
     "type": "module",
     "scripts": {
-        "dev": "bun --watch src/index.ts",
+        "dev": "node --env-file=.env --watch src/index.ts",
         "build": "bun build --entrypoints ./src/index.ts --outdir ./dist --target bun --minify --sourcemap=external",
         "compile": "bun build --compile --minify --sourcemap ./src/index.ts --outfile myapp"
     },
