@@ -1,7 +1,7 @@
 import { connect, JSONCodec, type NatsConnection } from "nats";
 import type { Cookie } from "puppeteer";
 import { logger, type WeiboCookieExpireEvent, type WeiboCookieRequest, type WeiboCookieRespond, type WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "shark7-shared";
-import { WeiboWeb } from "./WeiboWeb";
+import { WeiboWeb } from "./WeiboWeb.ts";
 
 const nats_server = process.env['nats_server'] ?? 'localhost'
 

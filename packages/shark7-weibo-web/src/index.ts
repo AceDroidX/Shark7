@@ -1,6 +1,6 @@
 import { initLogger, logger, Puppeteer } from 'shark7-shared';
-import { Nats } from './nats';
-import { WeiboWeb } from './WeiboWeb';
+import { Nats } from './nats.ts';
+import { WeiboWeb } from './WeiboWeb.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

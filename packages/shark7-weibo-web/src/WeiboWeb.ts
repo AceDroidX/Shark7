@@ -1,6 +1,6 @@
 import { Browser } from "puppeteer"
 import { cookieJsonToStr, logger, Web } from "shark7-shared"
-import { Nats } from "./nats"
+import { Nats } from "./nats.ts"
 
 const login_btn_selector = '//a[text()="登录"]'
 const oldlogin_btn_selector = '#weibo_top_public > div > div > div.gn_position > div.gn_login > ul > li:nth-child(3) > a'
