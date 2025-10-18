@@ -13,9 +13,9 @@ export class Puppeteer<T extends Web> {
         this.web = web
     }
     static async getBrowser() {
-        const addrs = await dns.promises.resolve4(process.env['browser_host'] ?? 'localhost');
+        const ip = process.env['browser_ip'] ?? (await dns.promises.resolve4(process.env['browser_host'] ?? 'localhost'))[0];
         return await puppeteer.connect({
-            browserURL: `http://${addrs[0]}:9222`,
+            browserURL: `http://${ip}:9222`,
         })
     }
     static async getInstance<W extends Web, E>(webfunc: { new(browser: Browser, extra: E): W }, extra: E): Promise<Puppeteer<W>>
