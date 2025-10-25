@@ -28,7 +28,7 @@ export class WeiboUserCtl {
             return null;
         }
         if (result.data.ok != 1) {
-            if (result.data.url == 'https://weibo.com/login.php') {
+            if (result.data.url.startsWith('https://weibo.com/login.php')) {
                 logger.error(`cookie已失效:getRawUserInfo error:\n${JSON.stringify(result.data)}`);
                 this.wcm.sendWeiboCookieExpireEvent()
                 return null;
@@ -50,7 +50,7 @@ export class WeiboUserCtl {
             return [];
         }
         if (raw.data.ok != 1) {
-            if (raw.data.url == 'https://weibo.com/login.php') {
+            if (raw.data.url.startsWith('https://weibo.com/login.php')) {
                 logger.error(`cookie已失效:getMblogs error:\n${JSON.stringify(raw.data)}`);
                 this.wcm.sendWeiboCookieExpireEvent()
                 return [];
