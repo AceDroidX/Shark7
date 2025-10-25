@@ -1,8 +1,8 @@
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboCookieMgr, WeiboDBs } from 'shark7-shared';
-import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event';
-import { WeiboHTTP } from './model/WeiboHTTP';
-import { MongoController } from './MongoController';
-import { WeiboController } from './WeiboController';
+import { onCommentInsert, onCommentUpdate, onMblogEvent, onMblogUpdate, onUserDBEvent } from './event.ts';
+import { WeiboHTTP } from './model/WeiboHTTP.ts';
+import { MongoController } from './MongoController.ts';
+import { WeiboController } from './WeiboController.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

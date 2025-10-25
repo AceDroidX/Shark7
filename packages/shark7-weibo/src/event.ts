@@ -1,9 +1,9 @@
 import type { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb"
 import type { Shark7Event, WeiboComment } from "shark7-shared"
 import { Scope, WeiboMsg, WeiboUser, logger } from 'shark7-shared'
-import { MongoController } from "./MongoController"
-import { fetchComments } from './comment'
-import { WeiboHTTP } from "./model/WeiboHTTP"
+import { MongoController } from "./MongoController.ts"
+import { fetchComments } from './comment.ts'
+import { WeiboHTTP } from "./model/WeiboHTTP.ts"
 
 export async function onMblogEvent(ctr: MongoController, event: ChangeStreamInsertDocument<WeiboMsg>): Promise<Shark7Event | null> {
     const nmb = event.fullDocument

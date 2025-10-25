@@ -1,12 +1,13 @@
 import type { WeiboComment, WeiboCommentApi, WeiboReplyComment, WeiboRootComment } from 'shark7-shared';
 import { logger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { WeiboHTTP } from './model/WeiboHTTP';
+import { MongoController } from './MongoController.ts';
+import { WeiboHTTP } from './model/WeiboHTTP.ts';
 
-enum CommentFlow {
-    ByHot = 0,
-    ByTime = 1,
-}
+const CommentFlow = {
+    ByHot: 0,
+    ByTime: 1,
+} as const;
+type CommentFlow = typeof CommentFlow[keyof typeof CommentFlow];
 
 async function getComments<T extends WeiboComment>(wbhttp: WeiboHTTP, id: number, flow: CommentFlow, count = 20, isSubComment = false): Promise<T[] | null> {
     const result = await wbhttp.getURL<WeiboCommentApi<T>>(`https://weibo.com/ajax/statuses/buildComments?flow=${flow}&id=${id}&is_show_bulletin=2&count=${count}&fetch_level=${Number(isSubComment)}`)
@@ -37,7 +38,7 @@ async function getInnerComments(wbhttp: WeiboHTTP, comments: WeiboRootComment[])
     return innerComments
 }
 
-async function getMblogComments(mongo: MongoController, wbhttp: WeiboHTTP, id: number, flow = CommentFlow.ByHot, count = 100): Promise<WeiboComment[] | null> {
+async function getMblogComments(mongo: MongoController, wbhttp: WeiboHTTP, id: number, flow: CommentFlow = CommentFlow.ByHot, count = 100): Promise<WeiboComment[] | null> {
     const root = await getComments<WeiboRootComment>(wbhttp, id, flow, count)
     if (!root) return null
     const inner = await getInnerComments(wbhttp, root)

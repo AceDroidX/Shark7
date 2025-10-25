@@ -1,7 +1,7 @@
 import { Scheduler, WeiboCookieMgr, WeiboMsg, WeiboUser, logErrorDetail, logWarn, logger } from "shark7-shared";
-import { MongoController } from "./MongoController";
-import { WeiboHTTP } from "./model/WeiboHTTP";
-import { WeiboUserCtl } from "./model/WeiboUserCtl";
+import { MongoController } from "./MongoController.ts";
+import { WeiboHTTP } from "./model/WeiboHTTP.ts";
+import { WeiboUserCtl } from "./model/WeiboUserCtl.ts";
 
 export class WeiboController {
     static wc: WeiboController;
