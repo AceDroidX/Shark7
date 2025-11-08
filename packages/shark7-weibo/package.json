@@ -5,12 +5,8 @@
     "module": "src/index.ts",
     "type": "module",
     "scripts": {
-        "start": "node --enable-source-maps dist/index.js",
-        "test": "node dist/test.js",
-        "clean": "tsc --build --clean",
-        "dev": "nodemon src/index.ts",
-        "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=node",
-        "serve": "ts-node src/index.ts"
+        "dev": "node --env-file=.env --watch src/index.ts",
+        "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=node"
     },
     "author": "AceDroidX",
     "license": "ISC",

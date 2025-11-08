@@ -9,7 +9,7 @@ export class WeiboHTTP {
     }
     async getURL<T = any>(url: string) {
         try {
-            return await axios.get<T>(url, { headers: { "Referer": "https://weibo.com", 'User-Agent': UA, 'cookie': cookieJsonToStr(this.wcm.cookie) } })
+            return await axios.get<T>(url, { headers: { "Referer": "https://weibo.com", 'User-Agent': UA, 'cookie': cookieJsonToStr(this.wcm.cookie), 'X-XSRF-TOKEN': this.wcm.cookie.find(cookie => cookie.name === 'XSRF-TOKEN')?.value } })
         }
         catch (err) {
             if (axios.isAxiosError(err)) {
