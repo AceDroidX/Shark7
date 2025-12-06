@@ -30,6 +30,9 @@ export async function onUserDBEvent(ctr: MongoController, event: ChangeStreamUpd
             'urge_detail','video_icon','enable_ai_double','profile_show','social_real_relation_type',
             'mate_relation','profile_component_disabled','profile_mob_params','profile_tab_info','story_ring'].some(value => key==value)) return
         }
+        if ((flattenOrigin[key] != null && value == null) || (flattenOrigin[key] == null && value != null)) {
+            if(['cover_and_head_image_info.profile_cover_list'].some(value => key.startsWith(value))) return
+        }
         if (JSON.stringify(value) == '[]' || JSON.stringify(value) == '{}') {
             return
         }
