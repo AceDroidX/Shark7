@@ -1,5 +1,5 @@
 import { MongoControllerBase, MongoDBs } from "shark7-shared";
-import { EventProcessor } from "./event";
+import { EventProcessor } from "./event.ts";
 
 export {
     MongoController

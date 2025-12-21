@@ -36,10 +36,11 @@ type AndroidConfig = {
     direct_boot_ok?: boolean
 }
 
-export enum AndroidMessagePriority {
-    NORMAL = 'normal',
-    HIGH = 'high',
-}
+export const AndroidMessagePriority = {
+    NORMAL: 'normal',
+    HIGH: 'high',
+} as const
+export type AndroidMessagePriority = typeof AndroidMessagePriority[keyof typeof AndroidMessagePriority];
 
 export type Shark7FcmData = {
     event: string,

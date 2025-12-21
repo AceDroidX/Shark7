@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Shark7Event } from "shark7-shared";
 import { getScopeName, getTime, loggerEventSender } from "shark7-shared";
-import { KHLAPIPREFIX } from "../constants";
+import { KHLAPIPREFIX } from "../constants.ts";
 
 // async function sendLogToKHL(log: string) {
 //     if (!process.env['khl_log_channel_id']) {

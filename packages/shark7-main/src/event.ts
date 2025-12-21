@@ -1,8 +1,8 @@
 import type { ChangeStreamDocument, ChangeStreamInsertDocument } from "mongodb";
 import type { LogEvent, Shark7Event } from "shark7-shared";
 import { logLevelToScope, logger } from "shark7-shared";
-import { FcmClient } from "./fcm";
-import { sendMsgToFcmByScope, sendMsgToKHLByScope } from "./sendMsg";
+import { FcmClient } from "./fcm/index.ts";
+import { sendMsgToFcmByScope, sendMsgToKHLByScope } from "./sendMsg.ts";
 
 export class EventProcessor {
     fcm?: FcmClient

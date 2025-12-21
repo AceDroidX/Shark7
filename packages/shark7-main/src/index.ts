@@ -1,8 +1,8 @@
 import { Collection } from 'mongodb';
 import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { EventProcessor } from './event';
-import { FcmClient } from './fcm';
+import { MongoController } from './MongoController.ts';
+import { EventProcessor } from './event.ts';
+import { FcmClient } from './fcm/index.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

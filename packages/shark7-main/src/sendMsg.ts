@@ -1,6 +1,6 @@
 import type { Shark7Event } from "shark7-shared"
-import { FcmClient } from "./fcm"
-import { sendEventToKHL } from "./khl"
+import { FcmClient } from "./fcm/index.ts"
+import { sendEventToKHL } from "./khl/index.ts"
 
 type Channel = {
     id: string,
