@@ -2,7 +2,8 @@ export function getSkinName(skinID: number) {
     switch (skinID) {
         case 275110190:
             return "随机最爱";
-        case 493570024 || 845551255:
+        case 493570024:
+        case 845551255:
             return "初始";
         case 1685613493:
             return "虚空专家";
