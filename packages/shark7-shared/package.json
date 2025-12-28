@@ -6,6 +6,7 @@
     "main": "src/index.ts",
     "type": "module",
     "scripts": {
+        "check": "tsc --noEmit",
         "start": "node --enable-source-maps dist/index.js",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",

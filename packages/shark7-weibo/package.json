@@ -5,6 +5,7 @@
     "module": "src/index.ts",
     "type": "module",
     "scripts": {
+        "check": "tsc --noEmit",
         "dev": "node --env-file=.env --watch src/index.ts",
         "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=node"
     },

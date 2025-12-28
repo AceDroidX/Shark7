@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
+        "check": "tsc --noEmit",
         "start": "node --env-file=.env src/index.ts",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",

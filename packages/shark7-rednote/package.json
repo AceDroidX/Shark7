@@ -5,6 +5,7 @@
     "module": "src/index.ts",
     "type": "module",
     "scripts": {
+        "check": "tsc --noEmit",
         "dev": "bun --watch src/index.ts"
     },
     "author": "AceDroidX",
