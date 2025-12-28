@@ -2,7 +2,7 @@ import axios from "axios";
 import type { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb";
 import type { BiliApi, BiliDynamic, Shark7Event } from "shark7-shared";
 import { Scope, logAxiosError, logErrorDetail, logger } from "shark7-shared";
-import { MongoController } from "./MongoController";
+import { MongoController } from "./MongoController.ts";
 
 const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
 

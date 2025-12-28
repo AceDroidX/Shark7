@@ -8,14 +8,14 @@ import {
     type RednoteNoteDetail,
     type RednoteUser,
 } from "shark7-shared";
-import { MongoController } from "./MongoController";
-import { axios_rednote } from "./axios";
+import { MongoController } from "./MongoController.ts";
+import { axios_rednote } from "./axios.ts";
 import type {
     RednoteApi,
     RednoteCommentPage,
     RednoteNoteDetailPage,
     RednoteNotePage,
-} from "./model";
+} from "./model.ts";
 
 let xsec_token: string | undefined;
 

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { cookieStrToJson, logAxiosError, logger } from "shark7-shared";
-import { MiscEncrypt } from "./misc_encrypt";
-import { rednoteWeb } from "./RednoteWeb";
-import { XscEncrypt } from "./xsc_encrypt";
+import { MiscEncrypt } from "./misc_encrypt.ts";
+import { rednoteWeb } from "./RednoteWeb.ts";
+import { XscEncrypt } from "./xsc_encrypt.ts";
 
 export const axios_rednote = axios.create({
     baseURL: "https://edith.xiaohongshu.com",

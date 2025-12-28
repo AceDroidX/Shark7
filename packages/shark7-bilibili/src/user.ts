@@ -2,7 +2,7 @@ import axios from "axios";
 import type { ChangeStreamUpdateDocument } from "mongodb";
 import type { BiliApi, BiliUser, Shark7Event } from "shark7-shared";
 import { BiliGet, Scope, flattenObj, logAxiosError, logErrorDetail, logger } from "shark7-shared";
-import { MongoController } from "./MongoController";
+import { MongoController } from "./MongoController.ts";
 
 export async function getUser(user_id: number): Promise<BiliUser | null> {
     try {

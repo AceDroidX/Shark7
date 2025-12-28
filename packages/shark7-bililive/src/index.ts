@@ -3,9 +3,9 @@ import { BiliLiveDBs } from 'shark7-shared';
 import { MongoControlClient } from 'shark7-shared';
 import { logger, initLogger } from 'shark7-shared';
 import { logErrorDetail } from 'shark7-shared';
-import { GetConfTask } from './GetConfTask';
-import { getFiltedMsg } from './live';
-import { MongoController } from './MongoController';
+import { GetConfTask } from './GetConfTask.ts';
+import { getFiltedMsg } from './live.ts';
+import { MongoController } from './MongoController.ts';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {

@@ -1,6 +1,6 @@
 import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { fetchUser, insertUser, onUserEvent } from './user';
+import { MongoController } from './MongoController.ts';
+import { fetchUser, insertUser, onUserEvent } from './user.ts';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {

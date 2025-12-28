@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { ApexUserInfo } from "shark7-shared";
 import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { onUserInfoEvent } from './onUserInfoEvent';
+import { MongoController } from './MongoController.ts';
+import { onUserInfoEvent } from './onUserInfoEvent.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

@@ -1,8 +1,8 @@
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboCookieMgr, WeiboDBs } from 'shark7-shared';
-import { fetchLike, getLike } from './fetchLike';
-import { fetchOnline, getOnline } from './fetchOnline';
-import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model';
-import { MongoController, onNewLike, onNewOnlineData } from './MongoController';
+import { fetchLike, getLike } from './fetchLike.ts';
+import { fetchOnline, getOnline } from './fetchOnline.ts';
+import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model.ts';
+import { MongoController, onNewLike, onNewOnlineData } from './MongoController.ts';
 
 process.on('uncaughtException', function (err) {
     //打印出错误

@@ -11,10 +11,10 @@ import {
     onNoteDetailEvent,
     onNoteEvent,
     onUserDBEvent,
-} from "./event";
-import { fetchComment, fetchNote, fetchUser, getNote } from "./fetch";
-import { MongoController } from "./MongoController";
-import { initWeb } from "./RednoteWeb";
+} from "./event.ts";
+import { fetchComment, fetchNote, fetchUser, getNote } from "./fetch.ts";
+import { MongoController } from "./MongoController.ts";
+import { initWeb } from "./RednoteWeb.ts";
 
 process.on("uncaughtException", function (err) {
     //打印出错误

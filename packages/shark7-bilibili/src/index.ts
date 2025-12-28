@@ -1,8 +1,8 @@
 import { BilibiliDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
-import { MongoController } from './MongoController';
-import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic';
-import { insertUser, onUserEvent } from './user';
-import { insertVideo, onCoinEvent, onLikeEvent, onVideoUpdate } from './video';
+import { MongoController } from './MongoController.ts';
+import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic.ts';
+import { insertUser, onUserEvent } from './user.ts';
+import { insertVideo, onCoinEvent, onLikeEvent, onVideoUpdate } from './video.ts';
 
 process.on('uncaughtException', function (err) {
     logErrorDetail('未捕获的错误', err)

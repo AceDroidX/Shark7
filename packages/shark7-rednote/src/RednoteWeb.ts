@@ -6,7 +6,7 @@ import {
     Puppeteer,
     Web,
 } from "shark7-shared";
-import type { BrowserSign } from "./model";
+import type { BrowserSign } from "./model.ts";
 
 const login_btn_selector = '//*[text()="登录"]';
 // const oldlogin_btn_selector =

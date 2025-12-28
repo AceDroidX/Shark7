@@ -1,8 +1,8 @@
 import type { Cookie } from 'puppeteer';
 import { logErrorDetail, logger, WeiboMsg } from 'shark7-shared';
-import type { WeiboCard, WeiboLikeIdConfig } from "./model";
-import { MongoController } from './MongoController';
-import { fetchURL, getReqConfig } from './utils';
+import type { WeiboCard, WeiboLikeIdConfig } from "./model.ts";
+import { MongoController } from './MongoController.ts';
+import { fetchURL, getReqConfig } from './utils.ts';
 
 export async function getLike(cookie: Cookie[], config: WeiboLikeIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.like_cid

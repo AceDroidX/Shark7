@@ -10,8 +10,8 @@ import type {
     Shark7Event,
 } from "shark7-shared";
 import { Scope, flattenObj, logger } from "shark7-shared";
-import { MongoController } from "./MongoController";
-import { fetchNoteDetail } from "./fetch";
+import { MongoController } from "./MongoController.ts";
+import { fetchNoteDetail } from "./fetch.ts";
 
 export async function onUserDBEvent(
     ctr: MongoController,

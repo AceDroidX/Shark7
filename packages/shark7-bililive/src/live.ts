@@ -1,8 +1,8 @@
 import { LiveTCP, type TCPOptions } from 'bilibili-live-ws'
 import type { Shark7Event } from "shark7-shared"
 import { BiliSimpleUser, BiliUsers, Scope, logger } from 'shark7-shared'
-import { GetConfTask } from "./GetConfTask"
-import { MongoController } from "./MongoController"
+import { GetConfTask } from "./GetConfTask.ts"
+import { MongoController } from "./MongoController.ts"
 
 const BILILIVEPREFIX = 'https://live.bilibili.com'
 

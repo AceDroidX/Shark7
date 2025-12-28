@@ -1,5 +1,5 @@
 import { BiliGet, cookieStrToMap } from "shark7-shared";
-import { AsyncQueue } from "./AsyncQueue";
+import { AsyncQueue } from "./AsyncQueue.ts";
 
 const sleep = (t: number) => new Promise((r) => setTimeout(r, t));
 
