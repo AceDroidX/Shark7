@@ -6,5 +6,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     curl \
     wget \
     nano \
+    bash \
+    shadow \
+    && chsh -s /bin/bash \
     && npm config set registry https://registry.npmmirror.com/ \
     && npm install -g pnpm@10.18.3
