@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { ApexUserInfo } from "shark7-shared";
-import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr } from 'shark7-shared';
+import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr, Nats } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { onUserInfoEvent } from './onUserInfoEvent.ts';
 
@@ -23,7 +23,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(ApexDBs, MongoController, nc)
 
     initLogger('apex')
 

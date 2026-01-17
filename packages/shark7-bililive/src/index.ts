@@ -3,6 +3,7 @@ import { BiliLiveDBs } from 'shark7-shared';
 import { MongoControlClient } from 'shark7-shared';
 import { logger, initLogger } from 'shark7-shared';
 import { logErrorDetail } from 'shark7-shared';
+import { Nats } from 'shark7-shared';
 import { GetConfTask } from './GetConfTask.ts';
 import { getFiltedMsg } from './live.ts';
 import { MongoController } from './MongoController.ts';
@@ -19,7 +20,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(BiliLiveDBs, MongoController, nc)
 
     initLogger('bililive')
 
@@ -51,7 +53,7 @@ async function main() {
         const user = await roomid_Users.addByRoomid(id);
         if (!user) process.exit(1)
         logger.info(user.toString())
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
     const confTask = new GetConfTask()
     roomid_Users.users.forEach((value: BiliSimpleUser, index: number) => {

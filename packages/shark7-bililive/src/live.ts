@@ -24,7 +24,7 @@ export async function getFiltedMsg(mongo: MongoController, confTask: GetConfTask
                 if (!targetuser) { return logger.error(`roomid:${roomid}用户未找到`) }
                 logger.info(`<${targetuser.name}/${roomid}>${filter.msg}`)
                 filter.name = `${targetuser.name}/${roomid}`
-                mongo.addShark7Event(filter)
+                mongo.publishShark7Event(filter)
             }
         } catch (error) {
             logger.error(`<${roomid}>遇到错误，请检查日志；\n${error}`)

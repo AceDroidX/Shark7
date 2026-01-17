@@ -1,4 +1,4 @@
-import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
+import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { fetchUser, insertUser, onUserEvent } from './user.ts';
 
@@ -19,7 +19,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(NeteaseMusicDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(NeteaseMusicDBs, MongoController, nc)
 
     initLogger('netease-music')
 

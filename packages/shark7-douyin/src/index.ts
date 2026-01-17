@@ -1,4 +1,4 @@
-import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
+import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { onUserDBEvent } from "./event.ts";
 import { insertUser } from './user.ts';
@@ -23,7 +23,8 @@ process.on('uncaughtException', function (err) {
 // }
 main()
 async function main() {
-    const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(DouyinDBs, MongoController, nc)
 
     initLogger('douyin')
 

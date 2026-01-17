@@ -23,7 +23,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController, nc)
 
     initLogger('weibo')
 
@@ -33,7 +34,6 @@ async function main() {
     }
     const weibo_id = process.env['weibo_id'].split(',').map(x => parseInt(x))
 
-    const nc = await Nats.connect()
     const wcm = await WeiboCookieMgr.init(nc)
     const wbhttp = new WeiboHTTP(wcm)
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.mblogsDB, onMblogEvent, onMblogUpdate, wbhttp)

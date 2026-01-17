@@ -23,7 +23,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(WeiboDBs, MongoController, nc)
 
     initLogger('weibo-app')
 
@@ -40,7 +41,6 @@ async function main() {
     }
     mongo.addInsertChangeWatcher(mongo.ctr.dbs.likeDB, onNewLike)
     mongo.addUpdateChangeWatcher(mongo.ctr.dbs.onlineDB, onNewOnlineData)
-    const nc = await Nats.connect();
     const wcm = await WeiboCookieMgr.init(nc)
     if (!await getLike(wcm.cookie, like_id_config[0]) || !await getOnline(wcm.cookie, online_id_config[0])) {
         logger.error('数据获取测试失败')

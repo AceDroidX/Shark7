@@ -1,4 +1,4 @@
-import { BilibiliDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger } from 'shark7-shared';
+import { BilibiliDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { insertDynamic, onDynamicEvent, onDynamicUpdate } from './dynamic.ts';
 import { insertUser, onUserEvent } from './user.ts';
@@ -17,7 +17,8 @@ if (import.meta.main) {
     main()
 }
 async function main() {
-    const mongo = await MongoControlClient.getInstance(BilibiliDBs, MongoController)
+    const nc = await Nats.connect()
+    const mongo = await MongoControlClient.getInstance(BilibiliDBs, MongoController, nc)
 
     initLogger('bilibili')
 

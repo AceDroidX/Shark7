@@ -1,5 +1,7 @@
-import { MongoControllerBase, MongoDBs } from "shark7-shared";
+import { MongoControllerBase, MongoDBs, logger } from "shark7-shared";
+import type { NatsConnection } from "@nats-io/transport-node";
 import { EventProcessor } from "./event.ts";
+import { Shark7EventSubscriber } from "shark7-shared";
 
 export {
     MongoController
@@ -7,19 +9,33 @@ export {
 
 class MongoController extends MongoControllerBase<MongoDBs> {
     ep: EventProcessor
-    constructor(eventProcessor: EventProcessor, dbs: MongoDBs) {
+    nc?: NatsConnection
+    subscriber?: Shark7EventSubscriber
+    
+    constructor(eventProcessor: EventProcessor, dbs: MongoDBs, nc?: NatsConnection) {
         super(dbs)
         this.ep = eventProcessor
+        this.nc = nc
     }
-    run() {
-        // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
-        this.dbs.weibo.event.watch().on("change", this.ep.onEventChange.bind(this.ep));
-        this.dbs.apex.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.bililive.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.bilibili.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.douyin.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.netease_music.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.reckfeng.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
-        this.dbs.rednote.event.watch().on("change", this.ep.onEventChange.bind(this.ep))
+    
+    async subscribeEvents() {
+        if (!this.nc) {
+            logger.error('NATS未连接，无法订阅事件')
+            return
+        }
+        
+        if (!this.subscriber) {
+            this.subscriber = new Shark7EventSubscriber(this.nc)
+        }
+        
+        await this.subscriber.subscribeShark7Event((event) => {
+            this.ep.onNatsEvent(event)
+        })
+        
+        await this.subscriber.subscribeLogEvent((log) => {
+            this.ep.onLogEvent(log)
+        })
+        
+        logger.info('所有NATS事件订阅已启动')
     }
 }

@@ -15,23 +15,20 @@ export class EventProcessor {
         if (this.fcm) sendMsgToFcmByScope(event, this.fcm)
     }
 
-    onEventChange(raw: ChangeStreamDocument) {
-        if (raw.operationType != 'insert') {
-            logger.warn(`未知事件操作:${raw.operationType}`)
-            return
-        }
-        const event = raw as ChangeStreamInsertDocument<Shark7Event>
-        logger.info(`(${event.fullDocument.scope})事件改变: \n${JSON.stringify(raw)}`)
-        this.sendEvent(event.fullDocument)
+    onNatsEvent(event: Shark7Event) {
+        logger.info(`(${event.scope})接收到NATS事件: ${event.name}`)
+        this.sendEvent(event)
     }
 
-    onLogChange(raw: ChangeStreamDocument, collName: string) {
-        if (raw.operationType != 'insert') {
-            logger.warn(`未知事件操作:${raw.operationType}`)
-            return
+    onLogEvent(log: LogEvent) {
+        const scope = logLevelToScope(log.level)
+        const event: Shark7Event = { 
+            ts: Number(log.timestamp), 
+            name: 'Log', 
+            scope, 
+            msg: log.message 
         }
-        const event = raw as ChangeStreamInsertDocument<LogEvent>
-        const log = event.fullDocument
-        this.sendEvent({ ts: Number(new Date()), name: collName, scope: logLevelToScope(log.level), msg: log.message })
+        logger.info(`(${scope})接收到日志事件: ${log.message}`)
+        this.sendEvent(event)
     }
 }

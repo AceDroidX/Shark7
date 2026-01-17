@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger } from 'shark7-shared';
+import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { EventProcessor } from './event.ts';
 import { FcmClient } from './fcm/index.ts';
@@ -33,25 +33,20 @@ async function main() {
     } else {
         eventProcessor = new EventProcessor()
     }
-    const mongo = await getAllEventDBs(eventProcessor)
+    
+    const nc = await Nats.connect()
+    const mongo = await getAllEventDBs(eventProcessor, nc)
 
     initLogger('main')
 
-    mongo.ctr.run();
-
-    (await mongo.client.db('log').collections()).forEach(
-        (col: Collection) => {
-            logger.debug(col.collectionName)
-            col.watch().on('change', (event) => eventProcessor.onLogChange(event, col.collectionName))
-        }
-    );
+    await mongo.ctr.subscribeEvents();
 }
 
-async function getAllEventDBs(eventProcessor: EventProcessor) {
+async function getAllEventDBs(eventProcessor: EventProcessor, nc?: any) {
     try {
         const client = await MongoControlClient.getMongoClientConfig().connect();
         const dbs = await MongoDBs.getInstance(client)
-        const ctr = new MongoController(eventProcessor, dbs);
+        const ctr = new MongoController(eventProcessor, dbs, nc);
         logger.info('数据库已连接');
         return new MongoControlClient(client, ctr);
     } catch (err) {

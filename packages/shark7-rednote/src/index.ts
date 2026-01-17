@@ -5,6 +5,7 @@ import {
     initLogger,
     logErrorDetail,
     logger,
+    Nats,
 } from "shark7-shared";
 import {
     onCommentEvent,
@@ -37,9 +38,11 @@ if (import.meta.main) {
     main();
 }
 async function main() {
+    const nc = await Nats.connect()
     const mongo = await MongoControlClient.getInstance(
         RednoteDBs,
-        MongoController
+        MongoController,
+        nc
     );
 
     initLogger("rednote");
