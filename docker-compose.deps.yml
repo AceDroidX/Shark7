@@ -1,7 +1,7 @@
 version: "3.7"
 services:
     shark7-mongo:
-        image: bitnami/mongodb:6.0.9-debian-11-r2
+        image: bitnamilegacy/mongodb:6.0.9-debian-11-r2
         restart: unless-stopped
         container_name: shark7-mongo
         volumes:
@@ -31,9 +31,33 @@ services:
             - 4222:4222
         networks:
             - default
+    shark7-ntfy:
+        image: binwiederhier/ntfy
+        container_name: shark7-ntfy
+        command: serve --listen-http :8080
+        environment:
+            - TZ=Asia/Shanghai    # optional: set desired timezone
+        user: 1000:1000 # optional: replace with your own user/group or uid/gid
+        volumes:
+            - shark7-ntfy-cache:/var/cache/ntfy
+            - shark7-ntfy-data:/etc/ntfy
+        ports:
+            - 8001:8080
+        healthcheck: # optional: remember to adapt the host:port to your environment
+            test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:8080/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+            interval: 60s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        restart: unless-stopped
+        init: true # needed, if healthcheck is used. Prevents zombie processes
 volumes:
     shark7-mongodata:
         name: "shark7-mongodata"
+    shark7-ntfy-cache:
+        name: "shark7-ntfy-cache"
+    shark7-ntfy-data:
+        name: "shark7-ntfy-data"
 
 networks:
     default:
