@@ -7,7 +7,7 @@
         "start": "node --env-file=.env src/index.ts",
         "test": "node dist/test.js",
         "clean": "tsc --build --clean",
-        "dev": "nodemon src/index.ts",
+        "dev": "node --env-file=.env --watch src/index.ts",
         "build": "esbuild src/index.ts --bundle --minify --sourcemap --outdir=dist --platform=node",
         "serve": "ts-node src/index.ts"
     },

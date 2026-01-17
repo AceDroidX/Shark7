@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "check": "tsc --noEmit",
-        "dev": "bun --watch src/index.ts"
+        "dev": "node --env-file=.env --watch src/index.ts"
     },
     "author": "AceDroidX",
     "license": "ISC",
