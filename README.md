@@ -46,3 +46,9 @@ todo:
   - [ ] NATS消息处理
   - [x] 优化包导出路径
   - [x] esbuild
+
+v4 todo:
+- [x] 从各种微服务到main微服务使用NATS消息队列发送Shark7Event，也就是说main微服务不再读取数据库，而是通过订阅NATS消息来获取事件并处理
+- [x] 使用ntfy发送通知
+- 使用ltwlf/json-diff-ts进行数据对比
+- 使用PostgreSQL存储数据
