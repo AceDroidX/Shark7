@@ -54,7 +54,7 @@ export class MongoDBs extends EventDBs {
 
 export class WeiboDBs extends EventDBs {
     static dbname = 'weibo'
-    static postCollList = ['mblogs', 'users']
+    static collList = ['mblogs', 'users']
     data: Collection
     mblogsDB: Collection<WeiboMsg>
     commentsDB: Collection<WeiboComment>
@@ -77,7 +77,7 @@ export class WeiboDBs extends EventDBs {
 
 export class ApexDBs extends EventDBs {
     static dbname = 'apex'
-    static postCollList = ['userinfo']
+    static collList = ['userinfo']
     userinfoDB: Collection<ApexUserInfo>
     constructor(db: Db) {
         super(db)
@@ -87,7 +87,7 @@ export class ApexDBs extends EventDBs {
 
 export class BiliLiveDBs extends EventDBs {
     static dbname = 'bililive'
-    static postCollList = []
+    static collList = []
     guardDB: Collection<BiliGuardState>
     constructor(db: Db) {
         super(db)
@@ -97,7 +97,7 @@ export class BiliLiveDBs extends EventDBs {
 
 export class DouyinDBs extends EventDBs {
     static dbname = 'douyin'
-    static postCollList = ['users']
+    static collList = ['users']
     userDB: Collection<DouyinUser>
     constructor(db: Db) {
         super(db)
@@ -107,7 +107,7 @@ export class DouyinDBs extends EventDBs {
 
 export class NeteaseMusicDBs extends EventDBs {
     static dbname = 'netease-music'
-    static postCollList = ['users']
+    static collList = ['users']
     userDB: Collection<NeteaseMusicUser>
     constructor(db: Db) {
         super(db)
@@ -117,7 +117,7 @@ export class NeteaseMusicDBs extends EventDBs {
 
 export class BilibiliDBs extends EventDBs {
     static dbname = 'bilibili'
-    static postCollList = ['users']
+    static collList = ['users']
     userDB: Collection<BiliUser>
     coinDB: Collection<BiliVideo>
     likeDB: Collection<BiliVideo>
@@ -133,7 +133,7 @@ export class BilibiliDBs extends EventDBs {
 
 export class ReckfengDBs extends EventDBs {
     static dbname = 'reckfeng'
-    static postCollList = ['users']
+    static collList = ['users']
     userDB: Collection<ReckfengData>
     constructor(db: Db) {
         super(db)
@@ -143,7 +143,7 @@ export class ReckfengDBs extends EventDBs {
 
 export class RednoteDBs extends EventDBs {
     static dbname = 'rednote'
-    static postCollList = ['users']
+    static collList = ['users']
     userDB: Collection<RednoteUser>
     notesDB: Collection<RednoteNote>
     notesDetailDB: Collection<RednoteNoteDetail>

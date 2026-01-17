@@ -66,4 +66,12 @@ export class MongoController extends MongoControllerBase<RednoteDBs> {
         logger.debug("getCommentById: id:" + id);
         return await this.dbs.commentsDB.findOne({ id: id });
     }
+    async getNoteById(note_id: string) {
+        logger.debug("getNoteById: note_id:" + note_id);
+        return await this.dbs.notesDB.findOne({ note_id });
+    }
+    async getNoteDetailById(note_id: string) {
+        logger.debug("getNoteDetailById: note_id:" + note_id);
+        return await this.dbs.notesDetailDB.findOne({ note_id });
+    }
 }

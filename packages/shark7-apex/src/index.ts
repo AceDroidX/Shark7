@@ -1,11 +1,10 @@
 import axios from 'axios';
 import type { ApexUserInfo } from "shark7-shared";
-import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr, Nats } from 'shark7-shared';
+import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr, Nats, createChangeTracker } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
-import { onUserInfoEvent } from './onUserInfoEvent.ts';
+import { formatApexUserChanges } from './formatters.ts';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -13,12 +12,7 @@ process.on('uncaughtException', function (err) {
         process.exit(1);
     }
 });
-// process.on('unhandledRejection', (reason, promise) => {
-//     promise.catch((err) => {logger.error(err)});
-//     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
-//     process.exit(1);
-// });
-// init
+
 if (import.meta.main) {
     main()
 }
@@ -33,14 +27,23 @@ async function main() {
         logger.error('apex_uid配置项未配置')
         process.exit(1)
     }
-    // const apex_uid = apex_uid_str.split(',').map(player => { return player.split(':').map(e => { return toNumOrStr(e) }) })
     const apex_uid = apex_uid_str.split(':').map(e => { return toNumOrStr(e) })
     console.log(apex_uid)
+    
+    const trackUserInfoChange = createChangeTracker<ApexUserInfo>(
+        async (newData) => mongo.ctr.getUserInfo(newData.uid),
+        (data) => mongo.ctr.insertUserInfo(data),
+        (event) => mongo.publishShark7Event(event),
+        {
+            keysToSkip: ['shark7_id', 'shark7_name', '_id', 'charVer', 'timeSinceServerChange'],
+            formatter: formatApexUserChanges
+        }
+    )
+    
     if (!await getUserInfo(apex_uid[0], apex_uid[1])) {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userinfoDB, onUserInfoEvent)
     mongo.ctr.run()
 
     let interval = process.env['interval'] ? Number(process.env['interval']) : 3
@@ -48,7 +51,7 @@ async function main() {
     scheduler.addJob('refreshUserInfo', interval, async () => {
         const userInfo = await getUserInfo(apex_uid[0], apex_uid[1])
         if (!userInfo) return
-        await mongo.ctr.insertUserInfo(userInfo)
+        await trackUserInfoChange(userInfo)
     })
 }
 

@@ -3,6 +3,8 @@ import { logger } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { WeiboHTTP } from './model/WeiboHTTP.ts';
 
+type TrackCommentChange = (comment: WeiboComment) => Promise<void>;
+
 const CommentFlow = {
     ByHot: 0,
     ByTime: 1,
@@ -56,7 +58,7 @@ function commentsFilter(comments: WeiboComment[], uid: number): WeiboComment[] {
     return filtedComments
 }
 
-export async function fetchComments(mongo: MongoController, wbhttp: WeiboHTTP, id: number, uid: number): Promise<boolean> {
+export async function fetchComments(mongo: MongoController, wbhttp: WeiboHTTP, id: number, uid: number, trackCommentChange: TrackCommentChange): Promise<boolean> {
     logger.debug('开始抓取评论')
     const hotComments = await getMblogComments(mongo, wbhttp, id, CommentFlow.ByHot, 100)
     const timeComments = await getMblogComments(mongo, wbhttp, id, CommentFlow.ByTime, 10)
@@ -64,10 +66,10 @@ export async function fetchComments(mongo: MongoController, wbhttp: WeiboHTTP, i
         return false
     }
     for (const data of commentsFilter(hotComments, uid)) {
-        await mongo.insertComment(data)
+        await trackCommentChange(data)
     }
     for (const data of commentsFilter(timeComments, uid)) {
-        await mongo.insertComment(data)
+        await trackCommentChange(data)
     }
     return true
 }

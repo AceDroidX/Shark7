@@ -3,10 +3,9 @@ import { EventDBs } from '../database.ts'
 export * from './client.ts'
 
 export async function getDBInstance<T extends EventDBs>(client: MongoClient, eventdbs: {
-    dbname: string, postCollList: string[], new(db: Db): T
+    dbname: string, collList: string[], new(db: Db): T
 }) {
     const db = client.db(eventdbs.dbname)
-    await initPostChangeColl(db, eventdbs.postCollList)
     return new eventdbs(db)
 }
 

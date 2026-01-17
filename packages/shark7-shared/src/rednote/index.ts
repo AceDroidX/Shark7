@@ -1,4 +1,4 @@
-import type { Shark7Doc } from "../index.ts";
+import type { Shark7Doc, UpdateTypeDoc } from "../index.ts";
 
 const RednoteUserDemo = {
     result: {
@@ -98,7 +98,7 @@ const RednoteNoteDemo = {
         url: "",
     },
 };
-export type RednoteNote = typeof RednoteNoteDemo;
+export type RednoteNote = UpdateTypeDoc & typeof RednoteNoteDemo;
 
 const RednoteNoteDetailDemo = {
     type: "video",
@@ -256,7 +256,7 @@ const RednoteNoteDetailDemo = {
     tag_list: [],
     at_user_list: [],
 };
-export type RednoteNoteDetail = typeof RednoteNoteDetailDemo;
+export type RednoteNoteDetail = UpdateTypeDoc & typeof RednoteNoteDetailDemo;
 
 const RednoteCommentBaseDemo = {
     id: "111111111111111111111",
@@ -278,7 +278,7 @@ const RednoteCommentBaseDemo = {
     ip_location: "日本",
 };
 
-export type RednoteComment = typeof RednoteCommentBaseDemo &
+export type RednoteComment = UpdateTypeDoc & typeof RednoteCommentBaseDemo &
     (
         | {
               sub_comment_count: string;

@@ -1,6 +1,7 @@
-import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
+import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
-import { fetchUser, insertUser, onUserEvent } from './user.ts';
+import { fetchUser } from './user.ts';
+import { formatNeteaseMusicUserChanges } from './formatters.ts';
 
 process.on('uncaughtException', function (err) {
     if (err.name == 'WeiboError') {
@@ -10,11 +11,6 @@ process.on('uncaughtException', function (err) {
         process.exit(1);
     }
 });
-// process.on('unhandledRejection', (reason, promise) => {
-//     promise.catch((err) => {logger.error(err)});
-//     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
-//     process.exit(1);
-// });
 if (import.meta.main) {
     main()
 }
@@ -30,14 +26,24 @@ async function main() {
     }
     const user_id = Number(process.env['user_id'])
 
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserEvent)
+    const trackUserChange = createChangeTracker(
+        async (newData) => mongo.ctr.getUser(user_id),
+        (data) => mongo.ctr.insertUser(data),
+        (event) => mongo.publishShark7Event(event),
+        {
+            formatter: formatNeteaseMusicUserChanges
+        }
+    )
+    
     if (!await fetchUser(user_id)) {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
     let interval = process.env['interval'] ? Number(process.env['interval']) : 30
     const scheduler = new Scheduler()
-    scheduler.addJob('fetchUser', interval, () => { insertUser(mongo.ctr, user_id) })
+    scheduler.addJob('fetchUser', interval, async () => {
+        const data = await fetchUser(user_id);
+        if (data) await trackUserChange(data);
+    })
     logger.info('模块已启动')
 }
-

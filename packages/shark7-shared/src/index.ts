@@ -13,6 +13,7 @@ export * from './nats.ts'
 export * from './scheduler.ts'
 export * from './scope.ts'
 export * from './utils.ts'
+export * from './change-tracker.ts'
 
 export type Shark7Event = {
     ts: number

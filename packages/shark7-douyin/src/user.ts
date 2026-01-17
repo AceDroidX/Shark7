@@ -6,21 +6,10 @@ import {
     logger,
     type DouyinUser,
 } from "shark7-shared";
-import { MongoController } from "./MongoController.ts";
 import { sign } from "./X-Bogus.js";
 import type { DouyinUserApi } from "./model.ts";
 
-export async function insertUser(
-    ctr: MongoController,
-    sec_uid: string
-): Promise<boolean> {
-    const data = await getUser(sec_uid);
-    if (!data) return false;
-    await ctr.updateUserInfo(data);
-    return true;
-}
-
-async function getUser(sec_uid: string): Promise<DouyinUser | null> {
+export async function fetchUser(sec_uid: string): Promise<DouyinUser | null> {
     const user_agent = process.env["user_agent"];
     if (!user_agent) {
         logger.error("请设置user_agent");

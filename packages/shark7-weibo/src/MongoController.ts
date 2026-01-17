@@ -8,6 +8,9 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
         const res = await this.dbs.mblogsDB.findOne({ id: id })
         return res != null
     }
+    async getMblogByID(id: number) {
+        return await this.dbs.mblogsDB.findOne({ id })
+    }
     async insertUserInfo(user: WeiboUser) {
         await this.dbs.userDB.updateOne({ id: user.id }, [{ $replaceWith: user }], { upsert: true })
     }
@@ -16,5 +19,8 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     }
     async insertComment(comment: WeiboComment) {
         return await this.dbs.commentsDB.updateOne({ id: comment.id }, [{ $replaceWith: comment }], { upsert: true })
+    }
+    async getCommentById(id: number) {
+        return await this.dbs.commentsDB.findOne({ id })
     }
 }

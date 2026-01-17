@@ -1,10 +1,9 @@
-import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
+import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker, Scope } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
-import { onUserDBEvent } from "./event.ts";
-import { insertUser } from './user.ts';
+import { fetchUser } from './user.ts';
+import { formatDouyinUserChanges } from './formatters.ts';
 
 process.on('uncaughtException', function (err) {
-    //打印出错误
     if (err.name == 'WeiboError') {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
@@ -12,15 +11,7 @@ process.on('uncaughtException', function (err) {
         process.exit(1);
     }
 });
-// process.on('unhandledRejection', (reason, promise) => {
-//     promise.catch((err) => {logger.error(err)});
-//     logger.error(`Unhandled Rejection at:${promise}\nreason:${JSON.stringify(reason)}`);
-//     process.exit(1);
-// });
-// init
-// if (import.meta.main) {
-//     main()
-// }
+
 main()
 async function main() {
     const nc = await Nats.connect()
@@ -33,14 +24,28 @@ async function main() {
         logger.error('请设置douyin_sec_uid')
         process.exit(1)
     }
-    mongo.addUpdateChangeWatcher(mongo.ctr.dbs.userDB, onUserDBEvent)
+    
+    const trackUserChange = createChangeTracker(
+        async (newData) => mongo.ctr.getUserInfoBySecUID(newData.sec_uid),
+        (data) => mongo.ctr.updateUserInfo(data),
+        (event) => mongo.publishShark7Event(event),
+        {
+            formatter: formatDouyinUserChanges,
+            scope: Scope.Douyin.User,
+            name: (newData) => newData.nickname
+        }
+    )
+    
     await mongo.ctr.run()
-    if (!await insertUser(mongo.ctr, sec_uid)) {
+    if (!await fetchUser(sec_uid)) {
         logger.error('数据获取测试失败')
         process.exit(1)
     }
     let interval = process.env['interval'] ? Number(process.env['interval']) : 60
     const scheduler = new Scheduler()
-    scheduler.addJob('fetchUserInfo', interval, () => { insertUser(mongo.ctr,sec_uid) })
+    scheduler.addJob('fetchUserInfo', interval, async () => {
+        const data = await fetchUser(sec_uid);
+        if (data) await trackUserChange(data);
+    })
     logger.info('douyin模块已启动')
 }

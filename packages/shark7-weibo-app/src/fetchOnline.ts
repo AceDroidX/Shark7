@@ -4,6 +4,8 @@ import { MongoController } from './MongoController.ts';
 import type { WeiboCard, WeiboOnlineIdConfig } from "./model.ts";
 import { fetchURL, getReqConfig } from './utils.ts';
 
+type TrackOnlineChange = (onlineData: OnlineData) => Promise<void>;
+
 export async function getOnline(cookie: Cookie[], config: WeiboOnlineIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.online_cid
     const reqConfig = getReqConfig(cookie, cid);
@@ -15,7 +17,7 @@ export async function getOnline(cookie: Cookie[], config: WeiboOnlineIdConfig): 
     return data.cards
 }
 
-export async function fetchOnline(mongo: MongoController, cookie: Cookie[], config: WeiboOnlineIdConfig): Promise<boolean> {
+export async function fetchOnline(mongo: MongoController, cookie: Cookie[], config: WeiboOnlineIdConfig, trackOnlineChange: TrackOnlineChange): Promise<boolean> {
     logger.debug('开始抓取在线状态');
     const weibo_id = config.id
     const cards = await getOnline(cookie, config)
@@ -44,7 +46,7 @@ export async function fetchOnline(mongo: MongoController, cookie: Cookie[], conf
                             desc1: inner_card.desc1,
                             online: online
                         }
-                        await mongo.insertOnline(data)
+                        await trackOnlineChange(data)
                     }
                 }
             } else if (card.card_type == 9) {

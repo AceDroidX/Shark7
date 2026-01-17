@@ -1,7 +1,6 @@
 import axios from "axios";
-import type { ChangeStreamInsertDocument, ChangeStreamUpdateDocument } from "mongodb";
-import type { BiliApi, BiliVideo, Shark7Event } from "shark7-shared";
-import { Scope, logAxiosError, logErrorDetail, logger } from "shark7-shared";
+import type { BiliApi, BiliVideo } from "shark7-shared";
+import { logAxiosError, logErrorDetail, logger } from "shark7-shared";
 import { MongoController } from "./MongoController.ts";
 
 const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
@@ -34,49 +33,4 @@ export async function getVideo(user_id: number, user_name: string, type: 'coin' 
         }
         return null
     }
-}
-
-export async function insertVideo(ctr: MongoController, user_id: number, type: 'coin' | 'like'): Promise<boolean> {
-    const user = await ctr.getUser(user_id)
-    if (!user) {
-        logger.error('getUser出错 请先添加User')
-        process.exit(1)
-    }
-    const data = await getVideo(user_id, user.name, type)
-    if (!data) return false
-    if (type == 'coin') {
-        for (const item of data) {
-            await ctr.insertCoin(item)
-        }
-    } else {
-        for (const item of data) {
-            await ctr.insertLike(item)
-        }
-    }
-    return true
-}
-
-export async function onCoinEvent(ctr: MongoController, event: ChangeStreamInsertDocument<BiliVideo>): Promise<Shark7Event | null> {
-    const data = event.fullDocument
-    if (!data) {
-        logger.error(`fullDocument为${data}`)
-        process.exit(1)
-    }
-    const msg = `<${data.owner.name}>${data.title}\nhttps://b23.tv/${data.bvid}`
-    return { ts: Number(new Date()), name: String(data.shark7_name), scope: Scope.Bilibili.Coin, msg }
-}
-
-export async function onLikeEvent(ctr: MongoController, event: ChangeStreamInsertDocument<BiliVideo>): Promise<Shark7Event | null> {
-    const data = event.fullDocument
-    if (!data) {
-        logger.error(`fullDocument为${data}`)
-        process.exit(1)
-    }
-    const msg = `<${data.owner.name}>${data.title}\nhttps://b23.tv/${data.bvid}`
-    return { ts: Number(new Date()), name: String(data.shark7_name), scope: Scope.Bilibili.Like, msg }
-}
-
-export async function onVideoUpdate(ctr: MongoController, event: ChangeStreamUpdateDocument): Promise<Shark7Event | null> {
-    logger.debug('忽略onVideoUpdate')
-    return null
 }

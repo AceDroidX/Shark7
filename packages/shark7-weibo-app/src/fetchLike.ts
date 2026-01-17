@@ -4,6 +4,8 @@ import type { WeiboCard, WeiboLikeIdConfig } from "./model.ts";
 import { MongoController } from './MongoController.ts';
 import { fetchURL, getReqConfig } from './utils.ts';
 
+type TrackLikeChange = (weiboMsg: WeiboMsg) => Promise<void>;
+
 export async function getLike(cookie: Cookie[], config: WeiboLikeIdConfig): Promise<WeiboCard[] | null> {
     const cid = config.like_cid
     const reqConfig = getReqConfig(cookie, cid);
@@ -17,7 +19,7 @@ export async function getLike(cookie: Cookie[], config: WeiboLikeIdConfig): Prom
     return cards
 }
 
-export async function fetchLike(mongo: MongoController, cookie: Cookie[], config: WeiboLikeIdConfig): Promise<boolean> {
+export async function fetchLike(mongo: MongoController, cookie: Cookie[], config: WeiboLikeIdConfig, trackLikeChange: TrackLikeChange): Promise<boolean> {
     logger.debug('开始抓取点赞');
     const weibo_id = config.id
     const cards = await getLike(cookie, config)
@@ -34,14 +36,14 @@ export async function fetchLike(mongo: MongoController, cookie: Cookie[], config
                     return;
                 }
                 const weiboMsg = new WeiboMsg(card.card_group[0].mblog, weibo_id);
-                await mongo.insertLike(weiboMsg);
+                await trackLikeChange(weiboMsg);
             } else if (card.card_type == 9) {
                 if (!card.mblog) {
                     logger.error(`card.mblog为空:${JSON.stringify(card)}`);
                     return;
                 }
                 const weiboMsg = new WeiboMsg(card.mblog, weibo_id);
-                await mongo.insertLike(weiboMsg);
+                await trackLikeChange(weiboMsg);
             } else {
                 logger.warn(`card_type未知:${JSON.stringify(card)}`);
             }

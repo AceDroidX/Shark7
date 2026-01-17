@@ -38,6 +38,8 @@ export async function fetchNote(
     const data = await getNote(sec_uid);
     if (!data) return false;
     for (const item of data) {
+        item.shark7_id = item.note_id;
+        item.shark7_name = item.user.nickname;
         await ctr.insertNote(item);
     }
     return true;
@@ -183,7 +185,10 @@ export async function getNoteDetail(
         const resp = await axios_rednote.post<
             RednoteApi<RednoteNoteDetailPage>
         >(`/api/sns/web/v1/feed`, data);
-        return resp.data.data.items[0].note_card;
+        const note: any = resp.data.data.items[0].note_card;
+        note.shark7_id = note.note_id;
+        note.shark7_name = note.user.nickname;
+        return note;
     } catch (err) {
         if (axios.isAxiosError(err)) {
             logAxiosError(err);
@@ -213,7 +218,11 @@ export async function getComment(
         const resp = await axios_rednote.get<RednoteApi<RednoteCommentPage>>(
             `/api/sns/web/v2/comment/page?${new URLSearchParams(data)}`
         );
-        return resp.data.data.comments;
+        return resp.data.data.comments.map((comment: any) => ({
+            ...comment,
+            shark7_id: comment.id,
+            shark7_name: comment.user_info.nickname
+        }));
     } catch (err) {
         if (axios.isAxiosError(err)) {
             logAxiosError(err);

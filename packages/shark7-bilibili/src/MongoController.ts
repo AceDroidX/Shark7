@@ -17,4 +17,13 @@ export class MongoController extends MongoControllerBase<BilibiliDBs> {
     async insertDynamic(data: BiliDynamic) {
         return await this.dbs.dynamicDB.updateOne({ id_str: data.id_str }, [{ $replaceWith: data }], { upsert: true })
     }
+    async getCoinByAid(shark7_id: string, aid: number): Promise<BiliVideo | null> {
+        return await this.dbs.coinDB.findOne({ shark7_id, aid });
+    }
+    async getLikeByAid(shark7_id: string, aid: number): Promise<BiliVideo | null> {
+        return await this.dbs.likeDB.findOne({ shark7_id, aid });
+    }
+    async getDynamicById(id_str: string): Promise<BiliDynamic | null> {
+        return await this.dbs.dynamicDB.findOne({ id_str });
+    }
 }
