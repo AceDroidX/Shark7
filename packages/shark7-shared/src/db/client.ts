@@ -46,14 +46,9 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
         await this.ctr.addShark7Event(event);
     }
     async publishShark7Event(event: Shark7Event) {
+        await this.addShark7Event(event)
         if (this.eventPublisher) {
-            const success = await this.eventPublisher.publish(event)
-            if (!success) {
-                logger.warn('NATS发布失败，回退到数据库')
-                await this.ctr.addShark7Event(event)
-            }
-        } else {
-            await this.ctr.addShark7Event(event)
+            await this.eventPublisher.publish(event)
         }
     }
     async publishLogEvent(event: LogEvent) {
@@ -142,14 +137,9 @@ export class MongoControllerBase<T extends EventDBs> {
         await this.dbs.event.insertOne(event);
     }
     async publishShark7Event(event: Shark7Event) {
+        await this.addShark7Event(event)
         if (this.eventPublisher) {
-            const success = await this.eventPublisher.publish(event)
-            if (!success) {
-                logger.warn('NATS发布失败，回退到数据库')
-                await this.addShark7Event(event)
-            }
-        } else {
-            await this.addShark7Event(event)
+            await this.eventPublisher.publish(event)
         }
     }
 }
