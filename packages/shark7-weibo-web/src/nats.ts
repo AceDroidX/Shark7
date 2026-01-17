@@ -1,4 +1,4 @@
-import { connect, JSONCodec, type NatsConnection } from "nats";
+import { connect, type NatsConnection } from "@nats-io/transport-node";
 import type { Cookie } from "puppeteer";
 import { logger, type WeiboCookieExpireEvent, type WeiboCookieRequest, type WeiboCookieRespond, type WeiboCookieUpdateEvent, WeiboNATSSubscribeName } from "shark7-shared";
 import { WeiboWeb } from "./WeiboWeb.ts";
@@ -33,10 +33,10 @@ export class Nats {
     }
     async subscribeCookieExpire() {
         logger.debug(`subscribe:${WeiboNATSSubscribeName.CookieExpire}`)
-        const jc = JSONCodec<WeiboCookieExpireEvent>();
         const sub = this.nc.subscribe(WeiboNATSSubscribeName.CookieExpire, { max: 1 });
         for await (const m of sub) {
-            logger.info(`[${sub.getProcessed()}]: ${JSON.stringify(jc.decode(m.data))}`);
+            const event = m.json<WeiboCookieExpireEvent>()
+            logger.info(`[${sub.getProcessed()}]: ${JSON.stringify(event)}`);
             if (!this.weiboWeb) {
                 logger.error('this.weiboWeb not init')
                 continue
@@ -46,8 +46,6 @@ export class Nats {
         logger.info("subscription closed");
     }
     async respondCookieTask() {
-        const jcRequest = JSONCodec<WeiboCookieRequest>();
-        const jcRespond = JSONCodec<WeiboCookieRespond>();
         const sub = this.nc.subscribe(WeiboNATSSubscribeName.Cookie);
         for await (const m of sub) {
             if (!this.weiboWeb) {
@@ -58,16 +56,18 @@ export class Nats {
                 logger.warn('!this.weiboWeb.cookie')
                 continue
             }
-            if (m.respond(jcRespond.encode({ name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime(), cookie: this.weiboWeb.cookie }))) {
-                logger.info(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(jcRequest.decode(m.data))} handled`);
+            const request = m.json<WeiboCookieRequest>()
+            const respond: WeiboCookieRespond = { name: WeiboNATSSubscribeName.Cookie, ts: new Date().getTime(), cookie: this.weiboWeb.cookie }
+            if (m.respond(JSON.stringify(respond))) {
+                logger.info(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(request)} handled`);
             } else {
-                logger.debug(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(jcRequest.decode(m.data))} ignored - no reply subject`);
+                logger.debug(`[respondCookieTask] #${sub.getProcessed()}: ${JSON.stringify(request)} ignored - no reply subject`);
             }
         }
     }
     sendWeiboCookieUpdateEvent(cookie: Cookie[]) {
         logger.info(`sendWeiboCookieUpdateEvent`)
-        const jc = JSONCodec<WeiboCookieUpdateEvent>();
-        this.nc.publish(WeiboNATSSubscribeName.CookieUpdate, jc.encode({ name: WeiboNATSSubscribeName.CookieUpdate, ts: new Date().getTime(), cookie }))
+        const event: WeiboCookieUpdateEvent = { name: WeiboNATSSubscribeName.CookieUpdate, ts: new Date().getTime(), cookie }
+        this.nc.publish(WeiboNATSSubscribeName.CookieUpdate, JSON.stringify(event))
     }
 }

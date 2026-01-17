@@ -1,4 +1,4 @@
-import { connect } from "nats";
+import { connect } from "@nats-io/transport-node";
 import { logger } from "./logger.ts";
 
 const nats_server = process.env['nats_server'] ?? 'localhost'

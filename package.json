@@ -10,10 +10,11 @@
     "author": "AceDroidX",
     "license": "ISC",
     "dependencies": {
+        "@nats-io/nats-core": "^3.3.0",
+        "@nats-io/transport-node": "^3.3.0",
         "axios": "^1.7.2",
         "json-diff-ts": "^4.1.0",
-        "mongodb": "^6.7.0",
-        "nats": "^2.26.0"
+        "mongodb": "^6.7.0"
     },
     "devDependencies": {
         "@tsconfig/node-ts": "^23.6.1",
