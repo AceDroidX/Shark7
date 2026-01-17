@@ -1,8 +1,8 @@
-import { Collection } from 'mongodb';
-import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger, Nats } from 'shark7-shared';
+import { MongoControlClient, MongoDBs, initLogger, logErrorDetail, logger, Nats, Shark7EventPublisher } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { EventProcessor } from './event.ts';
 import { FcmClient } from './fcm/index.ts';
+import type { NatsConnection } from '@nats-io/nats-core';
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -42,13 +42,14 @@ async function main() {
     await mongo.ctr.subscribeEvents();
 }
 
-async function getAllEventDBs(eventProcessor: EventProcessor, nc?: any) {
+async function getAllEventDBs(eventProcessor: EventProcessor, nc: NatsConnection) {
     try {
         const client = await MongoControlClient.getMongoClientConfig().connect();
         const dbs = await MongoDBs.getInstance(client)
-        const ctr = new MongoController(eventProcessor, dbs, nc);
+        const eventPublisher = new Shark7EventPublisher(nc)
+        const ctr = new MongoController(eventProcessor, dbs, eventPublisher, nc);
         logger.info('数据库已连接');
-        return new MongoControlClient(client, ctr);
+        return new MongoControlClient(client, ctr, eventPublisher);
     } catch (err) {
         logErrorDetail('数据库连接失败', err);
         process.exit(1);

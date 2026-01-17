@@ -10,8 +10,8 @@ import { Shark7EventPublisher } from "../nats.ts";
 export class MongoControlClient<E extends EventDBs, C extends MongoControllerBase<E>> {
     client: MongoClient;
     ctr: C;
-    eventPublisher?: Shark7EventPublisher;
-    constructor(client: MongoClient, ctr: C, eventPublisher?: Shark7EventPublisher) {
+    eventPublisher: Shark7EventPublisher;
+    constructor(client: MongoClient, ctr: C, eventPublisher: Shark7EventPublisher) {
         this.client = client;
         this.ctr = ctr;
         this.eventPublisher = eventPublisher;
@@ -21,18 +21,14 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
     }
     static async getInstance<E extends EventDBs, C extends MongoControllerBase<E>>(dbfunc: {
         dbname: string, postCollList: string[], new(db: Db): E
-    }, ctrfunc: { new(dbs: E): C; }, nc?: NatsConnection) {
+    }, ctrfunc: { new(dbs: E, eventPublisher: Shark7EventPublisher): C; }, nc: NatsConnection) {
         try {
             const client = this.getMongoClientConfig();
             client.on('serverHeartbeatFailed', event => { logger.warn(`serverHeartbeatFailed: ${JSON.stringify(event)}`); });
             const dbs = await getDBInstance(client, dbfunc)
-            const ctr = new ctrfunc(dbs);
+            const eventPublisher = new Shark7EventPublisher(nc)
+            const ctr = new ctrfunc(dbs, eventPublisher);
             logger.info('数据库已连接');
-            
-            const eventPublisher = nc ? new Shark7EventPublisher(nc) : undefined
-            if (eventPublisher) {
-                ctr.eventPublisher = eventPublisher
-            }
             return new this(client, ctr, eventPublisher);
         } catch (err) {
             logErrorDetail('数据库连接失败', err);
@@ -128,8 +124,8 @@ export class MongoControlClient<E extends EventDBs, C extends MongoControllerBas
 
 export class MongoControllerBase<T extends EventDBs> {
     dbs: T;
-    eventPublisher?: Shark7EventPublisher;
-    constructor(dbs: T, eventPublisher?: Shark7EventPublisher) {
+    eventPublisher: Shark7EventPublisher;
+    constructor(dbs: T, eventPublisher: Shark7EventPublisher) {
         this.dbs = dbs;
         this.eventPublisher = eventPublisher;
     }
