@@ -1,6 +1,7 @@
 import type { Shark7Event } from "shark7-shared"
 import { FcmClient } from "./fcm/index.ts"
 import { sendEventToKHL } from "./khl/index.ts"
+import { sendEventToNtfy } from "./ntfy/index.ts"
 
 type Channel = {
     id: string,
@@ -30,6 +31,15 @@ export function sendMsgToFcmByScope(event: Shark7Event, fcm: FcmClient) {
     }
     const channelConfig = JSON.parse(process.env['fcm_channels']) as Channel[]
     sendMsgByScope(event, channelConfig, fcm.sendEvent.bind(fcm))
+}
+
+export function sendMsgToNtfyByScope(event: Shark7Event) {
+    if (!process.env['ntfy_channels']) {
+        console.error('ntfy_channels未设置')
+        process.exit(1)
+    }
+    const channelConfig = JSON.parse(process.env['ntfy_channels']) as Channel[]
+    sendMsgByScope(event, channelConfig, sendEventToNtfy)
 }
 
 export function sendMsgByScope(event: Shark7Event, channelConfig: Channel[], sendFunction: (event: Shark7Event, id: string) => void): void {
