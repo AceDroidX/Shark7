@@ -17,8 +17,7 @@ type Rule = {
 
 export function sendMsgToKHLByScope(event: Shark7Event) {
     if (!process.env['khl_channels']) {
-        console.error('khl_channels未设置')
-        process.exit(1)
+        return
     }
     const channelConfig = JSON.parse(process.env['khl_channels']) as Channel[]
     sendMsgByScope(event, channelConfig, sendEventToKHL)
@@ -35,8 +34,7 @@ export function sendMsgToFcmByScope(event: Shark7Event, fcm: FcmClient) {
 
 export function sendMsgToNtfyByScope(event: Shark7Event) {
     if (!process.env['ntfy_channels']) {
-        console.error('ntfy_channels未设置')
-        process.exit(1)
+        return
     }
     const channelConfig = JSON.parse(process.env['ntfy_channels']) as Channel[]
     sendMsgByScope(event, channelConfig, sendEventToNtfy)
