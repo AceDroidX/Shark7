@@ -56,11 +56,16 @@ async function main() {
         },
         {
             formatter: formatWeiboMblogChanges,
-            onInsert: (newData) => createWeiboMblogEvent(newData.user.screen_name, newData),
+            onInsert: async (newData) => {
+                await fetchComments(mongo.ctr, wbhttp, newData.id, newData._userid, trackCommentChange);
+                return createWeiboMblogEvent(newData.user.screen_name, newData);
+            },
             scope: Scope.Weibo.Mblog,
             name: (newData) => newData.user.screen_name,
             onUpdateExtra: async (oldData, newData) => {
-                await fetchComments(mongo.ctr, wbhttp, newData.id, newData._userid, trackCommentChange);
+                if (!oldData || oldData.comments_count !== newData.comments_count) {
+                    await fetchComments(mongo.ctr, wbhttp, newData.id, newData._userid, trackCommentChange);
+                }
             }
         }
     )

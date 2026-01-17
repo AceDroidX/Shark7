@@ -13,7 +13,7 @@ export interface ChangeTrackerOptions<T extends UpdateTypeDoc> {
     /** 自定义格式化函数 */
     formatter?: (changes: IAtomicChange[], newData: T) => string[];
     /** 插入时的处理器（如果为 null 则不处理插入） */
-    onInsert?: (newData: T) => Shark7Event | null;
+    onInsert?: (newData: T) => Shark7Event | null | Promise<Shark7Event | null>;
     /** 更新后的额外处理（如微博抓取评论） */
     onUpdateExtra?: (oldData: T | null, newData: T) => Promise<void>;
     /** 自定义事件作用域 */
@@ -47,7 +47,7 @@ export function createChangeTracker<T extends UpdateTypeDoc>(
         // 3. 如果是新插入数据
         if (!oldData) {
             if (options?.onInsert) {
-                const event = options.onInsert(newData);
+                const event = await options.onInsert(newData);
                 if (event) {
                     await eventPublisher(event);
                 }
