@@ -22,11 +22,9 @@ export function formatBilibiliUserChanges(changes: IAtomicChange[], newData: Bil
                 continue;
         }
 
-        if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
-            const skipFieldsPrefix = ['elec.show_info.list', 'live_room.watched_show'];
-            if (skipFieldsPrefix.some(prefix => key.startsWith(prefix))) {
-                continue;
-            }
+        const skipFieldsPrefix = ['elec.show_info.list', 'live_room.watched_show'];
+        if (skipFieldsPrefix.some(prefix => key.startsWith(prefix))) {
+            continue;
         }
 
         if (JSON.stringify(value) === '[]' || JSON.stringify(value) === '{}') {

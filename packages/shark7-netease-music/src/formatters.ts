@@ -15,12 +15,13 @@ export function formatNeteaseMusicUserChanges(changes: IAtomicChange[], newData:
         switch (key) {
             case 'userPoint.updateTime':
             case 'profile.privacyItemUnlimit.gender':
+            case 'createDays':
                 continue;
         }
         
-        if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
-            if (key === 'ip') continue;
-        }
+        // if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
+        //     if (key === 'ip') continue;
+        // }
         
         if (JSON.stringify(value) === '[]' || JSON.stringify(value) === '{}') continue;
         

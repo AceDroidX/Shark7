@@ -13,18 +13,22 @@ export function formatWeiboUserChanges(changes: IAtomicChange[], newData: WeiboU
         const key = change.path.replace(/^\$\./, '');
         const value = change.value;
         const oldValue = change.oldValue;
+
+        if (value === null && oldValue === undefined || value === undefined && oldValue === null) {
+            continue;
+        }
         
-        if (key === 'screen_name' && value !== undefined) {
+        if (key === 'screen_name') {
             messages.push(`微博昵称更改\n原：${oldValue}\n现：${value}`);
-        } else if (key === 'avatar_hd' && value !== undefined) {
+        } else if (key === 'avatar_hd') {
             messages.push(`微博头像更改\n原：${oldValue}\n现：\n${value}`);
-        } else if (key === 'friends_count' && value !== undefined) {
+        } else if (key === 'friends_count') {
             messages.push(`微博关注数更改\n原：${oldValue}\n现：${value}`);
-        } else if (key === 'statuses_count' && value !== undefined) {
+        } else if (key === 'statuses_count') {
             messages.push(`微博数量更改\n原：${oldValue}\n现：${value}`);
-        } else if (key === 'description' && value !== undefined) {
+        } else if (key === 'description') {
             messages.push(`微博简介更改\n原：${oldValue}\n现：${value}`);
-        } else if (key === 'verified_reason' && value !== undefined) {
+        } else if (key === 'verified_reason') {
             messages.push(`微博认证更改\n原：${oldValue}\n现：${value}`);
         }
     }
