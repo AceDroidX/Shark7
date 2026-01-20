@@ -18,16 +18,15 @@ export function formatBilibiliUserChanges(changes: IAtomicChange[], newData: Bil
             case 'vip.label.path':
             case 'fans_badge':
             case 'top_photo':
+            case 'elec.show_info.total':
                 continue;
         }
 
-        if (key.startsWith('live_room.watched_show')) {
-            continue;
-        }
-
         if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
-            const skipFields = ['live_room', 'elec', 'fans_medal.medal.wearing_status', 'fans_medal.medal.today_feed', 'user_honour_info.is_latest_100honour'];
-            if (skipFields.includes(key)) continue;
+            const skipFieldsPrefix = ['elec.show_info.list', 'live_room.watched_show'];
+            if (skipFieldsPrefix.some(prefix => key.startsWith(prefix))) {
+                continue;
+            }
         }
 
         if (JSON.stringify(value) === '[]' || JSON.stringify(value) === '{}') {
@@ -68,11 +67,19 @@ export function formatBilibiliDynamicChanges(changes: IAtomicChange[], newData: 
     for (const change of changes) {
         const key = change.path.replace(/^\$\./, '');
 
+        if (key.startsWith('orig')) {
+            continue;
+        }
+
         if (key.startsWith('modules.module_interaction')) {
             continue;
         }
 
-        if (key.startsWith('modules.module_stat.forward')) {
+        if (key.startsWith('modules.module_author')) {
+            continue;
+        }
+
+        if (key.startsWith('modules.module_dynamic.major.archive.stat')) {
             continue;
         }
 
@@ -83,6 +90,9 @@ export function formatBilibiliDynamicChanges(changes: IAtomicChange[], newData: 
         if (key.startsWith('modules.module_stat.comment')) {
             continue;
         }
+
+        const skipFields = ['modules.module_stat.forward.count', 'modules.module_stat.comment.count', 'modules.module_stat.like.count'];
+        if (skipFields.includes(key)) continue;
 
         const value = change.value;
         const oldValue = change.oldValue;
