@@ -20,6 +20,12 @@ export type WeiboLikeIdConfig = {
     like_cid: string
 }
 
+export type WeiboLikeIdWithNameConfig = {
+    id: number
+    like_cid: string
+    shark7_name: string
+}
+
 export type WeiboOnlineIdConfig = {
     id: number
     online_cid: string

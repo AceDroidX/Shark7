@@ -1,7 +1,7 @@
 import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboCookieMgr, WeiboDBs, createChangeTracker } from 'shark7-shared';
 import { fetchLike, getLike } from './fetchLike.ts';
 import { fetchOnline, getOnline } from './fetchOnline.ts';
-import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboOnlineIdConfig } from './model.ts';
+import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboLikeIdWithNameConfig, WeiboOnlineIdConfig } from './model.ts';
 import { MongoController } from './MongoController.ts';
 import type { OnlineData, WeiboMsg } from 'shark7-shared';
 import { getTime, Scope } from 'shark7-shared';
@@ -19,11 +19,12 @@ function formatOnlineChanges(changes: IAtomicChange[], newData: OnlineData): str
     return messages
 }
 
-function formatLikeChanges(changes: IAtomicChange[], newData: WeiboMsg): string[] {
-    const messages: string[] = []
-    const msg = `${newData.user.screen_name} 发布于${getTime(newData._timestamp, false)}\n${newData.text_raw ? newData.text_raw : newData.text}`
-    messages.push(msg)
-    return messages
+function formatLikeChange(changes: IAtomicChange[], newData: WeiboMsg): string[] {
+    return []
+}
+
+function formatLikeInsert(newData: WeiboMsg): string {
+    return `${newData.user.screen_name} 发布于${getTime(newData._timestamp, false)}\n${newData.text_raw ? newData.text_raw : newData.text}`
 }
 
 process.on('uncaughtException', function (err) {
@@ -50,55 +51,47 @@ async function main() {
         process.exit(1)
     }
     const weibo_id_config = JSON.parse(process.env['weibo_id']) as WeiboIdConfig[]
-    let like_id_config: WeiboLikeIdConfig[] = []
+    let like_id_config: WeiboLikeIdWithNameConfig[] = []
     let online_id_config: WeiboOnlineIdConfig[] = []
     for (const config of weibo_id_config) {
-        if (config.like_cid) like_id_config.push({ id: config.id, like_cid: config.like_cid })
+        if (config.like_cid) {
+            const shark7_name = await mongo.ctr.getUserInfoByID(config.id)
+            if (!shark7_name) {
+                logger.error(`无法通过ID获取用户信息: ${config.id}，请先使用shark7_weibo抓取用户信息`)
+                process.exit(1)
+            }
+            like_id_config.push({ id: config.id, like_cid: config.like_cid, shark7_name: shark7_name.screen_name })
+        }
         if (config.online_cid) online_id_config.push({ id: config.id, online_cid: config.online_cid })
     }
 
     const trackOnlineChange = createChangeTracker(
         async (newData) => mongo.ctr.getOnlineDataByID(newData.id),
         (data) => mongo.ctr.insertOnline(data),
-        async (event) => {
-            const user = await mongo.ctr.getUserInfoByID(event.name as any)
-            if (!user) {
-                logger.error(`user为null, event:\n${JSON.stringify(event)}`)
-                return
-            }
-            event.name = user.screen_name
-            await mongo.publishShark7Event(event)
-        },
+        (event) => mongo.publishShark7Event(event),
         {
             formatter: formatOnlineChanges,
             scope: Scope.Weibo.Online,
-            name: (newData) => String(newData.id),
+            name: (newData) => String(newData.screen_name),
             keysToSkip: ['_id', 'shark7_id']
         }
     )
 
+    // 多个用户点赞同一个微博时，可能会出现问题，需要后续修复
     const trackLikeChange = createChangeTracker(
         async (newData) => mongo.ctr.getLikeByID(newData.id),
         (data) => mongo.ctr.insertLike(data),
-        async (event) => {
-            const user = await mongo.ctr.getUserInfoByID(event.name as any)
-            if (!user) {
-                logger.error(`user为null, event:\n${JSON.stringify(event)}`)
-                return
-            }
-            event.name = user.screen_name
-            await mongo.publishShark7Event(event)
-        },
+        (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatLikeChanges,
+            formatter: formatLikeChange,
             onInsert: (newData) => ({
                 ts: Number(new Date()),
-                name: newData.user.screen_name,
+                name: String(newData.shark7_name),
                 scope: Scope.Weibo.Like,
-                msg: formatLikeChanges([], newData)[0]
+                msg: formatLikeInsert(newData)
             }),
             scope: Scope.Weibo.Like,
-            name: (newData) => String(newData.id),
+            name: (newData) => String(newData.shark7_name),
             keysToSkip: ['_id', 'shark7_id']
         }
     )
