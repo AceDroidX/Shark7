@@ -10,5 +10,5 @@ RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debi
     passwd \
     && chsh -s /bin/bash \
     && npm config set registry https://registry.npmmirror.com/ \
-    && npm install -g pnpm@10.18.3 \
+    && npm install -g pnpm@10.18.3 opencode-ai \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
