@@ -198,12 +198,63 @@ const MAJOR_TYPE_ARCHIVE_demo = {
     }
 }
 
+const MAJOR_TYPE_OPUS_demo = {
+    "type": "MAJOR_TYPE_OPUS",
+    "none": null,
+    "blocked": null,
+    "archive": null,
+    "pgc": null,
+    "courses": null,
+    "draw": null,
+    "article": null,
+    "music": null,
+    "common": null,
+    "upower_common": null,
+    "live": null,
+    "live_rcmd": null,
+    "medialist": null,
+    "subscription": null,
+    "ugc_season": null,
+    "subscription_new": null,
+    "opus": {
+        "jump_url": "//www.bilibili.com/opus/1167341247480725558",
+        "title": "",
+        "summary": {
+            "text": "2月15日 19:00 春节直播预约开启🧨！\n预约直抽 Switch 大奖！\n直播间福利拉满，每半小时解锁抽奖 + 红包雨，一起过热闹新年，不见不散！",
+            "rich_text_nodes": [
+                {
+                    "text": "2月15日 19:00 春节直播预约开启🧨！\n预约直抽 Switch 大奖！\n直播间福利拉满，每半小时解锁抽奖 + 红包雨，一起过热闹新年，不见不散！",
+                    "orig_text": "2月15日 19:00 春节直播预约开启🧨！\n预约直抽 Switch 大奖！\n直播间福利拉满，每半小时解锁抽奖 + 红包雨，一起过热闹新年，不见不散！",
+                    "type": "RICH_TEXT_NODE_TYPE_TEXT",
+                    "jump_url": "",
+                    "icon_url": "",
+                    "icon_name": "",
+                    "rid": "",
+                    "emoji": null,
+                    "goods": null,
+                    "style": null,
+                    "pics": [],
+                    "video": null
+                }
+            ],
+            "paragraphs": [],
+            "has_more": false
+        },
+        "style": 0,
+        "pics": [],
+        "fold_action": [
+            "展开",
+            "收起"
+        ]
+    }
+}
+
 const module_dynamic_demo = {
     "additional": null,
     "topic": null
 }
 
-type major = { type: "MAJOR_TYPE_DRAW" } & typeof MAJOR_TYPE_DRAW_demo | { type: 'MAJOR_TYPE_ARCHIVE' } & typeof MAJOR_TYPE_ARCHIVE_demo
+type major = { type: "MAJOR_TYPE_DRAW" } & typeof MAJOR_TYPE_DRAW_demo | { type: 'MAJOR_TYPE_ARCHIVE' } & typeof MAJOR_TYPE_ARCHIVE_demo | { type: 'MAJOR_TYPE_OPUS' } & typeof MAJOR_TYPE_OPUS_demo
 
 type module_dynamic = typeof module_dynamic_demo & {
     desc?: typeof module_dynamic_desc_demo

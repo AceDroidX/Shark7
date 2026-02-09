@@ -9,7 +9,7 @@ export async function getDynamic(user_id: number, user_name?: string): Promise<B
     try {
         const cookie = process.env['cookie'] ?? 'buvid3=12345678-1234-1234-1234-123456789123infoc;DedeUserID=123456789'
         const headers = { 'user-agent': UserAgent, 'referer': 'https://space.bilibili.com/', cookie }
-        const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=${user_id}`, { headers })
+        const resp = await axios.get<BiliApi>(`https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=${user_id}&features=itemOpusStyle,listOnlyfans,opusBigCover,onlyfansVote,forwardListHidden,decorationCard,commentsNewVersion,onlyfansAssetsV2,ugcDelete,onlyfansQaCard,avatarAutoTheme,sunflowerStyle,cardsEnhance,eva3CardOpus,eva3CardVideo,eva3CardComment,eva3CardUser`, { headers })
         if (resp.status != 200) {
             logger.warn(`getDynamic resp.status!=200\nstatus:${resp.status}\n` + JSON.stringify(resp.data))
             return null
