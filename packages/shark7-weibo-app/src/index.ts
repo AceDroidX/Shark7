@@ -1,4 +1,4 @@
-import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboCookieMgr, WeiboDBs, createChangeTracker } from 'shark7-shared';
+import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, WeiboCookieMgr, WeiboDBs, createChangeTracker, createUpdateEvent } from 'shark7-shared';
 import { fetchLike, getLike } from './fetchLike.ts';
 import { fetchOnline, getOnline } from './fetchOnline.ts';
 import type { WeiboIdConfig, WeiboLikeIdConfig, WeiboLikeIdWithNameConfig, WeiboOnlineIdConfig } from './model.ts';
@@ -65,33 +65,41 @@ async function main() {
         if (config.online_cid) online_id_config.push({ id: config.id, online_cid: config.online_cid })
     }
 
-    const trackOnlineChange = createChangeTracker(
+    const trackOnlineChange = createChangeTracker<OnlineData>(
         async (newData) => mongo.ctr.getOnlineDataByID(newData.id),
         (data) => mongo.ctr.insertOnline(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatOnlineChanges,
-            scope: Scope.Weibo.Online,
-            name: (newData) => String(newData.screen_name),
+            onUpdate: createUpdateEvent(
+                formatOnlineChanges,
+                (newData) => ({
+                    name: String(newData.screen_name),
+                    scope: Scope.Weibo.Online
+                })
+            ),
             keysToSkip: ['_id', 'shark7_id']
         }
     )
 
     // 多个用户点赞同一个微博时，可能会出现问题，需要后续修复
-    const trackLikeChange = createChangeTracker(
+    const trackLikeChange = createChangeTracker<WeiboMsg>(
         async (newData) => mongo.ctr.getLikeByID(newData.id),
         (data) => mongo.ctr.insertLike(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatLikeChange,
+            onUpdate: createUpdateEvent(
+                formatLikeChange,
+                (newData) => ({
+                    name: String(newData.shark7_name),
+                    scope: Scope.Weibo.Like
+                })
+            ),
             onInsert: (newData) => ({
                 ts: Number(new Date()),
                 name: String(newData.shark7_name),
                 scope: Scope.Weibo.Like,
                 msg: formatLikeInsert(newData)
             }),
-            scope: Scope.Weibo.Like,
-            name: (newData) => String(newData.shark7_name),
             keysToSkip: ['_id', 'shark7_id']
         }
     )
@@ -107,5 +115,3 @@ async function main() {
     scheduler.addJob('fetchOnline', interval, () => { online_id_config.forEach(config => fetchOnline(mongo.ctr, wcm.cookie, config, trackOnlineChange)) })
     logger.info('weibo-app模块已启动')
 }
-
-

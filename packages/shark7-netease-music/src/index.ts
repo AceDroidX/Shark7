@@ -1,4 +1,5 @@
-import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker } from 'shark7-shared';
+import { MongoControlClient, NeteaseMusicDBs, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker, createUpdateEvent, Scope } from 'shark7-shared';
+import type { NeteaseMusicUser } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { fetchUser } from './user.ts';
 import { formatNeteaseMusicUserChanges } from './formatters.ts';
@@ -26,12 +27,18 @@ async function main() {
     }
     const user_id = Number(process.env['user_id'])
 
-    const trackUserChange = createChangeTracker(
+    const trackUserChange = createChangeTracker<NeteaseMusicUser>(
         async (newData) => mongo.ctr.getUser(user_id),
         (data) => mongo.ctr.insertUser(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatNeteaseMusicUserChanges
+            onUpdate: createUpdateEvent(
+                formatNeteaseMusicUserChanges,
+                (newData) => ({
+                    name: newData.profile?.nickname || 'Unknown',
+                    scope: Scope.NeteaseMusic.User
+                })
+            )
         }
     )
     

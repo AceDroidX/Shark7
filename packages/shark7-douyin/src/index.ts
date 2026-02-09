@@ -1,4 +1,5 @@
-import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker, Scope } from 'shark7-shared';
+import { DouyinDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, Nats, createChangeTracker, createUpdateEvent, Scope } from 'shark7-shared';
+import type { DouyinUser } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { fetchUser } from './user.ts';
 import { formatDouyinUserChanges } from './formatters.ts';
@@ -25,14 +26,18 @@ async function main() {
         process.exit(1)
     }
     
-    const trackUserChange = createChangeTracker(
+    const trackUserChange = createChangeTracker<DouyinUser>(
         async (newData) => mongo.ctr.getUserInfoBySecUID(newData.sec_uid),
         (data) => mongo.ctr.updateUserInfo(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatDouyinUserChanges,
-            scope: Scope.Douyin.User,
-            name: (newData) => newData.nickname
+            onUpdate: createUpdateEvent(
+                formatDouyinUserChanges,
+                (newData) => ({
+                    name: newData.nickname,
+                    scope: Scope.Douyin.User
+                })
+            )
         }
     )
     

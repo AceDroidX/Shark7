@@ -7,7 +7,9 @@ import {
     logger,
     Nats,
     createChangeTracker,
+    createUpdateEvent,
     Scope,
+    type RednoteUser,
     type RednoteNote,
     type RednoteComment,
     type RednoteNoteDetail
@@ -57,14 +59,18 @@ async function main() {
         process.exit(1);
     }
     
-    const trackUserChange = createChangeTracker(
+    const trackUserChange = createChangeTracker<RednoteUser>(
         async (newData) => mongo.ctr.getUserInfoByUID(newData.shark7_id),
         (data) => mongo.ctr.updateUserInfo(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatRednoteUserChanges,
-            scope: Scope.Rednote.User,
-            name: (newData) => newData.basic_info.nickname
+            onUpdate: createUpdateEvent(
+                formatRednoteUserChanges,
+                (newData) => ({
+                    name: newData.basic_info.nickname,
+                    scope: Scope.Rednote.User
+                })
+            )
         }
     )
 
@@ -81,8 +87,9 @@ async function main() {
         (data) => mongo.ctr.insertNoteDetail(data),
         (event) => mongo.publishShark7Event(event),
         {
+            onUpdate: (oldData, newData, changes) => null,
             onInsert: (newData) => createRednoteNoteEvent(newData.user.nickname, newData),
-            onUpdateExtra: async (oldData, newData) => {
+            onUpdateExtra: async (oldData, newData, changes) => {
                 await fetchNoteDetail(mongo.ctr, newData.note_id);
             }
         }

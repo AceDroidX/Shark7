@@ -1,4 +1,5 @@
-import { BilibiliDBs, createChangeTracker, initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, Scope } from 'shark7-shared';
+import { BilibiliDBs, createChangeTracker, createUpdateEvent, initLogger, logErrorDetail, logger, MongoControlClient, Nats, Scheduler, Scope } from 'shark7-shared';
+import type { BiliUser } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { getDynamic } from './dynamic.ts';
 import { createBilibiliCoinEvent, createBilibiliDynamicEvent, createBilibiliLikeEvent, formatBilibiliDynamicChanges, formatBilibiliUserChanges, formatBilibiliVideoChanges } from './formatters.ts';
@@ -25,7 +26,7 @@ async function main() {
     }
     const user_id = Number(process.env['user_id'])
 
-    const trackUserChange = createChangeTracker(
+    const trackUserChange = createChangeTracker<BiliUser>(
         async (newData) => {
             const user = await mongo.ctr.getUser(user_id);
             return user;
@@ -33,9 +34,13 @@ async function main() {
         (data) => mongo.ctr.insertUser(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatBilibiliUserChanges,
-            scope: Scope.Bilibili.User,
-            name: (newData) => newData.name
+            onUpdate: createUpdateEvent(
+                formatBilibiliUserChanges,
+                (newData) => ({
+                    name: newData.name,
+                    scope: Scope.Bilibili.User
+                })
+            )
         }
     )
 
@@ -46,10 +51,14 @@ async function main() {
         (data) => mongo.ctr.insertCoin(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatBilibiliVideoChanges,
+            onUpdate: createUpdateEvent(
+                formatBilibiliVideoChanges,
+                (newData) => ({
+                    name: newData.shark7_name || newData.owner?.name || 'Unknown',
+                    scope: Scope.Bilibili.Coin
+                })
+            ),
             onInsert: (newData: any) => createBilibiliCoinEvent(newData.shark7_name, newData),
-            scope: Scope.Bilibili.Coin,
-            name: (newData) => newData.shark7_name || newData.owner?.name || 'Unknown'
         }
     )
 
@@ -60,10 +69,14 @@ async function main() {
         (data) => mongo.ctr.insertLike(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatBilibiliVideoChanges,
+            onUpdate: createUpdateEvent(
+                formatBilibiliVideoChanges,
+                (newData) => ({
+                    name: newData.shark7_name || newData.owner?.name || 'Unknown',
+                    scope: Scope.Bilibili.Like
+                })
+            ),
             onInsert: (newData: any) => createBilibiliLikeEvent(newData.shark7_name, newData),
-            scope: Scope.Bilibili.Like,
-            name: (newData) => newData.shark7_name || newData.owner?.name || 'Unknown'
         }
     )
 
@@ -74,10 +87,14 @@ async function main() {
         (data) => mongo.ctr.insertDynamic(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatBilibiliDynamicChanges,
+            onUpdate: createUpdateEvent(
+                formatBilibiliDynamicChanges,
+                (newData) => ({
+                    name: newData.modules?.module_author?.name || newData.shark7_name || 'Unknown',
+                    scope: Scope.Bilibili.Dynamic
+                })
+            ),
             onInsert: (newData: any) => createBilibiliDynamicEvent(newData.modules.module_author.name, newData),
-            scope: Scope.Bilibili.Dynamic,
-            name: (newData) => newData.modules?.module_author?.name || newData.shark7_name || 'Unknown'
         }
     )
     

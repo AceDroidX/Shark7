@@ -10,16 +10,35 @@ export interface ChangeTrackerOptions<T extends UpdateTypeDoc> {
     keysToSkip?: string[];
     /** 自定义 diff 选项 */
     diffOptions?: Options;
-    /** 自定义格式化函数 */
-    formatter?: (changes: IAtomicChange[], newData: T) => string[];
     /** 插入时的处理器（如果为 null 则不处理插入） */
     onInsert?: (newData: T) => Shark7Event | null | Promise<Shark7Event | null>;
+    /** 更新时的处理器（如果为 null 则不处理更新事件） */
+    onUpdate?: (oldData: T, newData: T, changes: IAtomicChange[]) => Shark7Event | null | Promise<Shark7Event | null>;
     /** 更新后的额外处理（如微博抓取评论） */
-    onUpdateExtra?: (oldData: T | null, newData: T) => Promise<void>;
-    /** 自定义事件作用域 */
-    scope?: string;
-    /** 自定义事件名称 */
-    name?: string | ((newData: T) => string);
+    onUpdateExtra?: (oldData: T, newData: T, changes: IAtomicChange[]) => void | Promise<void>;
+}
+
+type FormatChanges<T> = (changes: IAtomicChange[], newData: T) => string[];
+type GetEventMeta<T> = (newData: T) => { name: string; scope: string };
+
+/**
+ * 创建更新事件处理器
+ */
+export function createUpdateEvent<T>(
+    formatChanges: FormatChanges<T>,
+    getMeta: GetEventMeta<T>
+) {
+    return (oldData: T, newData: T, changes: IAtomicChange[]): Shark7Event | null => {
+        const messages = formatChanges(changes, newData).filter(m => m && m.trim());
+        if (messages.length === 0) return null;
+        const { name, scope } = getMeta(newData);
+        return {
+            ts: Number(new Date()),
+            name,
+            scope,
+            msg: messages.join('\n')
+        };
+    };
 }
 
 /**
@@ -64,49 +83,22 @@ export function createChangeTracker<T extends UpdateTypeDoc>(
         const changes = jsonDiff(oldData, newData, diffOptions);
         
         if (changes.length === 0) {
-            // 即使没有数据变化，也可能有额外处理逻辑
-            if (options?.onUpdateExtra) {
-                await options.onUpdateExtra(oldData, newData);
-            }
             return;
         }
         
-        // 5. 格式化变更消息
-        let messages: string[];
-        
-        if (options?.formatter) {
-            messages = options.formatter(changes, newData);
-        } else {
-            // 默认格式化
-            messages = changes.map(change => 
-                `${change.path} 更改\n原：${change.oldValue}\n现：${change.value}`
-            );
-        }
-        
-        // 过滤空消息
-        messages = messages.filter(m => m && m.trim());
-        
-        if (messages.length === 0) {
-            // 如果没有消息但有额外处理逻辑
-            if (options?.onUpdateExtra) {
-                await options.onUpdateExtra(oldData, newData);
-            }
+        // 5. 处理更新事件（如果未配置则忽略）
+        if (!options?.onUpdate) {
             return;
         }
         
-        // 6. 发布事件
-        const event: Shark7Event = {
-            ts: Number(new Date()),
-            name: options?.name ? (typeof options.name === 'function' ? options.name(newData) : options.name) : (newData as any).shark7_name || 'Unknown',
-            scope: options?.scope || 'General',
-            msg: messages.join('\n')
-        };
-
-        await eventPublisher(event);
+        const event = await options.onUpdate(oldData, newData, changes);
+        if (event) {
+            await eventPublisher(event);
+        }
         
-        // 7. 执行额外的更新处理逻辑
+        // 6. 执行额外的更新处理逻辑（不要求事件存在）
         if (options?.onUpdateExtra) {
-            await options.onUpdateExtra(oldData, newData);
+            await options.onUpdateExtra(oldData, newData, changes);
         }
     };
 }

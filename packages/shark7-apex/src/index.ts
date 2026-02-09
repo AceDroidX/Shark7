@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { ApexUserInfo } from "shark7-shared";
-import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr, Nats, createChangeTracker } from 'shark7-shared';
+import { ApexDBs, MongoControlClient, Scheduler, initLogger, logErrorDetail, logger, toNumOrStr, Nats, createChangeTracker, createUpdateEvent, Scope } from 'shark7-shared';
 import { MongoController } from './MongoController.ts';
 import { formatApexUserChanges } from './formatters.ts';
 
@@ -36,7 +36,13 @@ async function main() {
         (event) => mongo.publishShark7Event(event),
         {
             keysToSkip: ['shark7_id', 'shark7_name', '_id', 'charVer', 'timeSinceServerChange'],
-            formatter: formatApexUserChanges
+            onUpdate: createUpdateEvent(
+                formatApexUserChanges,
+                (newData) => ({
+                    name: newData.shark7_name || 'Unknown',
+                    scope: Scope.Apex
+                })
+            )
         }
     )
     

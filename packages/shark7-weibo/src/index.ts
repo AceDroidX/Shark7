@@ -1,4 +1,4 @@
-import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboCookieMgr, WeiboDBs, createChangeTracker, Scope, Scheduler } from 'shark7-shared';
+import { initLogger, logErrorDetail, logger, MongoControlClient, Nats, WeiboCookieMgr, WeiboDBs, createChangeTracker, createUpdateEvent, Scope, Scheduler } from 'shark7-shared';
 import type { WeiboMsg, WeiboComment, WeiboUser } from 'shark7-shared';
 import { fetchComments } from './comment.ts';
 import { fetchMblog } from './fetchMblog.ts';
@@ -39,9 +39,13 @@ async function main() {
         (data) => mongo.ctr.insertUserInfo(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatWeiboUserChanges,
-            scope: Scope.Weibo.User,
-            name: (newData) => newData.screen_name
+            onUpdate: createUpdateEvent(
+                formatWeiboUserChanges,
+                (newData) => ({
+                    name: newData.screen_name,
+                    scope: Scope.Weibo.User
+                })
+            )
         }
     )
 
@@ -55,14 +59,18 @@ async function main() {
             if (event) await mongo.publishShark7Event(event);
         },
         {
-            formatter: formatWeiboMblogChanges,
+            onUpdate: createUpdateEvent(
+                formatWeiboMblogChanges,
+                (newData) => ({
+                    name: newData.user.screen_name,
+                    scope: Scope.Weibo.Mblog
+                })
+            ),
             onInsert: async (newData) => {
                 await fetchComments(mongo.ctr, wbhttp, newData.id, newData._userid, trackCommentChange);
                 return createWeiboMblogEvent(newData.user.screen_name, newData);
             },
-            scope: Scope.Weibo.Mblog,
-            name: (newData) => newData.user.screen_name,
-            onUpdateExtra: async (oldData, newData) => {
+            onUpdateExtra: async (oldData, newData, changes) => {
                 if (!oldData || oldData.comments_count !== newData.comments_count) {
                     await fetchComments(mongo.ctr, wbhttp, newData.id, newData._userid, trackCommentChange);
                 }
@@ -75,10 +83,14 @@ async function main() {
         (data) => mongo.ctr.insertComment(data),
         (event) => mongo.publishShark7Event(event),
         {
-            formatter: formatWeiboCommentChanges,
+            onUpdate: createUpdateEvent(
+                formatWeiboCommentChanges,
+                (newData) => ({
+                    name: newData.user.screen_name,
+                    scope: Scope.Weibo.Comment
+                })
+            ),
             onInsert: (newData) => createWeiboCommentEvent(newData.user.screen_name, newData),
-            scope: Scope.Weibo.Comment,
-            name: (newData) => newData.user.screen_name
         }
     )
 
