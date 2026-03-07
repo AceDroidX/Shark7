@@ -7,9 +7,7 @@ export {
 
 class MongoController extends MongoControllerBase<ApexDBs> {
     async insertUserInfo(user: ApexUserInfo) {
-        await this.dbs.userinfoDB.updateOne({ uid: user.uid }, {
-            $set: user
-        }, { upsert: true })
+        await this.dbs.userinfoDB.updateOne({ uid: user.uid }, [{ $replaceWith: user }], { upsert: true })
     }
     async getUserInfo(uid: number) {
         return await this.dbs.userinfoDB.findOne({ uid })
