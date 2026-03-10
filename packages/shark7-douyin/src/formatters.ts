@@ -47,15 +47,10 @@ export function formatDouyinUserChanges(changes: IAtomicChange[], newData: Douyi
         const skipPrefixes = ['share_info', 'urge_detail'];
         if (skipPrefixes.some(prefix => key.startsWith(prefix))) continue;
         
-        // const skipFields = ['city', 'commerce_user_info', 'country', 'ip_location', 'cover_and_head_image_info', 
-        //                   'general_permission', 'life_story_block', 'original_musician', 'province', 
-        //                   'special_state_info', 'tab_settings', 'urge_detail', 'video_icon', 
-        //                   'enable_ai_double', 'profile_show', 'social_real_relation_type', 
-        //                   'mate_relation', 'profile_component_disabled', 'profile_mob_params', 
-        //                   'profile_tab_info', 'story_ring'];
-        // if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
-        //     if (skipFields.includes(key)) continue;
-        // }
+        const skipFieldsIfNull = ['ip_location'];
+        if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
+            if (skipFieldsIfNull.includes(key)) continue;
+        }
         
         // if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
         //     const skipNested = ['cover_and_head_image_info.profile_cover_list'];
