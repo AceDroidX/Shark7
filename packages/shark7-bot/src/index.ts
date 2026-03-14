@@ -45,6 +45,20 @@ function createContext() {
         logger.warn('未配置 QQ_APP_ID / QQ_SECRET / QQ_TOKEN，机器人只注册指令，不会连接 QQ 平台')
     }
 
+    ctx.middleware(async (session, next) => {
+        const content = session.content?.trimStart()
+        if (!content?.startsWith('/') || content.startsWith('//')) {
+            return next()
+        }
+
+        const commandLine = content.slice(1).trim()
+        if (!commandLine) {
+            return next()
+        }
+
+        return session.execute(commandLine)
+    })
+
     ctx.command('直播总结 <bvid:string>', '根据 BV 号获取直播回放 AI 总结')
         .alias('summary')
         .action(async ({ session }: { session?: Session }, bvid?: string) => {
@@ -56,6 +70,9 @@ function createContext() {
             const response = await requestVideoSummaryByBvid(normalized)
             return formatSummaryResponse(response)
         })
+
+    ctx.command('ping', '检查 shark7-bot 是否在线')
+        .action(() => 'pong')
 
     ctx.command('exit', '停止 shark7-bot')
         .action(() => {

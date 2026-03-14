@@ -5,6 +5,7 @@
         "bililive",
         "weibo",
         "weibo-web",
-        "main"
+        "main",
+        "bot"
     ]
 }
