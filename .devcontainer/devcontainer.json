@@ -26,7 +26,8 @@
 				"esbenp.prettier-vscode"
 			]
 		}
-	}
+	},
+	"postCreateCommand": "npm install -g opencode-ai"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

@@ -15,6 +15,8 @@ FROM base
 ARG PACKAGE
 ENV PACKAGE=${PACKAGE}
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/drizzle ./drizzle
+COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/packages/shark7-shared ./packages/shark7-shared
 COPY --from=build /app/packages/shark7-${PACKAGE} ./packages/shark7-${PACKAGE}
-ENTRYPOINT node packages/shark7-${PACKAGE}/src/index.ts
+ENTRYPOINT ["node", "scripts/docker-entrypoint.ts"]

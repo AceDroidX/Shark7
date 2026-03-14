@@ -1,18 +1,26 @@
 shared: &shared
     - "packages/shark7-shared/**"
     - "package.json"
-    - "bun.lockb"
-    - "bunfig.toml"
+    - "pnpm-lock.yaml"
     - "tsconfig.json"
+ai:
+    - *shared
+    - "packages/shark7-ai/**"
 apex:
     - *shared
     - "packages/shark7-apex/**"
 bilibili:
     - *shared
     - "packages/shark7-bilibili/**"
+bilibili-ext:
+    - *shared
+    - "packages/shark7-bilibili-ext/**"
 bililive:
     - *shared
     - "packages/shark7-bililive/**"
+bot:
+    - *shared
+    - "packages/shark7-bot/**"
 douyin:
     - *shared
     - "packages/shark7-douyin/**"

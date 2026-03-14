@@ -1,0 +1,28 @@
+{
+    "name": "shark7-bot",
+    "version": "1.0.0",
+    "description": "",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "check": "tsc --noEmit",
+        "start": "node --env-file=.env src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "clean": "tsc --build --clean",
+        "dev": "node --env-file=.env --watch src/index.ts",
+        "serve": "ts-node src/index.ts"
+    },
+    "author": "AceDroidX",
+    "license": "ISC",
+    "dependencies": {
+        "@cordisjs/plugin-http": "^0.6.3",
+        "@koishijs/core": "^4.18.11",
+        "@koishijs/plugin-adapter-qq": "^4.11.0",
+        "@koishijs/plugin-console": "^5.30.11",
+        "@koishijs/plugin-echo": "^2.2.5",
+        "@koishijs/plugin-sandbox": "^3.4.2",
+        "koishi": "^4.18.11",
+        "reggol": "^1.7.1",
+        "shark7-shared": "workspace:*"
+    }
+}

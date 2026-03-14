@@ -13,16 +13,27 @@ services:
         environment:
             - MONGODB_ROOT_USER=admin
             - MONGODB_ROOT_PASSWORD=admin
-            - MONGODB_REPLICA_SET_MODE=primary
-            - MONGODB_REPLICA_SET_NAME=rs0
-            - MONGODB_INITIAL_PRIMARY_HOST=shark7-mongo
-            - MONGODB_ADVERTISED_HOSTNAME=shark7-mongo
-            - MONGODB_REPLICA_SET_KEY=shark7replicasetkey
         deploy:
             resources:
                 limits:
                     cpus: '2.0'
                     memory: 512M
+    shark7-postgres:
+        image: pgvector/pgvector:pg18-trixie
+        restart: unless-stopped
+        container_name: shark7-postgres
+        hostname: shark7-postgres
+        shm_size: 128mb
+        volumes:
+            - shark7-postgres-data:/var/lib/postgresql/18/docker
+        networks:
+            - default
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=shark7
     shark7-nats:
         image: nats
         restart: unless-stopped
@@ -54,6 +65,8 @@ services:
 volumes:
     shark7-mongodata:
         name: "shark7-mongodata"
+    shark7-postgres-data:
+        name: "shark7-postgres-data"
     shark7-ntfy-cache:
         name: "shark7-ntfy-cache"
     shark7-ntfy-data:

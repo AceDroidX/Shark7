@@ -24,6 +24,10 @@ export const Shark7EventSubjects = {
     RECKFENG: 'shark7.event.reckfeng',
 } as const
 
+export const Shark7RpcSubjects = {
+    AI_SUMMARY_BY_BVID: 'shark7.rpc.ai.summary-by-bvid',
+} as const
+
 export class Shark7EventPublisher {
     nc: NatsConnection
     constructor(nc: NatsConnection) {

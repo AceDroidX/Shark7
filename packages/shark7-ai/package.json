@@ -1,0 +1,30 @@
+{
+    "name": "shark7-ai",
+    "version": "1.0.0",
+    "description": "",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "check": "tsc --noEmit",
+        "start": "node --env-file=.env src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "test:langfuse": "node --env-file=.env tests/langfuse.ts",
+        "test:nats": "node --env-file=.env tests/rpc.ts",
+        "clean": "tsc --build --clean",
+        "dev": "node --env-file=.env --watch src/index.ts",
+        "serve": "ts-node src/index.ts"
+    },
+    "author": "AceDroidX",
+    "license": "ISC",
+    "dependencies": {
+        "@langchain/core": "^1.1.32",
+        "@langchain/deepseek": "^1.0.17",
+        "@langfuse/core": "^5.0.1",
+        "@langfuse/langchain": "^5.0.1",
+        "@langfuse/otel": "^5.0.1",
+        "@opentelemetry/sdk-node": "^0.213.0",
+        "langchain": "^1.2.32",
+        "shark7-shared": "workspace:*",
+        "zod": "^4.3.6"
+    }
+}
