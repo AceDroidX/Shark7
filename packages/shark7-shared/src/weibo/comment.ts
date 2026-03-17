@@ -28,6 +28,8 @@ const WeiboCommentDemo = {
 export type WeiboComment = typeof WeiboCommentDemo & InsertTypeDoc & {
     user: WeiboUser
     reply_comment?: WeiboComment
+    _mblogid?: number
+    _userid?: number
 }
 
 export type WeiboReplyComment = WeiboComment & {

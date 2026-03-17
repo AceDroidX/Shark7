@@ -1,6 +1,7 @@
 import { Nats, initLogger, logErrorDetail, logger } from 'shark7-shared'
 import { initLangfuseOtel, shutdownLangfuseOtel } from './langfuse.ts'
 import { startAiSummaryRpcServer } from './rpc.ts'
+import { startAiStreamerScheduleRpcServer } from './streamer-schedule/rpc.ts'
 
 process.on('uncaughtException', function (err) {
     logErrorDetail('未捕获的错误', err)
@@ -17,6 +18,7 @@ export async function main() {
     await initLangfuseOtel()
     const nc = await Nats.connect()
     const rpcServer = await startAiSummaryRpcServer(nc)
+    const scheduleRpcServer = await startAiStreamerScheduleRpcServer(nc)
     logger.info('shark7-ai 已启动，等待 NATS 总结请求')
 
     let stopping = false
@@ -28,6 +30,7 @@ export async function main() {
         stopping = true
         logger.info('shark7-ai 正在关闭')
         await rpcServer.close()
+        await scheduleRpcServer.close()
         if (!nc.isClosed() && !nc.isDraining()) {
             await nc.drain()
         }
@@ -51,3 +54,4 @@ export * from './repository.ts'
 export * from './summary.ts'
 export * from './rpc.ts'
 export * from './langfuse.ts'
+export * from './streamer-schedule/index.ts'

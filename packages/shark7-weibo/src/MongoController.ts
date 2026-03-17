@@ -23,4 +23,7 @@ export class MongoController extends MongoControllerBase<WeiboDBs> {
     async getCommentById(id: number) {
         return await this.dbs.commentsDB.findOne({ id })
     }
+    async listCommentsByMblogIdAndUserId(mblogId: number, uid: number) {
+        return await this.dbs.commentsDB.find({ _mblogid: mblogId, 'user.id': uid }).toArray()
+    }
 }

@@ -1,9 +1,9 @@
 import { createHash } from 'node:crypto'
 import { ChatDeepSeek } from '@langchain/deepseek'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
-import { LogLevel, logger as LangfuseLoggerSingleton } from '@langfuse/core'
 import { CallbackHandler } from '@langfuse/langchain'
 import { logger, type Shark7PgDatabase } from 'shark7-shared'
+import { configureLangfuseLogger } from './langfuse-logger.ts'
 import { AiSummaryRepository } from './repository.ts'
 import type { SummaryChunkResult, VideoSummaryResult, VideoTranscript } from './types.ts'
 
@@ -12,8 +12,6 @@ const DefaultModel = process.env['DEEPSEEK_MODEL'] ?? 'deepseek-chat'
 const MaxChunkChars = Number(process.env['SUMMARY_CHUNK_CHARS'] ?? '12000')
 const MaxSummaryTokens = Number(process.env['SUMMARY_MAX_TOKENS'] ?? '2048')
 const RunningSummaryTimeoutMinutes = Number(process.env['SUMMARY_RUNNING_TIMEOUT_MINUTES'] ?? '30')
-
-let isLangfuseLoggerConfigured = false
 
 function splitText(source: string, chunkSize: number) {
     if (source.length <= chunkSize) return [source]
@@ -44,19 +42,6 @@ function buildInputHash(video: VideoTranscript) {
         model: DefaultModel,
     }))
     return hash.digest('hex')
-}
-
-function configureLangfuseLogger() {
-    if (isLangfuseLoggerConfigured) return
-    if (!process.env['LANGFUSE_SECRET_KEY'] || !process.env['LANGFUSE_PUBLIC_KEY']) return
-
-    LangfuseLoggerSingleton.configure({
-        level: LogLevel.DEBUG,
-        prefix: 'Langfuse SDK',
-        enableTimestamp: true,
-    })
-    isLangfuseLoggerConfigured = true
-    logger.info('已开启 Langfuse SDK 调试日志')
 }
 
 function createCallbacks(bvid: string) {

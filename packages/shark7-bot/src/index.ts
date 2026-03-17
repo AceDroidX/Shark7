@@ -5,6 +5,7 @@ import type { Session } from 'koishi'
 import Logger from 'reggol'
 import { initLogger, logger } from 'shark7-shared'
 import { formatSummaryResponse, requestVideoSummaryByBvid } from './nats.ts'
+import { formatStreamerScheduleReanalyzeResponse, formatStreamerScheduleResponse, requestStreamerSchedule, requestStreamerScheduleReanalyze } from './streamer-schedule.ts'
 
 function configureKoishiLogger() {
     Logger.levels.base = Logger.DEBUG
@@ -69,6 +70,32 @@ function createContext() {
             await session?.send?.(`正在生成 ${normalized} 的直播回放总结，请稍等...`)
             const response = await requestVideoSummaryByBvid(normalized)
             return formatSummaryResponse(response)
+        })
+
+    ctx.command('今天播吗', '查询默认主播今天是否直播及未来 7 天日程')
+        .action(async () => {
+            const response = await requestStreamerSchedule(7)
+            return formatStreamerScheduleResponse(response)
+        })
+
+    ctx.command('今天播什么', '查询默认主播今天播什么及未来 7 天日程')
+        .action(async () => {
+            const response = await requestStreamerSchedule(7)
+            return formatStreamerScheduleResponse(response)
+        })
+
+    ctx.command('日程', '查询默认主播未来 7 天日程')
+        .action(async () => {
+            const response = await requestStreamerSchedule(7)
+            return formatStreamerScheduleResponse(response)
+        })
+
+    ctx.command('重新分析日程 [hours:number]', '重新分析指定时间之前到现在的微博日程，默认 24 小时')
+        .action(async ({ session }: { session?: Session }, hours?: number) => {
+            const safeHours = Math.min(Math.max(Math.floor(hours ?? 24), 1), 24 * 30)
+            await session?.send?.(`正在重新分析最近 ${safeHours} 小时的微博日程，请稍等...`)
+            const response = await requestStreamerScheduleReanalyze(safeHours)
+            return formatStreamerScheduleReanalyzeResponse(response)
         })
 
     ctx.command('ping', '检查 shark7-bot 是否在线')

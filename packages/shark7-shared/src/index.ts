@@ -1,4 +1,5 @@
 export * from './apex/index.ts'
+export * from './ai-rpc.ts'
 export * from './bilibili/index.ts'
 export * from './bililive/index.ts'
 export * from './db/index.ts'

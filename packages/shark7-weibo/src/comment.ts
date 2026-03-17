@@ -11,6 +11,29 @@ const CommentFlow = {
 } as const;
 type CommentFlow = typeof CommentFlow[keyof typeof CommentFlow];
 
+function attachCommentContext(comment: WeiboComment, mblogId: number, uid: number): WeiboComment {
+    return Object.assign(comment, {
+        _mblogid: mblogId,
+        _userid: uid,
+    })
+}
+
+function hydrateReplyContext(comment: WeiboComment, commentMap: Map<number, WeiboComment>) {
+    if (comment.reply_comment) {
+        return comment
+    }
+    if (comment.rootid === comment.id) {
+        return comment
+    }
+    const replyComment = commentMap.get(comment.rootid)
+    if (!replyComment) {
+        return comment
+    }
+    return Object.assign(comment, {
+        reply_comment: replyComment,
+    })
+}
+
 async function getComments<T extends WeiboComment>(wbhttp: WeiboHTTP, id: number, flow: CommentFlow, count = 20, isSubComment = false): Promise<T[] | null> {
     const result = await wbhttp.getURL<WeiboCommentApi<T>>(`https://weibo.com/ajax/statuses/buildComments?flow=${flow}&id=${id}&is_show_bulletin=2&count=${count}&fetch_level=${Number(isSubComment)}`)
     if (!result) return null;
@@ -65,11 +88,17 @@ export async function fetchComments(mongo: MongoController, wbhttp: WeiboHTTP, i
     if (!hotComments || !timeComments) {
         return false
     }
+
+    const commentMap = new Map<number, WeiboComment>()
+    for (const comment of hotComments.concat(timeComments)) {
+        commentMap.set(comment.id, comment)
+    }
+
     for (const data of commentsFilter(hotComments, uid)) {
-        await trackCommentChange(data)
+        await trackCommentChange(attachCommentContext(hydrateReplyContext(data, commentMap), id, uid))
     }
     for (const data of commentsFilter(timeComments, uid)) {
-        await trackCommentChange(data)
+        await trackCommentChange(attachCommentContext(hydrateReplyContext(data, commentMap), id, uid))
     }
     return true
 }

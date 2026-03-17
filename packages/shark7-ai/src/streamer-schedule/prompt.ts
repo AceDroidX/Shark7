@@ -1,0 +1,142 @@
+import type { ExistingSchedulePromptItem, ScheduleRefreshSource } from './types.ts'
+
+export function buildStreamerSchedulePatchPrompt(input: {
+    nowIso: string
+    timezone: string
+    source: ScheduleRefreshSource
+    currentItems: ExistingSchedulePromptItem[]
+}) {
+    return {
+        system: [
+            '你是主播公开日程整理助手。',
+            '你的任务是根据一条新的微博正文或作者评论，判断是否需要更新主播日程。',
+            '必须只依据输入信息输出，不要补充微博里没有明确提到的安排。',
+            '如果微博内容与日程无关，请返回 needsUpdate=false。',
+            '如果微博包含模糊表达（例如 今晚、明天、周末、可能、大概、如果来得及），必须保留不确定性，不要强行编造成精确结论。',
+            '相对时间一律以 sourcePublishedAt 为基准，时区为 Asia/Shanghai。',
+            '微博正文和评论会分开输入；如果 sourceType=weibo_comment，表示这次是作者评论触发的增量更新，必须结合其携带的 mblog 正文上下文一起理解。',
+            '如果评论是对别人的提问进行回复，必须结合 replyTextRaw、replyScreenName 和 conversationText 一起理解，不要把回复文本孤立理解。',
+            '像“来不来”“今天播吗”“今天真不来了吗”这类问句，一般默认是在问今天播不播；若回复是“是的明天再来了”这类表达，应优先理解成“今天不播/今天取消，改到明天播”。',
+            '如果微博是在取消、改期、替换已有安排，请优先输出 update 或 cancel，并尽量引用现有 itemId。',
+            '如果无法确认 targetItemId，就不要猜，填 null。',
+            '不要输出空泛标题，例如“明天安排”“之后再来”“回头再说”；标题必须是具体的直播/活动/安排表述，若无法具体命名则优先 update/cancel 现有安排。',
+            '“今天不播”“今晚不来”“取消直播”这类信息本身也是有效日程，应该记录为 live 类日程，scheduleState=cancelled，而不是忽略。',
+            '输出必须是严格 JSON 对象，不要使用 Markdown 代码块，不要输出额外解释。',
+        ].join('\n'),
+        user: JSON.stringify({
+            nowIso: input.nowIso,
+            timezone: input.timezone,
+            source: input.source,
+            currentItems: input.currentItems,
+            outputRules: {
+                operationsAllowed: ['add', 'update', 'cancel', 'noop'],
+                categories: ['live', 'collab', 'recording', 'event', 'travel', 'post', 'other'],
+                scheduleStates: ['scheduled', 'cancelled'],
+                certainties: ['confirmed', 'likely', 'tentative', 'unknown'],
+                timePrecisions: ['exact', 'date_only', 'range', 'relative', 'unknown'],
+            },
+            examples: {
+                irrelevant: {
+                    needsUpdate: false,
+                    ignoredReason: '微博内容未提到任何可识别的公开安排',
+                    operations: [],
+                },
+                tentative: {
+                    needsUpdate: true,
+                    ignoredReason: null,
+                    operations: [{
+                        kind: 'add',
+                        targetItemId: null,
+                        reason: '微博提到今晚可能直播',
+                        item: {
+                            title: '今晚直播',
+                            category: 'live',
+                            scheduleState: 'scheduled',
+                            summary: null,
+                            startDate: '2026-03-17',
+                            endDate: null,
+                            startAt: null,
+                            endAt: null,
+                            dateText: '今晚',
+                            timeText: '今晚',
+                            timePrecision: 'relative',
+                            certainty: 'tentative',
+                            confidence: 0.64,
+                            evidenceText: '今晚可能播一下',
+                        },
+                    }],
+                },
+                commentReplyReschedule: {
+                    needsUpdate: true,
+                    ignoredReason: null,
+                    operations: [{
+                        kind: 'cancel',
+                        targetItemId: null,
+                        reason: '评论问答明确表示今天不来，属于今天不播的公开信息',
+                        item: {
+                            title: '今天不播',
+                            category: 'live',
+                            scheduleState: 'cancelled',
+                            summary: '今天不来播了',
+                            startDate: '2026-03-17',
+                            endDate: null,
+                            startAt: null,
+                            endAt: null,
+                            dateText: '今天',
+                            timeText: null,
+                            timePrecision: 'relative',
+                            certainty: 'confirmed',
+                            confidence: 0.92,
+                            evidenceText: '原评论<向太阳靠近的彗星_>:\n今天真不来了吗\n回复:\n是的明天再来了！',
+                        },
+                    }, {
+                        kind: 'add',
+                        targetItemId: null,
+                        reason: '评论问答说明改到明天',
+                        item: {
+                            title: '明天直播',
+                            category: 'live',
+                            scheduleState: 'scheduled',
+                            summary: null,
+                            startDate: '2026-03-18',
+                            endDate: null,
+                            startAt: null,
+                            endAt: null,
+                            dateText: '明天',
+                            timeText: null,
+                            timePrecision: 'relative',
+                            certainty: 'likely',
+                            confidence: 0.82,
+                            evidenceText: '原评论<向太阳靠近的彗星_>:\n今天真不来了吗\n回复:\n是的明天再来了！',
+                        },
+                    }],
+                },
+            },
+            requiredShape: {
+                needsUpdate: true,
+                ignoredReason: null,
+                operations: [{
+                    kind: 'add',
+                    targetItemId: null,
+                    reason: '简短说明',
+                    item: {
+                        title: '安排标题',
+                        category: 'live',
+                        scheduleState: 'scheduled',
+                        summary: '播什么/做什么，可为空',
+                        startDate: '2026-03-17',
+                        endDate: null,
+                        startAt: '2026-03-17T12:00:00+08:00',
+                        endAt: null,
+                        dateText: '今晚',
+                        timeText: '8点',
+                        timePrecision: 'exact',
+                        certainty: 'confirmed',
+                        confidence: 0.9,
+                        evidenceText: '原文中的关键片段',
+                    },
+                }],
+            },
+        }, null, 2),
+    }
+}

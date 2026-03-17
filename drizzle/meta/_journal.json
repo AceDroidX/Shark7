@@ -8,6 +8,13 @@
       "when": 1773505073013,
       "tag": "0000_exotic_thunderbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773751549698,
+      "tag": "0001_remarkable_roland_deschain",
+      "breakpoints": true
     }
   ]
 }

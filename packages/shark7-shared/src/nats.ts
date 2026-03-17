@@ -26,6 +26,12 @@ export const Shark7EventSubjects = {
 
 export const Shark7RpcSubjects = {
     AI_SUMMARY_BY_BVID: 'shark7.rpc.ai.summary-by-bvid',
+    AI_STREAMER_SCHEDULE_QUERY: 'shark7.rpc.ai.streamer-schedule-query',
+    AI_STREAMER_SCHEDULE_REANALYZE: 'shark7.rpc.ai.streamer-schedule-reanalyze',
+} as const
+
+export const Shark7JobSubjects = {
+    AI_STREAMER_SCHEDULE_REFRESH: 'shark7.job.ai.streamer-schedule-refresh',
 } as const
 
 export class Shark7EventPublisher {

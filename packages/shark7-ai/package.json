@@ -10,6 +10,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "test:langfuse": "node --env-file=.env tests/langfuse.ts",
         "test:nats": "node --env-file=.env tests/rpc.ts",
+        "test:streamer-schedule": "node --env-file=.env tests/streamer-schedule-reanalyze.ts",
+        "test:streamer-schedule-rpc": "node --env-file=.env tests/streamer-schedule-refresh-rpc.ts",
         "clean": "tsc --build --clean",
         "dev": "node --env-file=.env --watch src/index.ts",
         "serve": "ts-node src/index.ts"
