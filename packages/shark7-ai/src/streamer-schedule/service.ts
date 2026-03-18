@@ -19,6 +19,7 @@ import {
     SchedulePatchSchema,
     StreamerSchedulePromptVersion,
     buildScheduleInputHash,
+    buildSchedulePromptPayload,
     type ExistingSchedulePromptItem,
     type SchedulePatch,
     type SchedulePatchItem,
@@ -243,11 +244,13 @@ async function invokeSchedulePatch(input: {
     source: ScheduleRefreshSource
     currentItems: ExistingSchedulePromptItem[]
 }) {
-    const prompt = buildStreamerSchedulePatchPrompt({
-        nowIso: new Date().toISOString(),
-        timezone: DefaultScheduleTimezone,
+    const promptPayload = buildSchedulePromptPayload({
         source: input.source,
         currentItems: input.currentItems,
+    })
+    const prompt = buildStreamerSchedulePatchPrompt({
+        source: promptPayload.source,
+        currentItems: promptPayload.currentItems,
     })
     const model = createModel()
     logger.info(`开始调用日程模型: streamer=${input.streamerId} source=${input.source.sourceId}`)
@@ -273,7 +276,11 @@ export async function refreshStreamerScheduleBySource(db: Shark7PgDatabase, sour
         source,
         currentItems,
     })
-    const requestJson = source as unknown as Record<string, unknown>
+    const promptPayload = buildSchedulePromptPayload({
+        source,
+        currentItems,
+    })
+    const requestJson = promptPayload as unknown as Record<string, unknown>
 
     const cached = await repository.findSuccessfulRunBySourceHash(source.sourceType, source.sourceId, inputHash)
     if (cached) {

@@ -13,7 +13,7 @@ import {
 } from 'shark7-shared'
 import { z } from 'zod'
 
-export const StreamerSchedulePromptVersion = 'v2'
+export const StreamerSchedulePromptVersion = 'v4'
 export const DefaultScheduleModel = process.env['DEEPSEEK_MODEL'] ?? 'deepseek-chat'
 export const DefaultScheduleTimezone = 'Asia/Shanghai'
 
@@ -120,51 +120,119 @@ export type ScheduleRefreshResult = {
 
 export type HistoricalScheduleSource = ScheduleRefreshSource
 
+type SchedulePromptSourceMblog = {
+    sourceType: 'weibo_mblog'
+    screenName: string
+    sourcePublishedAt: string
+    textRaw: string
+    title?: string
+}
+
+type SchedulePromptSourceComment = {
+    sourceType: 'weibo_comment'
+    screenName: string
+    sourcePublishedAt: string
+    textRaw: string
+    replyTextRaw?: string
+    replyScreenName?: string
+    conversationText?: string
+    mblog: {
+        sourcePublishedAt: string
+        textRaw: string
+        title?: string
+    }
+}
+
+export type SchedulePromptSource = SchedulePromptSourceMblog | SchedulePromptSourceComment
+
+export type SchedulePromptCurrentItem = {
+    itemId: number
+    title: string
+    category: StreamerScheduleCategory
+    scheduleState: StreamerScheduleState
+    certainty: StreamerScheduleCertainty
+    startDate?: string
+    endDate?: string
+    startAt?: string
+    endAt?: string
+    dateText?: string
+    timeText?: string
+    timePrecision: StreamerScheduleTimePrecision
+    summary?: string
+    evidence: Array<{
+        sourceType: string
+        sourcePublishedAt: string
+        evidenceText: string
+    }>
+}
+
+export type SchedulePromptPayload = {
+    source: SchedulePromptSource
+    currentItems: SchedulePromptCurrentItem[]
+}
+
+function compactObject<T extends Record<string, unknown>>(value: T) {
+    const entries = Object.entries(value).filter(([, item]) => item !== null && item !== undefined && item !== '')
+    return Object.fromEntries(entries)
+}
+
 function toStableScheduleSource(source: ScheduleRefreshSource) {
     if (source.sourceType === 'weibo_mblog') {
-        return {
-            streamerId: source.streamerId,
-            platform: source.platform,
-            externalUserId: source.externalUserId,
-            screenName: source.screenName,
+        return compactObject({
             sourceType: source.sourceType,
-            sourceId: source.sourceId,
-            sourceUrl: source.sourceUrl,
+            screenName: source.screenName,
             sourcePublishedAt: source.sourcePublishedAt,
             textRaw: source.textRaw,
             title: source.title,
-            visibleType: source.visibleType,
-            repostType: source.repostType,
-            isTop: source.isTop,
-            authorUserId: source.authorUserId,
-        }
+        }) as SchedulePromptSourceMblog
     }
 
-    return {
-        streamerId: source.streamerId,
-        platform: source.platform,
-        externalUserId: source.externalUserId,
-        screenName: source.screenName,
+    return compactObject({
         sourceType: source.sourceType,
-        sourceId: source.sourceId,
-        sourceUrl: source.sourceUrl,
+        screenName: source.screenName,
         sourcePublishedAt: source.sourcePublishedAt,
         textRaw: source.textRaw,
-        authorUserId: source.authorUserId,
-        replyCommentId: source.replyCommentId,
         replyTextRaw: source.replyTextRaw,
         replyScreenName: source.replyScreenName,
         conversationText: source.conversationText,
-        mblog: {
-            sourceId: source.mblog.sourceId,
-            sourceUrl: source.mblog.sourceUrl,
+        mblog: compactObject({
             sourcePublishedAt: source.mblog.sourcePublishedAt,
             textRaw: source.mblog.textRaw,
             title: source.mblog.title,
-            visibleType: source.mblog.visibleType,
-            repostType: source.mblog.repostType,
-            isTop: source.mblog.isTop,
-        },
+        }),
+    }) as SchedulePromptSourceComment
+}
+
+function toPromptCurrentItem(item: ExistingSchedulePromptItem): SchedulePromptCurrentItem {
+    return compactObject({
+        itemId: item.itemId,
+        title: item.title,
+        category: item.category,
+        scheduleState: item.scheduleState,
+        certainty: item.certainty,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        startAt: item.startAt,
+        endAt: item.endAt,
+        dateText: item.dateText,
+        timeText: item.timeText,
+        timePrecision: item.timePrecision,
+        summary: item.summary,
+        evidence: item.sources.map((source) => compactObject({
+            sourceType: source.sourceType,
+            sourcePublishedAt: source.sourcePublishedAt,
+            evidenceText: source.evidenceText,
+        })),
+    }) as SchedulePromptCurrentItem
+}
+
+export function buildSchedulePromptPayload(input: {
+    source: ScheduleRefreshSource
+    currentItems: ExistingSchedulePromptItem[]
+}): SchedulePromptPayload {
+    return {
+        source: toStableScheduleSource(input.source),
+        currentItems: input.currentItems.map((item) => toPromptCurrentItem(item)),
     }
 }
 
@@ -173,10 +241,7 @@ export function buildScheduleInputHash(input: {
     currentItems: ExistingSchedulePromptItem[]
 }) {
     const hash = createHash('sha256')
-    hash.update(JSON.stringify({
-        source: toStableScheduleSource(input.source),
-        currentItems: input.currentItems,
-    }))
+    hash.update(JSON.stringify(buildSchedulePromptPayload(input)))
     hash.update(JSON.stringify({
         promptVersion: StreamerSchedulePromptVersion,
         model: DefaultScheduleModel,

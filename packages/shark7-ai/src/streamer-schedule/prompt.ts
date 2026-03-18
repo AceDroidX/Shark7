@@ -1,10 +1,8 @@
-import type { ExistingSchedulePromptItem, ScheduleRefreshSource } from './types.ts'
+import { type SchedulePromptCurrentItem, type SchedulePromptSource } from './types.ts'
 
 export function buildStreamerSchedulePatchPrompt(input: {
-    nowIso: string
-    timezone: string
-    source: ScheduleRefreshSource
-    currentItems: ExistingSchedulePromptItem[]
+    source: SchedulePromptSource
+    currentItems: SchedulePromptCurrentItem[]
 }) {
     return {
         system: [
@@ -22,12 +20,9 @@ export function buildStreamerSchedulePatchPrompt(input: {
             '不要输出空泛标题，例如“明天安排”“之后再来”“回头再说”；标题必须是具体的直播/活动/安排表述，若无法具体命名则优先 update/cancel 现有安排。',
             '“今天不播”“今晚不来”“取消直播”这类信息本身也是有效日程，应该记录为 live 类日程，scheduleState=cancelled，而不是忽略。',
             '输出必须是严格 JSON 对象，不要使用 Markdown 代码块，不要输出额外解释。',
+            '输入中的 source 和 currentItems 都是已裁剪后的分析字段，只保留理解日程所需的信息。',
         ].join('\n'),
         user: JSON.stringify({
-            nowIso: input.nowIso,
-            timezone: input.timezone,
-            source: input.source,
-            currentItems: input.currentItems,
             outputRules: {
                 operationsAllowed: ['add', 'update', 'cancel', 'noop'],
                 categories: ['live', 'collab', 'recording', 'event', 'travel', 'post', 'other'],
@@ -136,6 +131,10 @@ export function buildStreamerSchedulePatchPrompt(input: {
                         evidenceText: '原文中的关键片段',
                     },
                 }],
+            },
+            analysisInput: {
+                source: input.source,
+                currentItems: input.currentItems,
             },
         }, null, 2),
     }
