@@ -22,11 +22,19 @@ export function hasMblogTextChanged(changes: IAtomicChange[]) {
     return changes.some(change => change.path.replace(/^\$\./, '') === 'text_raw')
 }
 
-export function hasCommentContentChanged(changes: IAtomicChange[]) {
-    return changes.some((change) => {
-        const path = change.path.replace(/^\$\./, '')
-        return path === 'text_raw' || path === 'reply_comment' || path.startsWith('reply_comment.')
-    })
+function getScheduleRelevantCommentSnapshot(comment: WeiboComment) {
+    return {
+        textRaw: comment.text_raw,
+        replyCommentId: comment.reply_comment ? String(comment.reply_comment.id) : null,
+        replyTextRaw: comment.reply_comment?.text_raw ?? comment.reply_comment?.text ?? null,
+    }
+}
+
+export function hasCommentContentChanged(oldData: WeiboComment | null, newData: WeiboComment) {
+    if (!oldData) {
+        return true
+    }
+    return JSON.stringify(getScheduleRelevantCommentSnapshot(oldData)) !== JSON.stringify(getScheduleRelevantCommentSnapshot(newData))
 }
 
 export function createMblogScheduleRefreshOnUpdateExtra(deps: {
@@ -46,8 +54,8 @@ export function createMblogScheduleRefreshOnUpdateExtra(deps: {
 export function createCommentScheduleRefreshOnUpdateExtra(deps: {
     publishComment: (newData: WeiboComment) => Promise<void>
 }) {
-    return async (_oldData: WeiboComment | null, newData: WeiboComment, changes: IAtomicChange[]) => {
-        if (hasCommentContentChanged(changes)) {
+    return async (oldData: WeiboComment | null, newData: WeiboComment, _changes: IAtomicChange[]) => {
+        if (hasCommentContentChanged(oldData, newData)) {
             await deps.publishComment(newData)
         }
     }

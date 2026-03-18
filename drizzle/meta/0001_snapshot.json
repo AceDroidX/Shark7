@@ -1698,8 +1698,8 @@
           "method": "btree",
           "with": {}
         },
-        "streamer_schedule_item_streamer_dedupe_idx": {
-          "name": "streamer_schedule_item_streamer_dedupe_idx",
+        "streamer_schedule_item_active_dedupe_uidx": {
+          "name": "streamer_schedule_item_active_dedupe_uidx",
           "columns": [
             {
               "expression": "streamer_id",
@@ -1714,7 +1714,8 @@
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
+          "where": "\"streamer_schedule_item\".\"status\" = 'active'",
           "concurrently": false,
           "method": "btree",
           "with": {}

@@ -10,7 +10,6 @@ export const StreamerScheduleCategories = [
 
 export const StreamerScheduleStatuses = [
     'active',
-    'cancelled',
     'superseded',
     'expired',
 ] as const

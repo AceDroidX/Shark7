@@ -3,6 +3,7 @@ import {
     StreamerScheduleCategories,
     StreamerScheduleCertainties,
     StreamerScheduleStates,
+    type StreamerScheduleStatus,
     StreamerScheduleTimePrecisions,
     type AiStreamerScheduleRefreshRequest,
     type StreamerScheduleCategory,
@@ -26,7 +27,7 @@ export type ExistingSchedulePromptItem = {
     title: string
     category: StreamerScheduleCategory
     scheduleState: StreamerScheduleState
-    status: string
+    status: StreamerScheduleStatus
     certainty: StreamerScheduleCertainty
     startDate: string | null
     endDate: string | null
@@ -72,6 +73,26 @@ export const SchedulePatchItemSchema = z.object({
     certainty: z.enum(StreamerScheduleCertainties),
     confidence: z.number().min(0).max(1),
     evidenceText: z.string().trim().min(1),
+}).superRefine((item, ctx) => {
+    if (item.startDate && item.endDate && item.startDate > item.endDate) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['endDate'],
+            message: 'endDate 不能早于 startDate',
+        })
+    }
+
+    if (item.startAt && item.endAt) {
+        const startAt = new Date(item.startAt)
+        const endAt = new Date(item.endAt)
+        if (!Number.isNaN(startAt.getTime()) && !Number.isNaN(endAt.getTime()) && startAt.getTime() > endAt.getTime()) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['endAt'],
+                message: 'endAt 不能早于 startAt',
+            })
+        }
+    }
 })
 
 export const SchedulePatchOperationSchema = z.object({
@@ -99,9 +120,63 @@ export type ScheduleRefreshResult = {
 
 export type HistoricalScheduleSource = ScheduleRefreshSource
 
-export function buildScheduleInputHash(source: ScheduleRefreshSource) {
+function toStableScheduleSource(source: ScheduleRefreshSource) {
+    if (source.sourceType === 'weibo_mblog') {
+        return {
+            streamerId: source.streamerId,
+            platform: source.platform,
+            externalUserId: source.externalUserId,
+            screenName: source.screenName,
+            sourceType: source.sourceType,
+            sourceId: source.sourceId,
+            sourceUrl: source.sourceUrl,
+            sourcePublishedAt: source.sourcePublishedAt,
+            textRaw: source.textRaw,
+            title: source.title,
+            visibleType: source.visibleType,
+            repostType: source.repostType,
+            isTop: source.isTop,
+            authorUserId: source.authorUserId,
+        }
+    }
+
+    return {
+        streamerId: source.streamerId,
+        platform: source.platform,
+        externalUserId: source.externalUserId,
+        screenName: source.screenName,
+        sourceType: source.sourceType,
+        sourceId: source.sourceId,
+        sourceUrl: source.sourceUrl,
+        sourcePublishedAt: source.sourcePublishedAt,
+        textRaw: source.textRaw,
+        authorUserId: source.authorUserId,
+        replyCommentId: source.replyCommentId,
+        replyTextRaw: source.replyTextRaw,
+        replyScreenName: source.replyScreenName,
+        conversationText: source.conversationText,
+        mblog: {
+            sourceId: source.mblog.sourceId,
+            sourceUrl: source.mblog.sourceUrl,
+            sourcePublishedAt: source.mblog.sourcePublishedAt,
+            textRaw: source.mblog.textRaw,
+            title: source.mblog.title,
+            visibleType: source.mblog.visibleType,
+            repostType: source.mblog.repostType,
+            isTop: source.mblog.isTop,
+        },
+    }
+}
+
+export function buildScheduleInputHash(input: {
+    source: ScheduleRefreshSource
+    currentItems: ExistingSchedulePromptItem[]
+}) {
     const hash = createHash('sha256')
-    hash.update(JSON.stringify(source))
+    hash.update(JSON.stringify({
+        source: toStableScheduleSource(input.source),
+        currentItems: input.currentItems,
+    }))
     hash.update(JSON.stringify({
         promptVersion: StreamerSchedulePromptVersion,
         model: DefaultScheduleModel,

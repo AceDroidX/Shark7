@@ -6,6 +6,7 @@ import {
     logger,
     type AiStreamerScheduleReanalyzeResponse,
     type AiStreamerScheduleQueryResponse,
+    type InsertStreamerScheduleItem,
     type Shark7PgDatabase,
     type StreamerScheduleQueryItem,
 } from 'shark7-shared'
@@ -141,6 +142,84 @@ function normalizePatchItem(item: SchedulePatchItem) {
     }
 }
 
+function buildScheduleItemValues(source: ScheduleRefreshSource, normalized: ReturnType<typeof normalizePatchItem>): InsertStreamerScheduleItem {
+    return {
+        streamerId: source.streamerId,
+        platform: source.platform,
+        externalUserId: source.externalUserId,
+        title: normalized.title,
+        category: normalized.category,
+        scheduleState: normalized.scheduleState,
+        status: 'active',
+        certainty: normalized.certainty,
+        confidence: normalized.confidence,
+        startDate: normalized.startDate,
+        endDate: normalized.endDate,
+        startAt: normalized.startAt,
+        endAt: normalized.endAt,
+        dateText: normalized.dateText,
+        timeText: normalized.timeText,
+        timePrecision: normalized.timePrecision,
+        timezone: normalized.timezone,
+        summary: normalized.summary,
+        dedupeKey: normalized.dedupeKey,
+        extraJson: normalized.extraJson,
+        lastExtractedAt: new Date(),
+        lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : null,
+    }
+}
+
+async function findScheduleTargetByNormalizedItem(repository: AiStreamerScheduleRepository, source: ScheduleRefreshSource, normalized: ReturnType<typeof normalizePatchItem>) {
+    const byDedupeKey = await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+    if (byDedupeKey) {
+        return byDedupeKey
+    }
+
+    const candidates = await repository.findActiveItemsByTimeRange({
+        streamerId: source.streamerId,
+        category: normalized.category,
+        startDate: normalized.startDate,
+        endDate: normalized.endDate,
+        startAt: normalized.startAt,
+        endAt: normalized.endAt,
+    })
+    const sameTitle = candidates.find((item) => item.title === normalized.title)
+    if (sameTitle) {
+        return sameTitle
+    }
+    const sameState = candidates.find((item) => item.scheduleState === normalized.scheduleState)
+    if (sameState) {
+        return sameState
+    }
+    if (candidates.length === 1) {
+        return candidates[0]
+    }
+    return null
+}
+
+async function upsertScheduleItemWithFallback(repository: AiStreamerScheduleRepository, source: ScheduleRefreshSource, normalized: ReturnType<typeof normalizePatchItem>) {
+    const values = buildScheduleItemValues(source, normalized)
+    const existing = await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+    if (existing) {
+        return { itemId: existing.id, created: false }
+    }
+
+    try {
+        const itemId = await repository.createOrMergeActiveScheduleItem(values)
+        return { itemId, created: true }
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        if (!message.includes('streamer_schedule_item_active_dedupe_uidx')) {
+            throw error
+        }
+        const concurrent = await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+        if (!concurrent) {
+            throw error
+        }
+        return { itemId: concurrent.id, created: false }
+    }
+}
+
 function getScheduleSourceEvidenceText(source: ScheduleRefreshSource) {
     if (source.sourceType === 'weibo_comment') {
         return source.conversationText ?? source.textRaw
@@ -189,7 +268,11 @@ async function invokeSchedulePatch(input: {
 
 export async function refreshStreamerScheduleBySource(db: Shark7PgDatabase, source: ScheduleRefreshSource): Promise<ScheduleRefreshResult> {
     const repository = new AiStreamerScheduleRepository(db)
-    const inputHash = buildScheduleInputHash(source)
+    const currentItems = await repository.listActivePromptItems(source.streamerId)
+    const inputHash = buildScheduleInputHash({
+        source,
+        currentItems,
+    })
     const requestJson = source as unknown as Record<string, unknown>
 
     const cached = await repository.findSuccessfulRunBySourceHash(source.sourceType, source.sourceId, inputHash)
@@ -223,11 +306,25 @@ export async function refreshStreamerScheduleBySource(db: Shark7PgDatabase, sour
     }
 
     if (!runId) {
+        const concurrent = await repository.findLatestRunBySourceHash(source.sourceType, source.sourceId, inputHash)
+        if (concurrent?.status === 'running' || concurrent?.status === 'success') {
+            logger.info(`日程刷新任务已被其他 worker 接管: streamer=${source.streamerId} source=${source.sourceId}`)
+            return { runId: concurrent.id, skipped: true, appliedOperations: 0 }
+        }
+        if (concurrent?.status === 'failed') {
+            runId = await repository.reclaimFailedRun(concurrent.id, {
+                modelName: DefaultScheduleModel,
+                promptVersion: StreamerSchedulePromptVersion,
+                requestJson,
+            })
+        }
+    }
+
+    if (!runId) {
         throw new Error(`无法创建日程刷新任务: source=${source.sourceId}`)
     }
 
     try {
-        const currentItems = await repository.listActivePromptItems(source.streamerId)
         const patch = await invokeSchedulePatch({
             streamerId: source.streamerId,
             source,
@@ -338,32 +435,9 @@ async function applySchedulePatch(repository: AiStreamerScheduleRepository, sour
 
         if (operation.kind === 'add' && normalized) {
             const existing = await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
-            const itemId = existing
-                ? existing.id
-                : await repository.createScheduleItem({
-                    streamerId: source.streamerId,
-                    platform: source.platform,
-                    externalUserId: source.externalUserId,
-                    title: normalized.title,
-                    category: normalized.category,
-                    scheduleState: normalized.scheduleState,
-                    status: 'active',
-                    certainty: normalized.certainty,
-                    confidence: normalized.confidence,
-                    startDate: normalized.startDate,
-                    endDate: normalized.endDate,
-                    startAt: normalized.startAt,
-                    endAt: normalized.endAt,
-                    dateText: normalized.dateText,
-                    timeText: normalized.timeText,
-                    timePrecision: normalized.timePrecision,
-                    timezone: normalized.timezone,
-                    summary: normalized.summary,
-                    dedupeKey: normalized.dedupeKey,
-                    extraJson: normalized.extraJson,
-                    lastExtractedAt: new Date(),
-                    lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : null,
-                })
+            const { itemId } = existing
+                ? { itemId: existing.id }
+                : await upsertScheduleItemWithFallback(repository, source, normalized)
             if (existing) {
                 await repository.updateScheduleItem(existing.id, {
                     title: normalized.title,
@@ -393,69 +467,79 @@ async function applySchedulePatch(repository: AiStreamerScheduleRepository, sour
         if (operation.kind === 'update' && normalized) {
             const target = operation.targetItemId
                 ? await repository.findActiveItemById(operation.targetItemId)
-                : await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+                : await findScheduleTargetByNormalizedItem(repository, source, normalized)
 
             if (!target) {
-                const itemId = await repository.createScheduleItem({
-                    streamerId: source.streamerId,
-                    platform: source.platform,
-                    externalUserId: source.externalUserId,
-                    title: normalized.title,
-                    category: normalized.category,
-                    scheduleState: normalized.scheduleState,
-                    status: 'active',
-                    certainty: normalized.certainty,
-                    confidence: normalized.confidence,
-                    startDate: normalized.startDate,
-                    endDate: normalized.endDate,
-                    startAt: normalized.startAt,
-                    endAt: normalized.endAt,
-                    dateText: normalized.dateText,
-                    timeText: normalized.timeText,
-                    timePrecision: normalized.timePrecision,
-                    timezone: normalized.timezone,
-                    summary: normalized.summary,
-                    dedupeKey: normalized.dedupeKey,
-                    extraJson: normalized.extraJson,
-                    lastExtractedAt: new Date(),
-                    lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : null,
-                })
+                const { itemId } = await upsertScheduleItemWithFallback(repository, source, normalized)
                 await repository.upsertEvidence(itemId, source, normalized.evidenceText)
             } else {
-                await repository.updateScheduleItem(target.id, {
-                    title: normalized.title,
-                    category: normalized.category,
-                    scheduleState: normalized.scheduleState,
-                    status: 'active',
-                    certainty: normalized.certainty,
-                    confidence: normalized.confidence,
-                    startDate: normalized.startDate,
-                    endDate: normalized.endDate,
-                    startAt: normalized.startAt,
-                    endAt: normalized.endAt,
-                    dateText: normalized.dateText,
-                    timeText: normalized.timeText,
-                    timePrecision: normalized.timePrecision,
-                    timezone: normalized.timezone,
-                    summary: normalized.summary,
-                    dedupeKey: normalized.dedupeKey,
-                    extraJson: normalized.extraJson,
-                    lastExtractedAt: new Date(),
-                    lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : target.lastConfirmedAt,
-                })
-                await repository.upsertEvidence(target.id, source, normalized.evidenceText)
+                const conflicting = target.dedupeKey === normalized.dedupeKey
+                    ? null
+                    : await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+
+                if (conflicting && conflicting.id !== target.id) {
+                    await repository.updateScheduleItem(conflicting.id, {
+                        title: normalized.title,
+                        category: normalized.category,
+                        scheduleState: normalized.scheduleState,
+                        status: 'active',
+                        certainty: normalized.certainty,
+                        confidence: normalized.confidence,
+                        startDate: normalized.startDate,
+                        endDate: normalized.endDate,
+                        startAt: normalized.startAt,
+                        endAt: normalized.endAt,
+                        dateText: normalized.dateText,
+                        timeText: normalized.timeText,
+                        timePrecision: normalized.timePrecision,
+                        timezone: normalized.timezone,
+                        summary: normalized.summary,
+                        extraJson: normalized.extraJson,
+                        lastExtractedAt: new Date(),
+                        lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : conflicting.lastConfirmedAt,
+                    })
+                    await repository.updateScheduleItem(target.id, {
+                        status: 'superseded',
+                    })
+                    await repository.upsertEvidence(conflicting.id, source, normalized.evidenceText)
+                } else {
+                    await repository.updateScheduleItem(target.id, {
+                        title: normalized.title,
+                        category: normalized.category,
+                        scheduleState: normalized.scheduleState,
+                        status: 'active',
+                        certainty: normalized.certainty,
+                        confidence: normalized.confidence,
+                        startDate: normalized.startDate,
+                        endDate: normalized.endDate,
+                        startAt: normalized.startAt,
+                        endAt: normalized.endAt,
+                        dateText: normalized.dateText,
+                        timeText: normalized.timeText,
+                        timePrecision: normalized.timePrecision,
+                        timezone: normalized.timezone,
+                        summary: normalized.summary,
+                        dedupeKey: normalized.dedupeKey,
+                        extraJson: normalized.extraJson,
+                        lastExtractedAt: new Date(),
+                        lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : target.lastConfirmedAt,
+                    })
+                    await repository.upsertEvidence(target.id, source, normalized.evidenceText)
+                }
             }
             applied += 1
             continue
         }
 
         if (operation.kind === 'cancel') {
+            let handledCancel = false
             if (operation.targetItemId) {
                 const target = await repository.findActiveItemById(operation.targetItemId)
                 if (target) {
                     await repository.cancelScheduleItem(target.id)
                     await repository.upsertEvidence(target.id, source, normalized?.evidenceText ?? getScheduleSourceEvidenceText(source))
                     applied += 1
+                    handledCancel = true
                 }
             }
 
@@ -466,33 +550,14 @@ async function applySchedulePatch(repository: AiStreamerScheduleRepository, sour
                 continue
             }
 
-            const existing = await repository.findActiveItemByDedupeKey(source.streamerId, normalized.dedupeKey)
+            if (handledCancel) {
+                continue
+            }
+
+            const existing = await findScheduleTargetByNormalizedItem(repository, source, normalized)
             const itemId = existing
                 ? existing.id
-                : await repository.createScheduleItem({
-                    streamerId: source.streamerId,
-                    platform: source.platform,
-                    externalUserId: source.externalUserId,
-                    title: normalized.title,
-                    category: normalized.category,
-                    scheduleState: normalized.scheduleState,
-                    status: 'active',
-                    certainty: normalized.certainty,
-                    confidence: normalized.confidence,
-                    startDate: normalized.startDate,
-                    endDate: normalized.endDate,
-                    startAt: normalized.startAt,
-                    endAt: normalized.endAt,
-                    dateText: normalized.dateText,
-                    timeText: normalized.timeText,
-                    timePrecision: normalized.timePrecision,
-                    timezone: normalized.timezone,
-                    summary: normalized.summary,
-                    dedupeKey: normalized.dedupeKey,
-                    extraJson: normalized.extraJson,
-                    lastExtractedAt: new Date(),
-                    lastConfirmedAt: normalized.certainty === 'confirmed' ? new Date() : null,
-                })
+                : (await upsertScheduleItemWithFallback(repository, source, normalized)).itemId
 
             if (existing) {
                 await repository.updateScheduleItem(existing.id, {

@@ -64,4 +64,4 @@ CREATE UNIQUE INDEX "streamer_schedule_evidence_item_source_uidx" ON "streamer_s
 CREATE INDEX "streamer_schedule_evidence_source_idx" ON "streamer_schedule_evidence" USING btree ("source_type","source_id");--> statement-breakpoint
 CREATE INDEX "streamer_schedule_item_streamer_status_date_idx" ON "streamer_schedule_item" USING btree ("streamer_id","status","start_date");--> statement-breakpoint
 CREATE INDEX "streamer_schedule_item_streamer_start_at_idx" ON "streamer_schedule_item" USING btree ("streamer_id","start_at");--> statement-breakpoint
-CREATE INDEX "streamer_schedule_item_streamer_dedupe_idx" ON "streamer_schedule_item" USING btree ("streamer_id","dedupe_key");
+CREATE UNIQUE INDEX "streamer_schedule_item_active_dedupe_uidx" ON "streamer_schedule_item" USING btree ("streamer_id","dedupe_key") WHERE "streamer_schedule_item"."status" = 'active';

@@ -200,10 +200,92 @@ export class AiStreamerScheduleRepository {
     async cancelScheduleItem(itemId: number) {
         await this.db.update(streamerScheduleItems)
             .set({
-                status: 'cancelled',
+                scheduleState: 'cancelled',
+                status: 'active',
                 updatedAt: sql`now()`,
             })
-            .where(eq(streamerScheduleItems.id, itemId))
+            .where(and(
+                eq(streamerScheduleItems.id, itemId),
+                eq(streamerScheduleItems.status, 'active'),
+            ))
+    }
+
+    async findActiveItemsByTimeRange(params: {
+        streamerId: string
+        category: InsertStreamerScheduleItem['category']
+        startDate: string | null
+        endDate: string | null
+        startAt: Date | null
+        endAt: Date | null
+    }) {
+        const items = await this.db.select().from(streamerScheduleItems)
+            .where(and(
+                eq(streamerScheduleItems.streamerId, params.streamerId),
+                eq(streamerScheduleItems.category, params.category),
+                eq(streamerScheduleItems.status, 'active'),
+            ))
+            .orderBy(desc(streamerScheduleItems.updatedAt), desc(streamerScheduleItems.id))
+
+        return items.filter((item) => {
+            if (params.startAt || params.endAt) {
+                const itemStartAt = item.startAt?.getTime() ?? null
+                const itemEndAt = item.endAt?.getTime() ?? itemStartAt
+                const targetStartAt = params.startAt?.getTime() ?? null
+                const targetEndAt = params.endAt?.getTime() ?? targetStartAt
+                if (itemStartAt !== null && itemEndAt !== null && targetStartAt !== null && targetEndAt !== null) {
+                    return itemEndAt >= targetStartAt && itemStartAt <= targetEndAt
+                }
+            }
+
+            const itemStartDate = item.startDate ?? item.endDate
+            const itemEndDate = item.endDate ?? item.startDate
+            const targetStartDate = params.startDate ?? params.endDate
+            const targetEndDate = params.endDate ?? params.startDate
+            if (!itemStartDate || !itemEndDate || !targetStartDate || !targetEndDate) {
+                return false
+            }
+            return itemEndDate >= targetStartDate && itemStartDate <= targetEndDate
+        })
+    }
+
+    async createOrMergeActiveScheduleItem(values: InsertStreamerScheduleItem) {
+        const [row] = await this.db.insert(streamerScheduleItems)
+            .values(values)
+            .onConflictDoUpdate({
+                target: [
+                    streamerScheduleItems.streamerId,
+                    streamerScheduleItems.dedupeKey,
+                ],
+                targetWhere: sql`${streamerScheduleItems.status} = 'active'`,
+                set: {
+                    platform: values.platform,
+                    externalUserId: values.externalUserId,
+                    title: values.title,
+                    category: values.category,
+                    scheduleState: values.scheduleState,
+                    status: values.status ?? 'active',
+                    certainty: values.certainty,
+                    confidence: values.confidence ?? null,
+                    startDate: values.startDate ?? null,
+                    endDate: values.endDate ?? null,
+                    startAt: values.startAt ?? null,
+                    endAt: values.endAt ?? null,
+                    dateText: values.dateText ?? null,
+                    timeText: values.timeText ?? null,
+                    timePrecision: values.timePrecision,
+                    timezone: values.timezone,
+                    summary: values.summary ?? null,
+                    extraJson: values.extraJson ?? null,
+                    lastExtractedAt: values.lastExtractedAt,
+                    lastConfirmedAt: values.lastConfirmedAt ?? null,
+                    updatedAt: sql`now()`,
+                },
+            })
+            .returning({ id: streamerScheduleItems.id })
+        if (!row) {
+            throw new Error('创建或合并日程项失败')
+        }
+        return row.id
     }
 
     async upsertEvidence(itemId: number, source: ScheduleRefreshSource, evidenceText: string) {
@@ -248,7 +330,7 @@ export class AiStreamerScheduleRepository {
             title: item.title,
             category: item.category as ExistingSchedulePromptItem['category'],
             scheduleState: item.scheduleState as ExistingSchedulePromptItem['scheduleState'],
-            status: item.status,
+            status: item.status as ExistingSchedulePromptItem['status'],
             certainty: item.certainty as ExistingSchedulePromptItem['certainty'],
             startDate: item.startDate,
             endDate: item.endDate,

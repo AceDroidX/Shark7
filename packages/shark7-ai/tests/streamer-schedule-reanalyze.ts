@@ -28,25 +28,24 @@ function getHours() {
 }
 
 function printSource(source: Awaited<ReturnType<typeof listWeiboSourcesInWindow>>[number], index: number) {
-    console.log(`\n=== 微博 ${index + 1} ===`)
+    console.log(`\n=== 来源 ${index + 1} ===`)
+    console.log(`sourceType: ${source.sourceType}`)
     console.log(`sourceId: ${source.sourceId}`)
     console.log(`sourceUrl: ${source.sourceUrl ?? 'N/A'}`)
     console.log(`publishedAt: ${source.sourcePublishedAt}`)
-    console.log(`title: ${source.title ?? '(无标题)'}`)
-    console.log(`textRaw:\n${source.textRaw}`)
-    if (source.comments.length === 0) {
-        console.log('comments: (无作者评论)')
+    if (source.sourceType === 'weibo_mblog') {
+        console.log(`title: ${source.title ?? '(无标题)'}`)
+        console.log(`textRaw:\n${source.textRaw}`)
         return
     }
-    console.log('comments:')
-    for (const comment of source.comments) {
-        console.log(`- [${comment.createdAt}] ${comment.screenName}: ${comment.textRaw}`)
-        if (comment.replyTextRaw) {
-            console.log(`  reply_to<${comment.replyScreenName ?? 'unknown'}>: ${comment.replyTextRaw}`)
-        }
-        if (comment.conversationText && comment.conversationText !== comment.textRaw) {
-            console.log(`  conversation:\n${comment.conversationText}`)
-        }
+    console.log(`mblogSourceId: ${source.mblog.sourceId}`)
+    console.log(`mblogTextRaw:\n${source.mblog.textRaw}`)
+    console.log(`commentTextRaw:\n${source.textRaw}`)
+    if (source.replyTextRaw) {
+        console.log(`reply_to<${source.replyScreenName ?? 'unknown'}>: ${source.replyTextRaw}`)
+    }
+    if (source.conversationText && source.conversationText !== source.textRaw) {
+        console.log(`conversation:\n${source.conversationText}`)
     }
 }
 
@@ -118,7 +117,7 @@ export async function main() {
         await resetStreamerScheduleData(db, streamerId)
         const sources = await listWeiboSourcesInWindow({ externalUserId, from, to })
         console.log(`时间范围: ${from.toISOString()} ~ ${to.toISOString()}`)
-        console.log(`命中微博数量: ${sources.length}`)
+        console.log(`命中来源数量: ${sources.length}`)
 
         let refreshed = 0
         let skipped = 0

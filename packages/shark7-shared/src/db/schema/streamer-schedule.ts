@@ -44,7 +44,9 @@ export const streamerScheduleItems = pgTable('streamer_schedule_item', {
 }, (table) => [
     index('streamer_schedule_item_streamer_status_date_idx').on(table.streamerId, table.status, table.startDate),
     index('streamer_schedule_item_streamer_start_at_idx').on(table.streamerId, table.startAt),
-    index('streamer_schedule_item_streamer_dedupe_idx').on(table.streamerId, table.dedupeKey),
+    uniqueIndex('streamer_schedule_item_active_dedupe_uidx')
+        .on(table.streamerId, table.dedupeKey)
+        .where(sql`${table.status} = 'active'`),
 ])
 
 export const streamerScheduleEvidence = pgTable('streamer_schedule_evidence', {
