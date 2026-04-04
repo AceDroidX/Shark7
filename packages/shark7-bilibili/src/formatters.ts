@@ -104,6 +104,11 @@ export function formatBilibiliDynamicChanges(changes: IAtomicChange[], newData: 
             continue;
         }
 
+        const skipFieldsIfNull = ['modules.module_dynamic.topic'];
+        if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
+            if (skipFieldsIfNull.includes(key)) continue;
+        }
+
         messages.push(`${key}更改\n原：${JSON.stringify(oldValue)}\n现：${JSON.stringify(value)}`);
     }
 
