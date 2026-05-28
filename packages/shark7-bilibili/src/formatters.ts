@@ -104,7 +104,7 @@ export function formatBilibiliDynamicChanges(changes: IAtomicChange[], newData: 
             continue;
         }
 
-        const skipFieldsIfNull = ['modules.module_dynamic.topic'];
+        const skipFieldsIfNull = ['modules.module_dynamic.topic', 'modules.module_stat.coin', 'modules.module_stat.favorite', 'modules.module_dynamic.major.opus.summary'];
         if ((oldValue != null && value == null) || (oldValue == null && value != null)) {
             if (skipFieldsIfNull.includes(key)) continue;
         }
