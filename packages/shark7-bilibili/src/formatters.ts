@@ -94,6 +94,10 @@ export function formatBilibiliDynamicChanges(changes: IAtomicChange[], newData: 
             continue;
         }
 
+        if (key.startsWith('basic.like_icon')) {
+            continue;
+        }
+
         const skipFields = ['modules.module_stat.forward.count', 'modules.module_stat.comment.count', 'modules.module_stat.like.count'];
         if (skipFields.includes(key)) continue;
 
